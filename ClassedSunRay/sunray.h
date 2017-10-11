@@ -5,17 +5,39 @@ class SunRay
 {
 public:
 	SunRay() :d_samplelights_(nullptr), d_perturbation_(nullptr) {}
+
+	//SunRay(const SunRay &sunray)
+	//{
+	//	sun_dir_ = sunray.sun_dir_;
+	//	dni_ = sunray.dni_;
+	//	csr_= sunray.csr_;
+	//	num_sunshape_groups_ = sunray.num_sunshape_groups_;
+	//	num_sunshape_lights_per_group_= sunray.num_sunshape_lights_per_group_;
+	//	d_samplelights_ = sunray.d_samplelights_;								
+	//	d_perturbation_ = sunray.d_perturbation_;
+	//}
+
 	~SunRay()
 	{
-		d_samplelights_ = nullptr;
-		d_perturbation_ = nullptr;
+		if(d_samplelights_)
+			d_samplelights_ = nullptr;
+		if(d_perturbation_)
+			d_perturbation_ = nullptr;
 	}
-	__device__ __host__ void Clear()
+
+	__device__ __host__ void CClear()
 	{
-		cudaFree(d_samplelights_);
-		cudaFree(d_perturbation_);
-		d_samplelights_ = nullptr;
-		d_perturbation_ = nullptr;
+		if (d_samplelights_)
+		{
+			cudaFree(d_samplelights_);
+			d_samplelights_ = nullptr;
+		}
+		
+		if (d_perturbation_)
+		{
+			cudaFree(d_perturbation_);
+			d_perturbation_ = nullptr;
+		}
 	}
 
 	float3 sun_dir_;					// e.g. 0.306454	-0.790155	0.530793

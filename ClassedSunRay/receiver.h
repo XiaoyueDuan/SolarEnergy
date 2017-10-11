@@ -14,15 +14,24 @@ public:
 
 	Receiver() :d_image_(nullptr) {}
 
+	Receiver(Receiver &rece)
+	{
+
+	}
+
 	~Receiver()
 	{
-		d_image_ = nullptr;
+		if(d_image_)
+			d_image_ = nullptr;
 	}
 
 	__device__ __host__ void CClear()
 	{
-		cudaFree(d_image_);
-		d_image_ = nullptr;
+		if (d_image_)
+		{
+			cudaFree(d_image_);
+			d_image_ = nullptr;
+		}
 	}
 
 	float pixel_length_;

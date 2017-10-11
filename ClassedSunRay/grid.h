@@ -24,16 +24,25 @@ public:
 
 	~RectGrid()
 	{
-		d_grid_helio_match_ = nullptr;
-		d_grid_helio_index_ = nullptr;
+		if(d_grid_helio_match_)
+			d_grid_helio_match_ = nullptr;
+		if (d_grid_helio_index_)
+			d_grid_helio_index_ = nullptr;
 	}
 
 	__device__ __host__ void CClear()
 	{
-		cudaFree(d_grid_helio_match_);
-		cudaFree(d_grid_helio_index_);
-		d_grid_helio_match_ = nullptr;
-		d_grid_helio_index_ = nullptr;
+		if (d_grid_helio_match_)
+		{
+			cudaFree(d_grid_helio_match_);
+			d_grid_helio_match_ = nullptr;
+		}
+
+		if (d_grid_helio_index_)
+		{
+			cudaFree(d_grid_helio_index_);
+			d_grid_helio_index_ = nullptr;
+		}
 	}
 
 	float3 min_vertex_;
