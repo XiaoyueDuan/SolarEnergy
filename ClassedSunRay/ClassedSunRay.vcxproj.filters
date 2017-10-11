@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="DataStructure">
+      <UniqueIdentifier>{74288dc0-e7bd-4d1b-b652-bdca8cac1b0e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="grid.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="heliostat.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="random_generator.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="receiver.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="sunray.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
