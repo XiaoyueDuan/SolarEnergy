@@ -10,6 +10,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{1b67364d-2903-41b9-8933-08cb06db6665}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{d6b6a73c-ec77-4cf5-8e12-fc6cda265e60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grid.h">
@@ -30,5 +33,19 @@
     <ClInclude Include="common_var.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="solar_scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="solar_scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="common_var.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

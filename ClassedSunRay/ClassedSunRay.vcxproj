@@ -24,7 +24,13 @@
     <ClInclude Include="heliostat.h" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="receiver.h" />
+    <ClInclude Include="solar_scene.h" />
     <ClInclude Include="sunray.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common_var.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="solar_scene.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B83FDF2-CFC3-416D-A55C-583E1B12A7BB}</ProjectGuid>

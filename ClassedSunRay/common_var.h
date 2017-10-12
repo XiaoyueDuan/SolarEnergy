@@ -1,16 +1,23 @@
 #pragma once
+#ifndef COMMON_VAR_H
+#define COMMON_VAR_H
+
 #include <cuda_runtime.h>
+#include <string>
+
+using namespace std;
 
 namespace solarenergy {
 	//sun ray related default value
-	float3 sun_dir = make_float3(0.306454, -0.790155, 0.530793);
-	float dni = 1000.0;
-	float csr = 0.1;
-	float num_sunshape_groups = 8;
-	float num_sunshape_lights_per_group = 1024;
+	extern float3 sun_dir;
+	extern float dni;
+	extern float csr;
+	extern float num_sunshape_groups;
+	extern float num_sunshape_lights_per_group;
 
-	//
-
-
-
+	//default scene file
+	extern string  scene_filepath;
 }
+
+
+#endif

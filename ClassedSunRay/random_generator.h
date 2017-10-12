@@ -3,19 +3,20 @@
 #include<ctime>
 #include<cstdlib>
 
-class RandomGenerator
+static class RandomGenerator
 {
 private:
-	static unsigned int seed_;
+	
 public:
+	//static unsigned int seed_;
 	//init the seed
 	static void initSeed() {
 		unsigned int mrand = (unsigned int)time(NULL);
-		seed_ = mrand;
+		//seed_ = mrand;
 		srand(mrand);
 	};
 	static void initSeed(unsigned int seed){
-		seed_ = seed;
+		//seed_ = seed;
 		srand(seed);
 	};
 	
