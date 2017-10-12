@@ -27,8 +27,8 @@ private:
 	static SolarScene *m_instance;		//Singleton
 
 public:
+	float ground_length_;
 	float ground_width_;
-	float grounf_length_;
 	int grid_num_;
 
 	//scene object

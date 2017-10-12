@@ -9,6 +9,8 @@ using namespace std;
 // Grid
 class Grid
 {
+public:
+	int type_;
 
 };
 
@@ -46,6 +48,7 @@ public:
 	}
 
 	float3 min_vertex_;
+	float3 pos_;
 	float3 size_;
 	float3 interval_;
 	int num_helios_;

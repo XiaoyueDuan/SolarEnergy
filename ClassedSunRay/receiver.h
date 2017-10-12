@@ -33,7 +33,12 @@ public:
 			d_image_ = nullptr;
 		}
 	}
-
+	//
+	int type_;
+	float3 normal_;
+	float3 pos_;
+	float3 size_;
+	int face_num_;
 	float pixel_length_;
 	float *d_image_;					// on GPU, size = resolution_.x * resolution_.y
 	int2 resolution_;					// resolution.x is columns, resolution.y is rows
@@ -47,9 +52,7 @@ public:
 	__device__ __host__ bool CInit(const int &type);
 
 	float3 rect_vertex_[4];
-	float3 normal_;
-	float3 pos_;
-	float3 size_;
+	
 
 private:
 	__device__ __host__ bool Cset_normal(const int &type);

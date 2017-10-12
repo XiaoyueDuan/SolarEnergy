@@ -9,6 +9,23 @@
 
 // Value-Defintions of the different String values
 static enum StringValue {
+	pos,
+	size,
+	norm,
+	face,
+	end,
+	gap,
+	matrix,
+	helio,
+	inter,
+	n,
+	type,
+	illegal
+};
+
+// Value-Defintions of the different String values
+static enum InputMode{
+	none,
 	ground,
 	receiver,
 	grid,
@@ -24,5 +41,6 @@ private:
 	SolarScene *solarScene_;  //eqaul the Scolar::GetInstance
 	// Map to associate the strings with the enum values
 	std::map<std::string, StringValue> string_value_read_map;
+	StringValue Str2Value(string str);
 
 };
