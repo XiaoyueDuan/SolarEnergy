@@ -24,12 +24,14 @@
     <ClInclude Include="heliostat.h" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="receiver.h" />
+    <ClInclude Include="scene_file_proc.h" />
     <ClInclude Include="solar_scene.h" />
     <ClInclude Include="sunray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common_var.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scene_file_proc.cpp" />
     <ClCompile Include="solar_scene.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

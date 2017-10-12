@@ -36,6 +36,9 @@
     <ClInclude Include="solar_scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="scene_file_proc.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solar_scene.cpp">
@@ -46,6 +49,9 @@
     </ClCompile>
     <ClCompile Include="common_var.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="scene_file_proc.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -22,17 +22,14 @@ public:
 	bool InitSolarScece();
 	bool InitSolarScene(string filepath);
 	bool LoadSceneFromFile(string filepath);
+	//scene object
+	Grid *grid_;
+	Heliostat *heliostat_;
+
+
+
 
 private:
 	static SolarScene *m_instance;		//Singleton
 
-public:
-	float ground_width_;
-	float grounf_length_;
-	int grid_num_;
-
-	//scene object
-	vector<Grid> grids;
-	vector<Heliostat> heliostats;
-	vector<Receiver> receivers;
 };

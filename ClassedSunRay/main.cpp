@@ -7,7 +7,13 @@
 using namespace std;
 
 int main() {
-	cout << solarenergy::scene_filepath << endl;
+	cout <<"filepath: "<< solarenergy::scene_filepath << endl;
+
+	SolarScene *solar_scene;
+	solar_scene = SolarScene::GetInstance();
+
+
+
 	system("pause");
 	return 0;
 }
