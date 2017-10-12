@@ -4,6 +4,12 @@
     <Filter Include="DataStructure">
       <UniqueIdentifier>{74288dc0-e7bd-4d1b-b652-bdca8cac1b0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{fb90e5e0-5632-4f2b-8729-167cea0b6f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{1b67364d-2903-41b9-8933-08cb06db6665}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grid.h">
@@ -20,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="sunray.h">
       <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="common_var.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

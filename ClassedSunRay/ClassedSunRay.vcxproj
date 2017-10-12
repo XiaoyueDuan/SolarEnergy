@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common_var.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="heliostat.h" />
     <ClInclude Include="random_generator.h" />
