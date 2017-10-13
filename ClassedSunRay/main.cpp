@@ -11,8 +11,8 @@ int main() {
 
 	SolarScene *solar_scene;
 	solar_scene = SolarScene::GetInstance();
-
-
+		
+	solar_scene->receivers[0]->CInit();
 
 	system("pause");
 	return 0;

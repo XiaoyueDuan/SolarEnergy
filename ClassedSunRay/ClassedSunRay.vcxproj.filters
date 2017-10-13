@@ -24,9 +24,6 @@
     <ClInclude Include="random_generator.h">
       <Filter>DataStructure</Filter>
     </ClInclude>
-    <ClInclude Include="receiver.h">
-      <Filter>DataStructure</Filter>
-    </ClInclude>
     <ClInclude Include="sunray.h">
       <Filter>DataStructure</Filter>
     </ClInclude>
@@ -38,6 +35,21 @@
     </ClInclude>
     <ClInclude Include="scene_file_proc.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="global_function.cuh">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="global_constant.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="vector_arithmetic.cuh">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="receiver.cuh">
+      <Filter>DataStructure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="scene_file_proc.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="receiver.cpp">
+      <Filter>DataStructure</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

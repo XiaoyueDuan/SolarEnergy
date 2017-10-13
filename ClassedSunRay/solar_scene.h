@@ -4,7 +4,7 @@
 #include "grid.h"
 #include "heliostat.h"
 #include "random_generator.h"
-#include "receiver.h"
+#include "receiver.cuh"
 #include "sunray.h"
 
 

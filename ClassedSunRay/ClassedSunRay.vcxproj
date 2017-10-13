@@ -20,17 +20,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_var.h" />
+    <ClInclude Include="global_constant.h" />
+    <ClInclude Include="global_function.cuh" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="heliostat.h" />
     <ClInclude Include="random_generator.h" />
-    <ClInclude Include="receiver.h" />
+    <ClInclude Include="receiver.cuh" />
     <ClInclude Include="scene_file_proc.h" />
     <ClInclude Include="solar_scene.h" />
     <ClInclude Include="sunray.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="vector_arithmetic.cuh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common_var.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="receiver.cpp" />
     <ClCompile Include="scene_file_proc.cpp" />
     <ClCompile Include="solar_scene.cpp" />
   </ItemGroup>
