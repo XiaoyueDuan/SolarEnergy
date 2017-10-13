@@ -47,7 +47,10 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 	bool gap_set = false;
 	bool matrix_set = false;
 	float2 gap_buf;
-	float2 matrix_buf;
+	int2 matrix_buf;
+	// prama to ensure the memery
+	int helio_input_num = 0;
+	int helio_input_total = 0;
 
 
 	InputMode inputMode = InputMode::none;
@@ -105,6 +108,13 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 
 			}
 			else if (line_head == "Grid"){
+				//vertify the last grid
+				if (helio_input_num != helio_input_total) {
+					std::cerr << "helistat number is wrong" << std::endl;
+				}
+				helio_input_num = 0;
+				helio_input_total = 0;
+
 				inputMode = InputMode::grid;
 				int grid_type;
 				line_stream >> grid_type;
@@ -119,6 +129,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 					break;
 				}
 				grid0->type_ = grid_type;
+				helio_input_num = 0;
 				//reset the gap 
 				gap_set = false;
 				matrix_set = false;
@@ -162,8 +173,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							receiver->face_num_ = face_num;
 							break;
 						case StringValue::end: //push the receiver
-							solarScene_->receivers.push_back(receiver);
-							//delete receiver;  
+							solarScene_->receivers.push_back(receiver);  
 							receiver = nullptr;
 							break;
 						default:
@@ -189,10 +199,12 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							line_stream >> inter.x >> inter.y >> inter.z;
 							grid0->interval_ = inter;
 							break;
-						case StringValue::n:
+						case StringValue::n:   //update the helio size
 							int n;
 							line_stream >> n;
 							grid0->num_helios_ = n;
+							helio_input_total = n;
+							heliostat = new RectangleHelio[n];
 							break;
 						case StringValue::type:
 							int helio_type;
@@ -224,7 +236,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							gap_set = true;
 							break;
 						case StringValue::matrix:
-							float2 matrix;
+							int2 matrix;
 							line_stream >> matrix.x >> matrix.y;
 							matrix_buf = matrix;
 							matrix_set = true;
@@ -234,15 +246,23 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 								std::cerr << "did not set the gap and matrix"<< std::endl;
 								break;
 							}
-							heliostat = new RectangleHelio;
+							//ensure the member
+							if (helio_input_num >= helio_input_total) {
+								std::cerr << "too many helistat" << std::endl;
+							}
 							float3 pos;
 							float3 size;
 							line_stream >> pos.x >> pos.y >> pos.z;
-							heliostat->pos_ = pos;
+							(heliostat+ helio_input_num)->pos_ = pos;
+							(heliostat + helio_input_num)->gap_ = gap_buf;//gap
+							(heliostat + helio_input_num)->row_col_ = matrix_buf;//matrix
 							if(helio_type_buf == 0) {
-								readHelioParamter(scene_stream, heliostat);
+								readHelioParamter(scene_stream, heliostat+helio_input_num);
 							}
-							solarScene_->heliostats.push_back(heliostat);
+							if (helio_input_num ==0) {
+								solarScene_->heliostats.push_back(heliostat);
+							}
+							++helio_input_num;
 							break;
 						default:
 							break;
