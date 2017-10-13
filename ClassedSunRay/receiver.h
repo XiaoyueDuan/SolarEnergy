@@ -12,14 +12,14 @@ public:
 	__device__ __host__ void GAddEnergy(const float &u, const float &v, const float &energy);	// add energy to d_image
 	__device__ __host__ void Cset_resolution(const float3 &geometry_info);
 
-	Receiver() :d_image_(nullptr) {}
+	__device__ __host__ Receiver() :d_image_(nullptr) {}
 
-	Receiver(Receiver &rece)
-	{
+	//__device__ __host__ Receiver(Receiver &rece)
+	//{
+	//
+	//}
 
-	}
-
-	~Receiver()
+	__device__ __host__ ~Receiver()
 	{
 		if(d_image_)
 			d_image_ = nullptr;
@@ -48,6 +48,7 @@ public:
 class RectangleReceiver :public Receiver
 {
 public:
+	__device__ __host__ RectangleReceiver() {}
 	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v);
 	__device__ __host__ bool CInit(const int &type);
 
@@ -66,9 +67,10 @@ inline bool RectangleReceiver::CInit(const int &type)
 }
 
 
-class CylinderReceiver : public Receiver
+class CylinderReceiver: public Receiver
 {
 public:
+	__device__ __host__ CylinderReceiver(){}
 	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v);
 
 	float2 radius_hight_;				// radius_hight.x is radius, while radius_hight.y is hight
@@ -79,6 +81,7 @@ public:
 class CircularTruncatedConeReceiver : public Receiver
 {
 public:
+	__device__ __host__ CircularTruncatedConeReceiver(){}
 	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v);
 
 	float3 topradius_bottomradius_hight_;	// topradius_bottomradius_hight_.x and while topradius_bottomradius_hight_.y is top radius and bottom radius respectively,

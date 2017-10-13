@@ -4,9 +4,9 @@
 class SunRay
 {
 public:
-	SunRay() :d_samplelights_(nullptr), d_perturbation_(nullptr) {}
+	__device__ __host__ SunRay() :d_samplelights_(nullptr), d_perturbation_(nullptr) {}
 
-	//SunRay(const SunRay &sunray)
+	//__device__ __host__ SunRay(const SunRay &sunray)
 	//{
 	//	sun_dir_ = sunray.sun_dir_;
 	//	dni_ = sunray.dni_;
@@ -17,7 +17,7 @@ public:
 	//	d_perturbation_ = sunray.d_perturbation_;
 	//}
 
-	~SunRay()
+	__device__ __host__ ~SunRay()
 	{
 		if(d_samplelights_)
 			d_samplelights_ = nullptr;

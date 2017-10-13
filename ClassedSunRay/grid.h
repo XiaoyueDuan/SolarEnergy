@@ -12,7 +12,7 @@ class Grid
 public:
 	int type_;
 	int helio_type_;
-
+	__device__ __host__ Grid(){}
 };
 
 
@@ -56,4 +56,5 @@ public:
 	int *d_grid_helio_match_;			// size = num_grid_helio_match_
 	int *d_grid_helio_index_;			// size = size.x * size.y * size.z +1
 	size_t num_grid_helio_match_;
+	Heliostat **d_helios;				// *d_helios point to a Heliostat array
 };
