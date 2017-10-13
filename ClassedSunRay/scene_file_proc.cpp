@@ -1,14 +1,13 @@
 #include "scene_file_proc.h"
 
 inline void readHelioParamter(stringstream &scene_stream, Heliostat *heliostat) {
-	//std::string line_buf;
-	//getline(scene_stream, str_line_buf);
-	//float3 size;
-	//std::stringstream line_stream_buf;
-	//line_stream_buf << str_line;
-
-
-	//heliostat->size_;
+	std::string line_buf;
+	getline(scene_stream, line_buf);
+	float3 size;
+	std::stringstream line_stream_buf;
+	line_stream_buf << line_buf;
+	line_stream_buf >> size.x >> size.y >> size.z;
+	heliostat->size_ = size;
 };
 
 
@@ -42,6 +41,7 @@ StringValue SceneFileProc::Str2Value(string str) {
 bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) {
 	Receiver *receiver;
 	RectGrid *grid0;
+	Heliostat *heliostat;
 	//to save the global settings
 	int helio_type_buf;
 	bool gap_set = false;
@@ -163,7 +163,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							break;
 						case StringValue::end: //push the receiver
 							solarScene_->receivers.push_back(receiver);
-							delete receiver;
+							//delete receiver;  
 							receiver = nullptr;
 							break;
 						default:
@@ -204,7 +204,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							// change the mode
 							inputMode = InputMode::heliostat;
 							helio_type_buf = grid0->helio_type_;
-							delete grid0;
+							//delete grid0;
 							grid0 = nullptr;
 							break;
 						default:
@@ -215,40 +215,41 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 						std::cerr << "this type grid is not support";
 					}
 					break;
-				//case InputMode::heliostat:
-				//	switch (string_value_read_map[line_head]) {
-				//		case StringValue::gap:
-				//			float2 gap;
-				//			line_stream >> gap.x >> gap.y;
-				//			gap_buf = gap;
-				//			gap_set = true;
-				//			break;
-				//		case StringValue::matrix:
-				//			float2 matrix;
-				//			line_stream >> matrix.x >> matrix.y;
-				//			matrix_buf = matrix;
-				//			matrix_set = true;
-				//			break;
-				//		case StringValue::helio:
-				//			if (!gap_set || !matrix_set) {
-				//				std::cerr << "did not set the gap and matrix"<< std::endl;
-				//				break;
-				//			}
-				//			Heliostat *heliostat = new RectangleHelio;
-				//			float3 pos;
-				//			float3 size;
-				//			line_stream >> pos.x >> pos.y >> pos.z;
-				//			heliostat->pos_ = pos;
-				//			if(helio_type_buf == 0) {
-				//				//readHelioParamter(scene_stream, heliostat);
-				//			}
-				//			//solarScene_->heliostats.push_back(heliostat);
-				//			break;
-				//		default:
-				//			break;
-				//	}
+				case InputMode::heliostat:
+					switch (string_value_read_map[line_head]) {
+						case StringValue::gap:
+							float2 gap;
+							line_stream >> gap.x >> gap.y;
+							gap_buf = gap;
+							gap_set = true;
+							break;
+						case StringValue::matrix:
+							float2 matrix;
+							line_stream >> matrix.x >> matrix.y;
+							matrix_buf = matrix;
+							matrix_set = true;
+							break;
+						case StringValue::helio:
+							if (!gap_set || !matrix_set) {
+								std::cerr << "did not set the gap and matrix"<< std::endl;
+								break;
+							}
+							heliostat = new RectangleHelio;
+							float3 pos;
+							float3 size;
+							line_stream >> pos.x >> pos.y >> pos.z;
+							heliostat->pos_ = pos;
+							if(helio_type_buf == 0) {
+								readHelioParamter(scene_stream, heliostat);
+							}
+							solarScene_->heliostats.push_back(heliostat);
+							break;
+						default:
+							break;
+					}
+					break;
 				default:
-					std::cout << "get grid parameter" << std::endl;
+					std::cout << "illeagle parameter" << std::endl;
 					break;
 			}
 		}
