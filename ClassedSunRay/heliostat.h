@@ -6,6 +6,9 @@
 class Heliostat
 {
 public:
+	float3 pos_;
+	float3 size_;
+	float3 normal_;
 	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir){}
 };
 
@@ -16,9 +19,7 @@ public:
 	__device__ __host__ void Cset_sub_row_col(const float &pixel_length);
 	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir);	// whether the light with orig and dir can intersect with this heliostat
 
-	float3 pos_;
-	float3 size_;
-	float3 normal_;
+	
 	float3 vertex_[4];
 
 	int2 row_col_;		// How many mirrors compose a heliostat

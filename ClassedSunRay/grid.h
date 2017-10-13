@@ -11,6 +11,7 @@ class Grid
 {
 public:
 	int type_;
+	int helio_type_;
 
 };
 
