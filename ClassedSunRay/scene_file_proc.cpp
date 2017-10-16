@@ -70,7 +70,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 		while (getline(scene_stream, str_line)) {
 			if (str_line[0] == '#' || str_line == "") { continue; }
 #ifdef _DEBUG
-			std::cout << str_line << std::endl;
+	//		std::cout << str_line << std::endl;
 #endif
 			std::stringstream line_stream;
 			line_stream << str_line;  
