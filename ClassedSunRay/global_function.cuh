@@ -64,4 +64,35 @@ namespace global_func
 											-sin*origin.x + cos*origin.z);
 		return rotate_result;
 	}
+
+	//	Ray intersects with Parallelogram comfirmed by vertexs A, B and C, 
+	//	which A is the angle subtend diagonal, e.g: In rectangle, A=Pi/2
+	__host__ __device__ inline bool rayParallelogramIntersect(
+		const float3 &orig, const float3 &dir,
+		const float3 &A, const float3 &B, const float3 &C,
+		float &t, float &u, float &v)
+	{
+		float3 E1 = B - A;
+		float3 E2 = C - A;
+		float3 pvec = cross(dir, E2);
+		float det = dot(E1, pvec);
+
+		// ray and triangle are parallel if det is close to 0
+		if (fabsf(det) < global_const::Epsilon) return false;
+
+		float invDet = 1 / det;
+
+		float3 T = orig - A;
+		u = dot(T, pvec)* invDet;
+		if (u < 0 || u > 1) return false;
+
+		float3 qvec = cross(T, E1);
+		v = dot(dir, qvec)*invDet;
+		if (v < 0 || v > 1) return false;
+
+		t = dot(E2, qvec)*invDet;
+		if (t < global_const::Epsilon) return false;
+
+		return true;
+	}
 }

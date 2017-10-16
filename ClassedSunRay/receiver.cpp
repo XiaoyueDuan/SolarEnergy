@@ -1,10 +1,34 @@
 #include "receiver.cuh"
 
-void RectangleReceiver::CInit()
+// Receiver
+void Receiver::Calloc_image()
+{
+	checkCudaErrors(cudaMalloc((void **)&d_image_, sizeof(float)*resolution_.x*resolution_.y));
+}
+
+
+
+// RectangleReceiver
+void RectangleReceiver::CInit(const int &geometry_info)
+{
+	Cinit_vertex();
+	Cset_resolution(geometry_info);
+	Calloc_image();
+}
+
+void RectangleReceiver::Cinit_vertex()
 {
 	Cset_localnormal();	// set local normal
 	Cset_localvertex();	// set local vertex according to face type
 	Cset_vertex();		// set world vertex according to normal
+}
+
+void RectangleReceiver::Cset_resolution(const int &geometry_info)
+{
+	float height = length(rect_vertex_[1] - rect_vertex_[0]);
+	float width = length(rect_vertex_[1] - rect_vertex_[2]);
+	resolution_.x = width*float(geometry_info);
+	resolution_.y = height*float(geometry_info);
 }
 
 void RectangleReceiver::Cset_localnormal()
