@@ -8,7 +8,7 @@
 #include <string>
 
 // Value-Defintions of the different String values
-static enum StringValue {
+enum StringValue {
 	pos,
 	size,
 	norm,
@@ -24,7 +24,7 @@ static enum StringValue {
 };
 
 // Value-Defintions of the different String values
-static enum InputMode{
+enum InputMode{
 	none,
 	ground,
 	receiver,
