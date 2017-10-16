@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GUIClass</class>
+ <widget class="QMainWindow" name="GUIClass">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1265</width>
+    <height>853</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1265</width>
+    <height>853</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1265</width>
+    <height>853</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>SolarEnergy</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1261</width>
+      <height>771</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="openglwindow" name="sceneWidget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTreeWidget" name="treeWidget">
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableView" name="tableView"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1265</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionopen"/>
+    <addaction name="actionsave"/>
+    <addaction name="actionsave_as"/>
+    <addaction name="separator"/>
+    <addaction name="actionreload"/>
+    <addaction name="actionrecent_file"/>
+   </widget>
+   <widget class="QMenu" name="menuEnvironment">
+    <property name="title">
+     <string>Environment</string>
+    </property>
+    <addaction name="actionSunLight"/>
+    <addaction name="actionTranmissvity"/>
+    <addaction name="actionConstant_Variable"/>
+   </widget>
+   <widget class="QMenu" name="menuScene">
+    <property name="title">
+     <string>Scene</string>
+    </property>
+    <addaction name="actionCreate_Scene"/>
+    <addaction name="actionOpen_Scene"/>
+   </widget>
+   <widget class="QMenu" name="menuRay_Trace">
+    <property name="title">
+     <string>Ray Trace</string>
+    </property>
+    <addaction name="actionrun"/>
+    <addaction name="actionFlux_Analysis"/>
+    <addaction name="separator"/>
+    <addaction name="actionRayTrace_Option"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEnvironment"/>
+   <addaction name="menuScene"/>
+   <addaction name="menuRay_Trace"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionopen"/>
+   <addaction name="actionsave"/>
+   <addaction name="actionsave_as"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionopen">
+   <property name="icon">
+    <iconset resource="gui.qrc">
+     <normaloff>:/GUI/icons/open.png</normaloff>:/GUI/icons/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>open</string>
+   </property>
+  </action>
+  <action name="actionsave">
+   <property name="icon">
+    <iconset resource="gui.qrc">
+     <normaloff>:/GUI/icons/save.png</normaloff>:/GUI/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>save</string>
+   </property>
+  </action>
+  <action name="actionsave_as">
+   <property name="icon">
+    <iconset resource="gui.qrc">
+     <normaloff>:/GUI/icons/saveas.png</normaloff>:/GUI/icons/saveas.png</iconset>
+   </property>
+   <property name="text">
+    <string>save as</string>
+   </property>
+  </action>
+  <action name="actionSunLight">
+   <property name="text">
+    <string>Sun Light</string>
+   </property>
+  </action>
+  <action name="actionTranmissvity">
+   <property name="text">
+    <string>Tranmissvity</string>
+   </property>
+  </action>
+  <action name="actionCreate_Scene">
+   <property name="text">
+    <string>Create Scene</string>
+   </property>
+  </action>
+  <action name="actionOpen_Scene">
+   <property name="text">
+    <string>Open Scene</string>
+   </property>
+  </action>
+  <action name="actionreload">
+   <property name="text">
+    <string>reload</string>
+   </property>
+  </action>
+  <action name="actionrecent_file">
+   <property name="text">
+    <string>recent file</string>
+   </property>
+  </action>
+  <action name="actionConstant_Variable">
+   <property name="text">
+    <string>Constant Variable</string>
+   </property>
+  </action>
+  <action name="actionrun">
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </action>
+  <action name="actionFlux_Analysis">
+   <property name="text">
+    <string>Flux Analysis</string>
+   </property>
+  </action>
+  <action name="actionRayTrace_Option">
+   <property name="text">
+    <string>RayTrace Option</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>openglwindow</class>
+   <extends>QWidget</extends>
+   <header location="global">test/openglwindow.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="gui.qrc"/>
+ </resources>
+ <connections/>
+</ui>
