@@ -3,10 +3,10 @@
 #include<ctime>
 #include<cstdlib>
 
-static class RandomGenerator
+class RandomGenerator
 {	
 public:
-	static unsigned int seed_;
+	//static unsigned int seed_;
 	//init the seed
 	static void initSeed() {
 		unsigned int mrand = (unsigned int)time(NULL);

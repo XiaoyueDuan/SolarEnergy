@@ -251,7 +251,6 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 								std::cerr << "too many helistat" << std::endl;
 							}
 							float3 pos;
-							float3 size;
 							line_stream >> pos.x >> pos.y >> pos.z;
 							(heliostat+ helio_input_num)->pos_ = pos;
 							(heliostat + helio_input_num)->gap_ = gap_buf;//gap
