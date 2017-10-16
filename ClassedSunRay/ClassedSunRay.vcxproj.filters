@@ -74,6 +74,9 @@
     <ClCompile Include="heliostat.cpp">
       <Filter>DataStructure</Filter>
     </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>DataStructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="receiver.cu">

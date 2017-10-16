@@ -35,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common_var.cpp" />
+    <ClCompile Include="grid.cpp" />
     <ClCompile Include="heliostat.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="receiver.cpp" />
