@@ -3,6 +3,7 @@
 
 #include "common_var.h"
 #include "solar_scene.h"
+#include "Gtest.cuh"
 
 using namespace std;
 
@@ -11,8 +12,8 @@ int main() {
 
 	SolarScene *solar_scene;
 	solar_scene = SolarScene::GetInstance();
-		
-	solar_scene->receivers[0]->CInit();
+
+	test(*solar_scene);
 
 	system("pause");
 	return 0;

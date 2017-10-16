@@ -51,6 +51,9 @@
     <ClInclude Include="receiver.cuh">
       <Filter>DataStructure</Filter>
     </ClInclude>
+    <ClInclude Include="Gtest.cuh">
+      <Filter>test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solar_scene.cpp">
@@ -68,5 +71,16 @@
     <ClCompile Include="receiver.cpp">
       <Filter>DataStructure</Filter>
     </ClCompile>
+    <ClCompile Include="heliostat.cpp">
+      <Filter>DataStructure</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="receiver.cu">
+      <Filter>DataStructure</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Gtest.cu">
+      <Filter>test</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

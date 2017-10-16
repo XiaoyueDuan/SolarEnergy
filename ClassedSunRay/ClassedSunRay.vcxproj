@@ -23,6 +23,7 @@
     <ClInclude Include="global_constant.h" />
     <ClInclude Include="global_function.cuh" />
     <ClInclude Include="grid.h" />
+    <ClInclude Include="Gtest.cuh" />
     <ClInclude Include="heliostat.h" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="receiver.cuh" />
@@ -34,10 +35,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common_var.cpp" />
+    <ClCompile Include="heliostat.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="receiver.cpp" />
     <ClCompile Include="scene_file_proc.cpp" />
     <ClCompile Include="solar_scene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Gtest.cu" />
+    <CudaCompile Include="receiver.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B83FDF2-CFC3-416D-A55C-583E1B12A7BB}</ProjectGuid>
