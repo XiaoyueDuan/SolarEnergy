@@ -1,91 +1,10 @@
-#include "openglwindow.h"  
+#include "scenewindow.h"  
 #include <iostream>  
 #include <QtGui/QMouseEvent> 
 
-//OpenGL Mathematics 用来进行数学变换  
-#include <glm/glm.hpp>  
-#include <glm/gtc/matrix_transform.hpp>  
-#include <glm/gtc/type_ptr.hpp>  
-
-/*******************************************************************************
-* 鼠标操作的一些设置
-******************************************************************************/
-
-//相机位置及朝向，用来构造ViewMatrix，进行“世界空间”到“观察空间”的转换  
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);   //相机位置  
-glm::vec3 worldCentrol = glm::vec3(0.0f, 0.0f, 0.0f);   //世界坐标原点，相机始终朝向这个方向  
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);   //相机的顶部始终朝向y轴  
-
-													//构建ModelMatrix，进行“局部空间”到“世界空间”的转换  
-glm::vec3 transVec = glm::vec3(0.0f, 0.0f, 0.0f);   //局部坐标在世界坐标中的平移量  
-
-GLfloat yaw = 0.0f;       //偏航角  
-GLfloat pitch = 0.0f;     //俯仰角  
-GLfloat lastX = 0;        //光标上次x值  
-GLfloat lastY = 0;        //光标上次y值  
 
 
-						/*******************************************************************************
-						* 着色器、着色器程序、VAO（顶点数组对象）、VBO（顶点缓冲对象）、EBO(索引缓冲对象)
-						******************************************************************************/
-
-const GLuint NumVertexShader = 2;       //顶点着色器的数目  
-const GLuint NumFragmentShader = 1;     //片段着色器的数目  
-const GLuint NumShaderProgram = 2;      //着色器程序的数目  
-const GLuint NumVAO = 2;                //VAO的数目  
-const GLuint NumVBO = 2;                //VBO的数目  
-const GLuint NumEBO = 1;                //EBO的数目  
-
-GLuint IDVertexShader[NumVertexShader];
-GLuint IDFragmentShader[NumFragmentShader];
-GLuint IDShaderProgram[NumShaderProgram];
-GLuint IDVAO[NumVAO];
-GLuint IDVBO[NumVBO];
-GLuint IDEBO[NumEBO];
-
-/*******************************************************************************
-* 着色器源码
-******************************************************************************/
-
-const GLchar *vertexShaderSource =
-"#version 330 core\n"
-"layout(location = 0) in vec3 vPosition;\n"
-"layout(location = 1) in vec3 vColor;\n"
-"uniform mat4 model;\n"
-"uniform mat4 view;\n"
-"uniform mat4 projection;\n"
-"out vec3 Color;\n"
-"void main()\n"
-"{\n"
-"gl_Position = projection * view * model * vec4(vPosition, 1.0);\n"
-"Color = vColor;\n"
-"}\n";
-
-const GLchar *fragmentShaderSource =
-"#version 330 core\n"
-"in vec3 Color;\n"
-"out vec4 fColor;\n"
-"void main()\n"
-"{\n"
-"fColor = vec4(Color, 1.0f);\n"
-"}\n";
-
-const GLchar *vertexShaderSource1 =         //绘制三维坐标  
-"#version 330 core\n"
-"layout(location = 0) in vec3 vPosition;\n"
-"layout(location = 1) in vec3 vColor;\n"
-"out vec3 Color;\n"
-"uniform mat4 modelCoor;\n"
-"uniform mat4 viewCoor;\n"
-"uniform mat4 projectionCoor;\n"
-"void main()\n"
-"{\n"
-"Color = vColor;\n"
-"gl_Position = projectionCoor * viewCoor * modelCoor * vec4(vPosition, 1.0);\n"
-"}\n";
-
-
-openglwindow::openglwindow(QWidget *parent)
+scenewindow::scenewindow(QWidget *parent)
 	:QOpenGLWidget(parent)
 {
 	//设置OpenGL的版本信息  
@@ -100,12 +19,12 @@ openglwindow::openglwindow(QWidget *parent)
 
 }
 
-openglwindow::~openglwindow()
+scenewindow::~scenewindow()
 {
 
 }
 
-void openglwindow::initializeGL()
+void scenewindow::initializeGL()
 {
 	//初始化OpenGL函数  
 	initializeOpenGLFunctions();
@@ -221,13 +140,12 @@ void openglwindow::initializeGL()
 	/****************************************************************************/
 
 	/* 创建相关对象 */
-	glGenVertexArrays(NumVAO, IDVAO);
-	glGenBuffers(NumVBO, IDVBO);
-	glGenBuffers(NumEBO, IDEBO);
+	glGenVertexArrays(NumVAOGw, IDVAO);
+	glGenBuffers(NumVBOGw, IDVBO);
+	glGenBuffers(NumEBOGw, IDEBO);
 
 	/* 显示立方体 */
-	glBindVertexArray(IDVAO[0]);    //开始记录状态信息  
-
+	glBindVertexArray(IDVAO[0]);  //开始记录状态信息  
 	glBindBuffer(GL_ARRAY_BUFFER, IDVBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -244,10 +162,10 @@ void openglwindow::initializeGL()
 
 	glBindVertexArray(0);           //结束记录状态信息  
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);   //在VAO后解绑，是为了不让VAO把解绑EBO的信息包含进入  
-	/* 显示立方体 */
+												/* 显示立方体 */
 
-										
-	/* 显示坐标信息 */
+
+												/* 显示坐标信息 */
 	glBindVertexArray(IDVAO[1]);    //开始记录状态信息  
 
 	glBindBuffer(GL_ARRAY_BUFFER, IDVBO[1]);
@@ -262,15 +180,15 @@ void openglwindow::initializeGL()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);           //结束记录状态信息  
-	/* 坐标 */
+									/* 坐标 */
 
-	/* 固定属性区域 */
+									/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
 
 
 }
 
-void openglwindow::paintGL()
+void scenewindow::paintGL()
 {
 	//清理屏幕  
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -328,14 +246,14 @@ void openglwindow::paintGL()
 	glFlush();
 }
 
-void openglwindow::resizeGL(int width, int height)
+void scenewindow::resizeGL(int width, int height)
 {
 	//未使用  
 	Q_UNUSED(width);
 	Q_UNUSED(height);
 }
 
-void openglwindow::mouseMoveEvent(QMouseEvent *event)
+void scenewindow::mouseMoveEvent(QMouseEvent *event)
 {
 	//鼠标左键用来实现对物体的旋转功能  
 	if (event->buttons() == Qt::LeftButton)
@@ -381,13 +299,13 @@ void openglwindow::mouseMoveEvent(QMouseEvent *event)
 }
 
 //滚轮实现对物体的放大缩小，摄像机距离远近（放大缩小）  
-void openglwindow::wheelEvent(QWheelEvent *event)
+void scenewindow::wheelEvent(QWheelEvent *event)
 {
 	GLfloat sensitivity = 0.0005f;
 	cameraPos *= (1.0f - event->delta() * sensitivity);
 }
 
-void openglwindow::mousePressEvent(QMouseEvent *event)
+void scenewindow::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
@@ -406,7 +324,7 @@ void openglwindow::mousePressEvent(QMouseEvent *event)
 	lastY = event->y();
 }
 
-void openglwindow::mouseReleaseEvent(QMouseEvent *event)
+void scenewindow::mouseReleaseEvent(QMouseEvent *event)
 {
 	//设置光标形状  
 	cursor.setShape(Qt::ArrowCursor);

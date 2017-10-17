@@ -1,0 +1,237 @@
+/********************************************************************************
+** Form generated from reading UI file 'gui.ui'
+**
+** Created by: Qt User Interface Compiler version 5.8.0
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef UI_GUI_H
+#define UI_GUI_H
+
+#include <QtCore/QVariant>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTableView>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
+#include <test/openglwindow.h>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_GUIClass
+{
+public:
+    QAction *actionopen;
+    QAction *actionsave;
+    QAction *actionsave_as;
+    QAction *actionSunLight;
+    QAction *actionTranmissvity;
+    QAction *actionCreate_Scene;
+    QAction *actionOpen_Scene;
+    QAction *actionreload;
+    QAction *actionrecent_file;
+    QAction *actionConstant_Variable;
+    QAction *actionrun;
+    QAction *actionFlux_Analysis;
+    QAction *actionRayTrace_Option;
+    QAction *actionAbout;
+    QWidget *centralWidget;
+    QWidget *layoutWidget;
+    QHBoxLayout *horizontalLayout;
+    openglwindow *sceneWidget;
+    QVBoxLayout *verticalLayout;
+    QTreeWidget *treeWidget;
+    QTableView *tableView;
+    QMenuBar *menuBar;
+    QMenu *menuFile;
+    QMenu *menuEnvironment;
+    QMenu *menuScene;
+    QMenu *menuRay_Trace;
+    QMenu *menuHelp;
+    QToolBar *mainToolBar;
+    QStatusBar *statusBar;
+
+    void setupUi(QMainWindow *GUIClass)
+    {
+        if (GUIClass->objectName().isEmpty())
+            GUIClass->setObjectName(QStringLiteral("GUIClass"));
+        GUIClass->setEnabled(true);
+        GUIClass->resize(1265, 853);
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(GUIClass->sizePolicy().hasHeightForWidth());
+        GUIClass->setSizePolicy(sizePolicy);
+        GUIClass->setMinimumSize(QSize(1265, 853));
+        GUIClass->setMaximumSize(QSize(1265, 853));
+        actionopen = new QAction(GUIClass);
+        actionopen->setObjectName(QStringLiteral("actionopen"));
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/GUI/icons/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionopen->setIcon(icon);
+        actionsave = new QAction(GUIClass);
+        actionsave->setObjectName(QStringLiteral("actionsave"));
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/GUI/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionsave->setIcon(icon1);
+        actionsave_as = new QAction(GUIClass);
+        actionsave_as->setObjectName(QStringLiteral("actionsave_as"));
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/GUI/icons/saveas.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionsave_as->setIcon(icon2);
+        actionSunLight = new QAction(GUIClass);
+        actionSunLight->setObjectName(QStringLiteral("actionSunLight"));
+        actionTranmissvity = new QAction(GUIClass);
+        actionTranmissvity->setObjectName(QStringLiteral("actionTranmissvity"));
+        actionCreate_Scene = new QAction(GUIClass);
+        actionCreate_Scene->setObjectName(QStringLiteral("actionCreate_Scene"));
+        actionOpen_Scene = new QAction(GUIClass);
+        actionOpen_Scene->setObjectName(QStringLiteral("actionOpen_Scene"));
+        actionreload = new QAction(GUIClass);
+        actionreload->setObjectName(QStringLiteral("actionreload"));
+        actionrecent_file = new QAction(GUIClass);
+        actionrecent_file->setObjectName(QStringLiteral("actionrecent_file"));
+        actionConstant_Variable = new QAction(GUIClass);
+        actionConstant_Variable->setObjectName(QStringLiteral("actionConstant_Variable"));
+        actionrun = new QAction(GUIClass);
+        actionrun->setObjectName(QStringLiteral("actionrun"));
+        actionFlux_Analysis = new QAction(GUIClass);
+        actionFlux_Analysis->setObjectName(QStringLiteral("actionFlux_Analysis"));
+        actionRayTrace_Option = new QAction(GUIClass);
+        actionRayTrace_Option->setObjectName(QStringLiteral("actionRayTrace_Option"));
+        actionAbout = new QAction(GUIClass);
+        actionAbout->setObjectName(QStringLiteral("actionAbout"));
+        centralWidget = new QWidget(GUIClass);
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        layoutWidget = new QWidget(centralWidget);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(0, 0, 1261, 771));
+        horizontalLayout = new QHBoxLayout(layoutWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        sceneWidget = new openglwindow(layoutWidget);
+        sceneWidget->setObjectName(QStringLiteral("sceneWidget"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(1);
+        sizePolicy1.setVerticalStretch(1);
+        sizePolicy1.setHeightForWidth(sceneWidget->sizePolicy().hasHeightForWidth());
+        sceneWidget->setSizePolicy(sizePolicy1);
+
+        horizontalLayout->addWidget(sceneWidget);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        treeWidget = new QTreeWidget(layoutWidget);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QStringLiteral("1"));
+        treeWidget->setHeaderItem(__qtreewidgetitem);
+        treeWidget->setObjectName(QStringLiteral("treeWidget"));
+
+        verticalLayout->addWidget(treeWidget);
+
+        tableView = new QTableView(layoutWidget);
+        tableView->setObjectName(QStringLiteral("tableView"));
+
+        verticalLayout->addWidget(tableView);
+
+
+        horizontalLayout->addLayout(verticalLayout);
+
+        GUIClass->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(GUIClass);
+        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 1265, 23));
+        menuFile = new QMenu(menuBar);
+        menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuEnvironment = new QMenu(menuBar);
+        menuEnvironment->setObjectName(QStringLiteral("menuEnvironment"));
+        menuScene = new QMenu(menuBar);
+        menuScene->setObjectName(QStringLiteral("menuScene"));
+        menuRay_Trace = new QMenu(menuBar);
+        menuRay_Trace->setObjectName(QStringLiteral("menuRay_Trace"));
+        menuHelp = new QMenu(menuBar);
+        menuHelp->setObjectName(QStringLiteral("menuHelp"));
+        GUIClass->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(GUIClass);
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        GUIClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
+        statusBar = new QStatusBar(GUIClass);
+        statusBar->setObjectName(QStringLiteral("statusBar"));
+        GUIClass->setStatusBar(statusBar);
+
+        menuBar->addAction(menuFile->menuAction());
+        menuBar->addAction(menuEnvironment->menuAction());
+        menuBar->addAction(menuScene->menuAction());
+        menuBar->addAction(menuRay_Trace->menuAction());
+        menuBar->addAction(menuHelp->menuAction());
+        menuFile->addAction(actionopen);
+        menuFile->addAction(actionsave);
+        menuFile->addAction(actionsave_as);
+        menuFile->addSeparator();
+        menuFile->addAction(actionreload);
+        menuFile->addAction(actionrecent_file);
+        menuEnvironment->addAction(actionSunLight);
+        menuEnvironment->addAction(actionTranmissvity);
+        menuEnvironment->addAction(actionConstant_Variable);
+        menuScene->addAction(actionCreate_Scene);
+        menuScene->addAction(actionOpen_Scene);
+        menuRay_Trace->addAction(actionrun);
+        menuRay_Trace->addAction(actionFlux_Analysis);
+        menuRay_Trace->addSeparator();
+        menuRay_Trace->addAction(actionRayTrace_Option);
+        menuHelp->addAction(actionAbout);
+        mainToolBar->addAction(actionopen);
+        mainToolBar->addAction(actionsave);
+        mainToolBar->addAction(actionsave_as);
+
+        retranslateUi(GUIClass);
+
+        QMetaObject::connectSlotsByName(GUIClass);
+    } // setupUi
+
+    void retranslateUi(QMainWindow *GUIClass)
+    {
+        GUIClass->setWindowTitle(QApplication::translate("GUIClass", "SolarEnergy", Q_NULLPTR));
+        actionopen->setText(QApplication::translate("GUIClass", "open", Q_NULLPTR));
+        actionsave->setText(QApplication::translate("GUIClass", "save", Q_NULLPTR));
+        actionsave_as->setText(QApplication::translate("GUIClass", "save as", Q_NULLPTR));
+        actionSunLight->setText(QApplication::translate("GUIClass", "Sun Light", Q_NULLPTR));
+        actionTranmissvity->setText(QApplication::translate("GUIClass", "Tranmissvity", Q_NULLPTR));
+        actionCreate_Scene->setText(QApplication::translate("GUIClass", "Create Scene", Q_NULLPTR));
+        actionOpen_Scene->setText(QApplication::translate("GUIClass", "Open Scene", Q_NULLPTR));
+        actionreload->setText(QApplication::translate("GUIClass", "reload", Q_NULLPTR));
+        actionrecent_file->setText(QApplication::translate("GUIClass", "recent file", Q_NULLPTR));
+        actionConstant_Variable->setText(QApplication::translate("GUIClass", "Constant Variable", Q_NULLPTR));
+        actionrun->setText(QApplication::translate("GUIClass", "Run", Q_NULLPTR));
+        actionFlux_Analysis->setText(QApplication::translate("GUIClass", "Flux Analysis", Q_NULLPTR));
+        actionRayTrace_Option->setText(QApplication::translate("GUIClass", "RayTrace Option", Q_NULLPTR));
+        actionAbout->setText(QApplication::translate("GUIClass", "About", Q_NULLPTR));
+        menuFile->setTitle(QApplication::translate("GUIClass", "File", Q_NULLPTR));
+        menuEnvironment->setTitle(QApplication::translate("GUIClass", "Environment", Q_NULLPTR));
+        menuScene->setTitle(QApplication::translate("GUIClass", "Scene", Q_NULLPTR));
+        menuRay_Trace->setTitle(QApplication::translate("GUIClass", "Ray Trace", Q_NULLPTR));
+        menuHelp->setTitle(QApplication::translate("GUIClass", "Help", Q_NULLPTR));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class GUIClass: public Ui_GUIClass {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // UI_GUI_H
