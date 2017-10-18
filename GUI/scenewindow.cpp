@@ -29,11 +29,11 @@ void SceneWindow::initializeGL()
 	initializeOpenGLFunctions();
 	//设置全局变量  
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-	//初始化着色器程序
+	//初始化立方体着色器程序
 	shaderCube.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader/simple.vert");
 	shaderCube.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader/simple.frag");
 	shaderCube.link();
-
+	//初始化坐标着色器程序
 	shaderCoor.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader/coordinate.vert");
 	//shaderCoor.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource1);
 	shaderCoor.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader/simple.frag");
@@ -123,9 +123,9 @@ void SceneWindow::initializeGL()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);           //结束记录状态信息  
-	/* 坐标 */
+	
 
-									/* 固定属性区域 */
+	/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
 
 
@@ -166,8 +166,8 @@ void SceneWindow::paintGL()
 	glm::mat4 viewCoor;
 	glm::mat4 projectionCoor;
 	glm::mat4 modelCoor;
-	GLint modelCoorLoc = shaderCoor.uniformLocation("modelCoor");                     
-	GLint viewCoorLoc = shaderCoor.uniformLocation("viewCoor");                   
+	GLint modelCoorLoc = shaderCoor.uniformLocation("modelCoor");
+	GLint viewCoorLoc = shaderCoor.uniformLocation("viewCoor");
 	GLint projCoorLoc = shaderCoor.uniformLocation("projectionCoor");
 
 	viewCoor = glm::lookAt(cameraPos, worldCentrol, cameraUp);
@@ -176,9 +176,27 @@ void SceneWindow::paintGL()
 	modelCoor = glm::translate(modelCoor, glm::vec3(-0.48f, -0.28f, glm::length(cameraPos) - 0.8f));
 	modelCoor = glm::rotate(modelCoor, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
 	modelCoor = glm::rotate(modelCoor, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-	glUniformMatrix4fv(viewCoorLoc, 1, GL_FALSE, glm::value_ptr(viewCoor));
-	glUniformMatrix4fv(projCoorLoc, 1, GL_FALSE, glm::value_ptr(projectionCoor));
-	glUniformMatrix4fv(modelCoorLoc, 1, GL_FALSE, glm::value_ptr(modelCoor));
+	//glUniformMatrix4fv(viewCoorLoc, 1, GL_FALSE, glm::value_ptr(viewCoor));
+	//glUniformMatrix4fv(projCoorLoc, 1, GL_FALSE, glm::value_ptr(projectionCoor));
+	//glUniformMatrix4fv(modelCoorLoc, 1, GL_FALSE, glm::value_ptr(modelCoor));
+	
+
+	QMatrix4x4 viewCoor1;
+	QMatrix4x4 projectionCoor1;
+	QMatrix4x4 modelCoor1;
+	viewCoor1.lookAt(cameraPos1, worldCentrol1, cameraUp1);
+	projectionCoor1.perspective(45.0f, 5.0f / 3.0f,0.1f,100000.0f);
+	//modelCoor1.translate(QVector3D(-0.48f, -0.28f, cameraPos1.length()-0.8f));
+	modelCoor1.setToIdentity();
+	modelCoor1.translate(QVector3D(-0.48f, -0.28f, cameraPos1.length() - 0.8f));
+	modelCoor1.rotate(pitch, 1.0f, 0.0f, 0.0f);
+	modelCoor1.rotate(yaw, 0.0f, 1.0f, 0.0f);
+
+	shaderCoor.setUniformValue("viewCoor", viewCoor1);
+	shaderCoor.setUniformValue("projectionCoor", projectionCoor1);
+	shaderCoor.setUniformValue("modelCoor", modelCoor1);
+
+
 	glBindVertexArray(IDVAO[1]);
 	glDrawArrays(GL_LINES, 0, 2);
 	glDrawArrays(GL_LINES, 2, 2);
@@ -246,6 +264,7 @@ void SceneWindow::wheelEvent(QWheelEvent *event)
 {
 	GLfloat sensitivity = 0.0005f;
 	cameraPos *= (1.0f - event->delta() * sensitivity);
+	cameraPos1 *= (1.0f - event->delta() * sensitivity);
 }
 
 void SceneWindow::mousePressEvent(QMouseEvent *event)

@@ -12,10 +12,6 @@
 #include <glm/gtc/matrix_transform.hpp>  
 #include <glm/gtc/type_ptr.hpp>  
 
-
-
-
-
 class SceneWindow : public QOpenGLWidget,
 	protected QOpenGLFunctions_3_3_Core
 {
@@ -36,18 +32,19 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-	QCursor cursor; // 管理光标形状
-	/*******************************************************************************
-	* 鼠标操作的一些设置
-	******************************************************************************/
-
+	
 	//相机位置及朝向，用来构造ViewMatrix，进行“世界空间”到“观察空间”的转换  
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);   //相机位置  
 	glm::vec3 worldCentrol = glm::vec3(0.0f, 0.0f, 0.0f);   //世界坐标原点，相机始终朝向这个方向  
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);   //相机的顶部始终朝向y轴  
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);   //相机的顶部始终朝向y轴   
+	glm::vec3 transVec = glm::vec3(0.0f, 0.0f, 0.0f);   //局部坐标在世界坐标中的平移量(构建ModelMatrix，进行“局部空间”到“世界空间”的转换)
 
-														//构建ModelMatrix，进行“局部空间”到“世界空间”的转换  
-	glm::vec3 transVec = glm::vec3(0.0f, 0.0f, 0.0f);   //局部坐标在世界坐标中的平移量  
+	QCursor cursor; // 管理光标形状
+	//相机位置及朝向，用来构造ViewMatrix，进行“世界空间”到“观察空间”的转换 
+	QVector3D cameraPos1 = QVector3D(0.0f, 0.0f, 3.0f);    //相机位置
+	QVector3D worldCentrol1 = QVector3D(0.0f, 0.0f, 0.0f); //世界坐标原点，相机朝向
+	QVector3D cameraUp1 = QVector3D(0.0f, 1.0f, 0.0f);     //相机的顶部朝向y轴
+	QVector3D transVec1 = QVector3D(0.0f, 0.0f, 0.0f);     //局部坐标在世界坐标中的平移量(构建ModelMatrix，进行“局部空间”到“世界空间”的转换)
 
 	GLfloat yaw = 0.0f;       //偏航角  
 	GLfloat pitch = 0.0f;     //俯仰角  
