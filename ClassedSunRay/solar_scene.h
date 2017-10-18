@@ -32,7 +32,7 @@ public:
 	int grid_num_;
 
 	//scene object
-	vector<RectGrid *> grid0s;
+	vector<Grid *> grid0s;
 	vector<Heliostat *> heliostats;
 	vector<Receiver *> receivers;
 };
