@@ -1,12 +1,13 @@
-#include "scenewindow.h"  
 #include <iostream>  
 #include <QtGui/QMouseEvent> 
 
+#include "scenewindow.h" 
 
-
-scenewindow::scenewindow(QWidget *parent)
+SceneWindow::SceneWindow(QWidget *parent)
 	:QOpenGLWidget(parent)
 {
+	//init glad
+
 	//设置OpenGL的版本信息  
 	QSurfaceFormat format;
 	format.setRenderableType(QSurfaceFormat::OpenGL);
@@ -19,87 +20,24 @@ scenewindow::scenewindow(QWidget *parent)
 
 }
 
-scenewindow::~scenewindow()
+SceneWindow::~SceneWindow()
 {
 
 }
 
-void scenewindow::initializeGL()
+void SceneWindow::initializeGL()
 {
 	//初始化OpenGL函数  
 	initializeOpenGLFunctions();
-
 	//设置全局变量  
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	/******************************* 顶点着色器创建 *******************************/
-	/* 第一个顶点着色器 */
-	IDVertexShader[0] = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(IDVertexShader[0], 1, &vertexShaderSource, nullptr);
-	glCompileShader(IDVertexShader[0]);
-	//检查编译是否出错  
-	GLint success;
-	GLchar infoLog[512];
-	glGetShaderiv(IDVertexShader[0], GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(IDVertexShader[0], 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	/******************************* 片段着色器创建 *******************************/
-	/* 第一个片元着色器 */
-	IDFragmentShader[0] = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(IDFragmentShader[0], 1, &fragmentShaderSource, nullptr);
-	glCompileShader(IDFragmentShader[0]);
-	//检查编译是否出错  
-	glGetShaderiv(IDFragmentShader[0], GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(IDFragmentShader[0], 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	/********************************* 链接着色器 *********************************/
-	/* 第一个着色器程序 */
-	IDShaderProgram[0] = glCreateProgram();
-	glAttachShader(IDShaderProgram[0], IDVertexShader[0]);
-	glAttachShader(IDShaderProgram[0], IDFragmentShader[0]);
-	glLinkProgram(IDShaderProgram[0]);
-	//检查链接错误  
-	glGetProgramiv(IDShaderProgram[0], GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(IDShaderProgram[0], 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	/* 第二个顶点着色器 */
-	IDVertexShader[1] = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(IDVertexShader[1], 1, &vertexShaderSource1, nullptr);
-	glCompileShader(IDVertexShader[1]);
-	//检查编译是否出错  
-	glGetShaderiv(IDVertexShader[1], GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(IDVertexShader[1], 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	/* 第二个着色器程序 */
-	IDShaderProgram[1] = glCreateProgram();
-	glAttachShader(IDShaderProgram[1], IDVertexShader[1]);
-	glAttachShader(IDShaderProgram[1], IDFragmentShader[0]);
-	glLinkProgram(IDShaderProgram[1]);
-	//检查链接错误  
-	glGetProgramiv(IDShaderProgram[1], GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(IDShaderProgram[1], 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	//删除着色器对象（生成着色器程序之后不再需要）  
-	glDeleteShader(IDVertexShader[0]);
-	glDeleteShader(IDVertexShader[1]);
-	glDeleteShader(IDFragmentShader[0]);
+	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	//初始化着色器程序
+	shaderCube.init("shader/simple.vert", "shader/simple.frag");
+	shaderCoor.init("shader/coordinate.vert", "shader/simple.frag");
+	//初始化VAO VBO EBO
+	IDVAO.resize(NumVAOGw);
+	IDVBO.resize(NumVBOGw);
+	IDEBO.resize(NumEBOGw);
 
 	/******************************** 设置顶点数据 ********************************/
 	//彩色正方体  
@@ -140,9 +78,9 @@ void scenewindow::initializeGL()
 	/****************************************************************************/
 
 	/* 创建相关对象 */
-	glGenVertexArrays(NumVAOGw, IDVAO);
-	glGenBuffers(NumVBOGw, IDVBO);
-	glGenBuffers(NumEBOGw, IDEBO);
+	glGenVertexArrays(NumVAOGw, &IDVAO[0]);
+	glGenBuffers(NumVBOGw, &IDVBO[0]);
+	glGenBuffers(NumEBOGw, &IDEBO[0]);
 
 	/* 显示立方体 */
 	glBindVertexArray(IDVAO[0]);  //开始记录状态信息  
@@ -162,10 +100,10 @@ void scenewindow::initializeGL()
 
 	glBindVertexArray(0);           //结束记录状态信息  
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);   //在VAO后解绑，是为了不让VAO把解绑EBO的信息包含进入  
-												/* 显示立方体 */
+	/* 显示立方体 */
 
 
-												/* 显示坐标信息 */
+	/* 显示坐标信息 */
 	glBindVertexArray(IDVAO[1]);    //开始记录状态信息  
 
 	glBindBuffer(GL_ARRAY_BUFFER, IDVBO[1]);
@@ -180,7 +118,7 @@ void scenewindow::initializeGL()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);           //结束记录状态信息  
-									/* 坐标 */
+	/* 坐标 */
 
 									/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
@@ -188,7 +126,7 @@ void scenewindow::initializeGL()
 
 }
 
-void scenewindow::paintGL()
+void SceneWindow::paintGL()
 {
 	//清理屏幕  
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -197,14 +135,14 @@ void scenewindow::paintGL()
 	update();
 
 	//渲染彩色正方体  
-	glUseProgram(IDShaderProgram[0]);
+	shaderCube.use();
 
 	glm::mat4 view;
 	glm::mat4 projection;
 	glm::mat4 model;
-	GLint modelLoc = glGetUniformLocation(IDShaderProgram[0], "model");
-	GLint viewLoc = glGetUniformLocation(IDShaderProgram[0], "view");
-	GLint projLoc = glGetUniformLocation(IDShaderProgram[0], "projection");
+	GLint modelLoc = glGetUniformLocation(shaderCube.ID, "model");
+	GLint viewLoc = glGetUniformLocation(shaderCube.ID, "view");
+	GLint projLoc = glGetUniformLocation(shaderCube.ID, "projection");
 	view = glm::lookAt(cameraPos, worldCentrol, cameraUp);
 	projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100000.0f);
 	model = glm::translate(model, transVec);
@@ -218,15 +156,14 @@ void scenewindow::paintGL()
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	//渲染立方体
 	//画坐标  
-	glUseProgram(IDShaderProgram[1]);
+	shaderCoor.use();
 	glm::mat4 viewCoor;
 	glm::mat4 projectionCoor;
 	glm::mat4 modelCoor;
-	GLint modelCoorLoc = glGetUniformLocation(IDShaderProgram[1], "modelCoor");
-	GLint viewCoorLoc = glGetUniformLocation(IDShaderProgram[1], "viewCoor");
-	GLint projCoorLoc = glGetUniformLocation(IDShaderProgram[1], "projectionCoor");
+	GLint modelCoorLoc = glGetUniformLocation(shaderCoor.ID, "modelCoor");
+	GLint viewCoorLoc = glGetUniformLocation(shaderCoor.ID, "viewCoor");
+	GLint projCoorLoc = glGetUniformLocation(shaderCoor.ID, "projectionCoor");
 	viewCoor = glm::lookAt(cameraPos, worldCentrol, cameraUp);
 	projectionCoor = glm::perspective(glm::radians(45.0f), 5.0f / 3.0f, 0.1f, 100000.0f);
 	//modelCoor = glm::translate(modelCoor, glm::vec3(-0.38f, -0.28f, glm::length(cameraPos) - 0.8f));  
@@ -246,14 +183,14 @@ void scenewindow::paintGL()
 	glFlush();
 }
 
-void scenewindow::resizeGL(int width, int height)
+void SceneWindow::resizeGL(int width, int height)
 {
 	//未使用  
 	Q_UNUSED(width);
 	Q_UNUSED(height);
 }
 
-void scenewindow::mouseMoveEvent(QMouseEvent *event)
+void SceneWindow::mouseMoveEvent(QMouseEvent *event)
 {
 	//鼠标左键用来实现对物体的旋转功能  
 	if (event->buttons() == Qt::LeftButton)
@@ -299,13 +236,13 @@ void scenewindow::mouseMoveEvent(QMouseEvent *event)
 }
 
 //滚轮实现对物体的放大缩小，摄像机距离远近（放大缩小）  
-void scenewindow::wheelEvent(QWheelEvent *event)
+void SceneWindow::wheelEvent(QWheelEvent *event)
 {
 	GLfloat sensitivity = 0.0005f;
 	cameraPos *= (1.0f - event->delta() * sensitivity);
 }
 
-void scenewindow::mousePressEvent(QMouseEvent *event)
+void SceneWindow::mousePressEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
@@ -324,7 +261,7 @@ void scenewindow::mousePressEvent(QMouseEvent *event)
 	lastY = event->y();
 }
 
-void scenewindow::mouseReleaseEvent(QMouseEvent *event)
+void SceneWindow::mouseReleaseEvent(QMouseEvent *event)
 {
 	//设置光标形状  
 	cursor.setShape(Qt::ArrowCursor);

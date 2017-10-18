@@ -3,15 +3,8 @@
 #include <QtWidgets/QOpenGLWidget>  
 #include <QtGui/QOpenGLFunctions_3_3_Core> 
 #include <vector>
-
-const GLuint NumVertexShaderGw = 2;       //顶点着色器的数目  
-const GLuint NumFragmentShaderGw = 1;     //片段着色器的数目  
-const GLuint NumShaderProgramGw = 2;      //着色器程序的数目  
-const GLuint NumVAOGw = 2;                //VAO的数目  
-const GLuint NumVBOGw = 2;                //VBO的数目  
-const GLuint NumEBOGw = 1;                //EBO的数目  
-
-
+// opengl help function
+#include "shader_s.h"
 //OpenGL Mathematics 用来进行数学变换  
 #include <glm/glm.hpp>  
 #include <glm/gtc/matrix_transform.hpp>  
@@ -19,14 +12,16 @@ const GLuint NumEBOGw = 1;                //EBO的数目
 
 
 
-class scenewindow : public QOpenGLWidget,
+
+
+class SceneWindow : public QOpenGLWidget,
 	protected QOpenGLFunctions_3_3_Core
 {
 	Q_OBJECT
 
 public:
-	scenewindow(QWidget *parent = 0);
-	~scenewindow();
+	SceneWindow(QWidget *parent = 0);
+	~SceneWindow();
 
 	void initializeGL();
 	void resizeGL(int width, int height);
@@ -40,11 +35,11 @@ protected:
 
 private:
 	QCursor cursor; // 管理光标形状
-					/*******************************************************************************
-					* 鼠标操作的一些设置
-					******************************************************************************/
+	/*******************************************************************************
+	* 鼠标操作的一些设置
+	******************************************************************************/
 
-					//相机位置及朝向，用来构造ViewMatrix，进行“世界空间”到“观察空间”的转换  
+	//相机位置及朝向，用来构造ViewMatrix，进行“世界空间”到“观察空间”的转换  
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);   //相机位置  
 	glm::vec3 worldCentrol = glm::vec3(0.0f, 0.0f, 0.0f);   //世界坐标原点，相机始终朝向这个方向  
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);   //相机的顶部始终朝向y轴  
@@ -61,25 +56,18 @@ private:
 	* 着色器、着色器程序、VAO（顶点数组对象）、VBO（顶点缓冲对象）、EBO(索引缓冲对象)
 	******************************************************************************/
 
-	GLuint IDVertexShader[NumVertexShaderGw];
-	GLuint IDFragmentShader[NumFragmentShaderGw];
-	GLuint IDShaderProgram[NumShaderProgramGw];
-	GLuint IDVAO[NumVAOGw];
-	GLuint IDVBO[NumVBOGw];
-	GLuint IDEBO[NumEBOGw];
-
-	/*std::vector<GLuint> IDVertexShader;
-	std::vector<GLuint> IDVertexShader;
-	std::vector<GLuint> IDVertexShader;
-	std::vector<GLuint> IDVertexShader;
-	std::vector<GLuint> IDVertexShader;*/
-
-
+	Shader shaderCube;
+	Shader shaderCoor;
+	GLuint NumVAOGw = 2;                //VAO的数目  
+	GLuint NumVBOGw = 2;                //VBO的数目  
+	GLuint NumEBOGw = 1;                //EBO的数目  
+	std::vector<GLuint> IDVAO;
+	std::vector<GLuint> IDVBO;
+	std::vector<GLuint> IDEBO;
 
 	/*******************************************************************************
 	* 着色器源码
 	******************************************************************************/
-
 	const GLchar *vertexShaderSource =
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 vPosition;\n"

@@ -185,7 +185,6 @@
     </ClCompile>
     <ClCompile Include="gui.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Resources\glad.c" />
     <ClCompile Include="Resources\stb_image_include.cpp" />
     <ClCompile Include="scenewindow.cpp" />
     <ClCompile Include="sunlight.cpp" />
@@ -233,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_gui.h" />
+    <ClInclude Include="shader_s.h" />
     <CustomBuild Include="scenewindow.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing scenewindow.h...</Message>
@@ -317,6 +317,7 @@
     <Image Include="bitmap1.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="coordinate.vert" />
     <None Include="shader\simple.frag" />
     <None Include="shader\simple.vert" />
     <CustomBuild Include="sunlight.ui">

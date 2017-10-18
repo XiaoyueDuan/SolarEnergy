@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>SunLight</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons/lightKit.png</normaloff>icons/lightKit.png</iconset>
+  </property>
   <widget class="QTabWidget" name="sunLightWidget">
    <property name="geometry">
     <rect>
@@ -35,7 +39,7 @@
     <attribute name="title">
      <string>Sun Shape</string>
     </attribute>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -72,7 +76,7 @@
     <attribute name="title">
      <string>Sun Position</string>
     </attribute>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -106,7 +110,7 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>300</x>

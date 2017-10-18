@@ -34,6 +34,10 @@
   <property name="windowTitle">
    <string>SolarEnergy</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="gui.qrc">
+    <normaloff>:/GUI/icons/sunIcon.png</normaloff>:/GUI/icons/sunIcon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -46,7 +50,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="openglwindow" name="sceneWidget" native="true">
+      <widget class="SceneWindow" name="sceneWidget" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -58,16 +62,65 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTreeWidget" name="treeWidget">
+        <widget class="QTreeWidget" name="nodeTreeWidget">
          <column>
           <property name="text">
-           <string notr="true">1</string>
+           <string notr="true">Node</string>
           </property>
          </column>
+         <item>
+          <property name="text">
+           <string>ground</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>receiver</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>grid</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>heliostat0</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>heliostat1</string>
+           </property>
+          </item>
+         </item>
         </widget>
        </item>
        <item>
-        <widget class="QTableView" name="tableView"/>
+        <widget class="QTableWidget" name="parameterTableWidget">
+         <property name="columnCount">
+          <number>2</number>
+         </property>
+         <row>
+          <property name="text">
+           <string/>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string/>
+          </property>
+         </row>
+         <column>
+          <property name="text">
+           <string>parameter</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>value</string>
+          </property>
+         </column>
+        </widget>
        </item>
       </layout>
      </item>
@@ -228,9 +281,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>openglwindow</class>
+   <class>SceneWindow</class>
    <extends>QWidget</extends>
-   <header location="global">test/openglwindow.h</header>
+   <header location="global">scenewindow.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -19,12 +19,12 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableView>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include <test/openglwindow.h>
+#include <scenewindow.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -48,10 +48,10 @@ public:
     QWidget *centralWidget;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
-    openglwindow *sceneWidget;
+    SceneWindow *sceneWidget;
     QVBoxLayout *verticalLayout;
-    QTreeWidget *treeWidget;
-    QTableView *tableView;
+    QTreeWidget *nodeTreeWidget;
+    QTableWidget *parameterTableWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEnvironment;
@@ -74,21 +74,24 @@ public:
         GUIClass->setSizePolicy(sizePolicy);
         GUIClass->setMinimumSize(QSize(1265, 853));
         GUIClass->setMaximumSize(QSize(1265, 853));
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/GUI/icons/sunIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        GUIClass->setWindowIcon(icon);
         actionopen = new QAction(GUIClass);
         actionopen->setObjectName(QStringLiteral("actionopen"));
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/GUI/icons/open.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionopen->setIcon(icon);
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/GUI/icons/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionopen->setIcon(icon1);
         actionsave = new QAction(GUIClass);
         actionsave->setObjectName(QStringLiteral("actionsave"));
-        QIcon icon1;
-        icon1.addFile(QStringLiteral(":/GUI/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionsave->setIcon(icon1);
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/GUI/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionsave->setIcon(icon2);
         actionsave_as = new QAction(GUIClass);
         actionsave_as->setObjectName(QStringLiteral("actionsave_as"));
-        QIcon icon2;
-        icon2.addFile(QStringLiteral(":/GUI/icons/saveas.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionsave_as->setIcon(icon2);
+        QIcon icon3;
+        icon3.addFile(QStringLiteral(":/GUI/icons/saveas.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionsave_as->setIcon(icon3);
         actionSunLight = new QAction(GUIClass);
         actionSunLight->setObjectName(QStringLiteral("actionSunLight"));
         actionTranmissvity = new QAction(GUIClass);
@@ -121,7 +124,7 @@ public:
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        sceneWidget = new openglwindow(layoutWidget);
+        sceneWidget = new SceneWindow(layoutWidget);
         sceneWidget->setObjectName(QStringLiteral("sceneWidget"));
         QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy1.setHorizontalStretch(1);
@@ -134,18 +137,36 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        treeWidget = new QTreeWidget(layoutWidget);
+        nodeTreeWidget = new QTreeWidget(layoutWidget);
         QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QStringLiteral("1"));
-        treeWidget->setHeaderItem(__qtreewidgetitem);
-        treeWidget->setObjectName(QStringLiteral("treeWidget"));
+        __qtreewidgetitem->setText(0, QStringLiteral("Node"));
+        nodeTreeWidget->setHeaderItem(__qtreewidgetitem);
+        new QTreeWidgetItem(nodeTreeWidget);
+        new QTreeWidgetItem(nodeTreeWidget);
+        QTreeWidgetItem *__qtreewidgetitem1 = new QTreeWidgetItem(nodeTreeWidget);
+        new QTreeWidgetItem(__qtreewidgetitem1);
+        new QTreeWidgetItem(__qtreewidgetitem1);
+        nodeTreeWidget->setObjectName(QStringLiteral("nodeTreeWidget"));
 
-        verticalLayout->addWidget(treeWidget);
+        verticalLayout->addWidget(nodeTreeWidget);
 
-        tableView = new QTableView(layoutWidget);
-        tableView->setObjectName(QStringLiteral("tableView"));
+        parameterTableWidget = new QTableWidget(layoutWidget);
+        if (parameterTableWidget->columnCount() < 2)
+            parameterTableWidget->setColumnCount(2);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        parameterTableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        parameterTableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
+        if (parameterTableWidget->rowCount() < 2)
+            parameterTableWidget->setRowCount(2);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        parameterTableWidget->setVerticalHeaderItem(0, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        parameterTableWidget->setVerticalHeaderItem(1, __qtablewidgetitem3);
+        parameterTableWidget->setObjectName(QStringLiteral("parameterTableWidget"));
+        parameterTableWidget->setColumnCount(2);
 
-        verticalLayout->addWidget(tableView);
+        verticalLayout->addWidget(parameterTableWidget);
 
 
         horizontalLayout->addLayout(verticalLayout);
@@ -219,6 +240,25 @@ public:
         actionFlux_Analysis->setText(QApplication::translate("GUIClass", "Flux Analysis", Q_NULLPTR));
         actionRayTrace_Option->setText(QApplication::translate("GUIClass", "RayTrace Option", Q_NULLPTR));
         actionAbout->setText(QApplication::translate("GUIClass", "About", Q_NULLPTR));
+
+        const bool __sortingEnabled = nodeTreeWidget->isSortingEnabled();
+        nodeTreeWidget->setSortingEnabled(false);
+        QTreeWidgetItem *___qtreewidgetitem = nodeTreeWidget->topLevelItem(0);
+        ___qtreewidgetitem->setText(0, QApplication::translate("GUIClass", "ground", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem1 = nodeTreeWidget->topLevelItem(1);
+        ___qtreewidgetitem1->setText(0, QApplication::translate("GUIClass", "receiver", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem2 = nodeTreeWidget->topLevelItem(2);
+        ___qtreewidgetitem2->setText(0, QApplication::translate("GUIClass", "grid", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem3 = ___qtreewidgetitem2->child(0);
+        ___qtreewidgetitem3->setText(0, QApplication::translate("GUIClass", "heliostat0", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem4 = ___qtreewidgetitem2->child(1);
+        ___qtreewidgetitem4->setText(0, QApplication::translate("GUIClass", "heliostat1", Q_NULLPTR));
+        nodeTreeWidget->setSortingEnabled(__sortingEnabled);
+
+        QTableWidgetItem *___qtablewidgetitem = parameterTableWidget->horizontalHeaderItem(0);
+        ___qtablewidgetitem->setText(QApplication::translate("GUIClass", "parameter", Q_NULLPTR));
+        QTableWidgetItem *___qtablewidgetitem1 = parameterTableWidget->horizontalHeaderItem(1);
+        ___qtablewidgetitem1->setText(QApplication::translate("GUIClass", "value", Q_NULLPTR));
         menuFile->setTitle(QApplication::translate("GUIClass", "File", Q_NULLPTR));
         menuEnvironment->setTitle(QApplication::translate("GUIClass", "Environment", Q_NULLPTR));
         menuScene->setTitle(QApplication::translate("GUIClass", "Scene", Q_NULLPTR));

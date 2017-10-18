@@ -59,9 +59,6 @@
     <ClCompile Include="GeneratedFiles\qrc_gui.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resources\glad.c">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Resources\stb_image_include.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -126,6 +123,9 @@
     <ClInclude Include="GeneratedFiles\ui_sunlight.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="shader_s.h">
+      <Filter>Scene Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GUI.rc" />
@@ -138,6 +138,9 @@
       <Filter>shader</Filter>
     </None>
     <None Include="shader\simple.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="coordinate.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
