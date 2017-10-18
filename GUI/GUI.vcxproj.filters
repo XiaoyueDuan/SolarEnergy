@@ -123,9 +123,6 @@
     <ClInclude Include="GeneratedFiles\ui_sunlight.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="shader_s.h">
-      <Filter>Scene Window</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GUI.rc" />
@@ -140,7 +137,7 @@
     <None Include="shader\simple.vert">
       <Filter>shader</Filter>
     </None>
-    <None Include="coordinate.vert">
+    <None Include="shader\coordinate.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

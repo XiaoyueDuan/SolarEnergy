@@ -6,8 +6,6 @@
 SceneWindow::SceneWindow(QWidget *parent)
 	:QOpenGLWidget(parent)
 {
-	//init glad
-
 	//设置OpenGL的版本信息  
 	QSurfaceFormat format;
 	format.setRenderableType(QSurfaceFormat::OpenGL);
@@ -30,10 +28,17 @@ void SceneWindow::initializeGL()
 	//初始化OpenGL函数  
 	initializeOpenGLFunctions();
 	//设置全局变量  
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	//初始化着色器程序
-	shaderCube.init("shader/simple.vert", "shader/simple.frag");
-	shaderCoor.init("shader/coordinate.vert", "shader/simple.frag");
+	shaderCube.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader/simple.vert");
+	shaderCube.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader/simple.frag");
+	shaderCube.link();
+
+	shaderCoor.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader/coordinate.vert");
+	//shaderCoor.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource1);
+	shaderCoor.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader/simple.frag");
+	shaderCoor.link();
+
 	//初始化VAO VBO EBO
 	IDVAO.resize(NumVAOGw);
 	IDVBO.resize(NumVBOGw);
@@ -135,14 +140,14 @@ void SceneWindow::paintGL()
 	update();
 
 	//渲染彩色正方体  
-	shaderCube.use();
+	shaderCube.bind();
 
 	glm::mat4 view;
 	glm::mat4 projection;
 	glm::mat4 model;
-	GLint modelLoc = glGetUniformLocation(shaderCube.ID, "model");
-	GLint viewLoc = glGetUniformLocation(shaderCube.ID, "view");
-	GLint projLoc = glGetUniformLocation(shaderCube.ID, "projection");
+	GLint modelLoc = shaderCube.uniformLocation("model");
+	GLint viewLoc = shaderCube.uniformLocation("view");
+	GLint projLoc = shaderCube.uniformLocation("projection");
 	view = glm::lookAt(cameraPos, worldCentrol, cameraUp);
 	projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100000.0f);
 	model = glm::translate(model, transVec);
@@ -157,13 +162,14 @@ void SceneWindow::paintGL()
 	glBindVertexArray(0);
 
 	//画坐标  
-	shaderCoor.use();
+	shaderCoor.bind();
 	glm::mat4 viewCoor;
 	glm::mat4 projectionCoor;
 	glm::mat4 modelCoor;
-	GLint modelCoorLoc = glGetUniformLocation(shaderCoor.ID, "modelCoor");
-	GLint viewCoorLoc = glGetUniformLocation(shaderCoor.ID, "viewCoor");
-	GLint projCoorLoc = glGetUniformLocation(shaderCoor.ID, "projectionCoor");
+	GLint modelCoorLoc = shaderCoor.uniformLocation("modelCoor");                     
+	GLint viewCoorLoc = shaderCoor.uniformLocation("viewCoor");                   
+	GLint projCoorLoc = shaderCoor.uniformLocation("projectionCoor");
+
 	viewCoor = glm::lookAt(cameraPos, worldCentrol, cameraUp);
 	projectionCoor = glm::perspective(glm::radians(45.0f), 5.0f / 3.0f, 0.1f, 100000.0f);
 	//modelCoor = glm::translate(modelCoor, glm::vec3(-0.38f, -0.28f, glm::length(cameraPos) - 0.8f));  
