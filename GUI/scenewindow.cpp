@@ -142,20 +142,31 @@ void SceneWindow::paintGL()
 	//渲染彩色正方体  
 	shaderCube.bind();
 
-	glm::mat4 view;
-	glm::mat4 projection;
-	glm::mat4 model;
-	GLint modelLoc = shaderCube.uniformLocation("model");
-	GLint viewLoc = shaderCube.uniformLocation("view");
-	GLint projLoc = shaderCube.uniformLocation("projection");
-	view = glm::lookAt(cameraPos, worldCentrol, cameraUp);
-	projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100000.0f);
-	model = glm::translate(model, transVec);
-	model = glm::rotate(model, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));   //按住左键，上下拖动鼠标让立方体绕x轴旋转  
-	model = glm::rotate(model, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));     //按住左键，左右拖动鼠标让立方体绕y轴旋转  
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	//glm::mat4 view;
+	//glm::mat4 projection;
+	//glm::mat4 model;
+	//GLint modelLoc = shaderCube.uniformLocation("model");
+	//GLint viewLoc = shaderCube.uniformLocation("view");
+	//GLint projLoc = shaderCube.uniformLocation("projection");
+	
+	//view = glm::lookAt(cameraPos, worldCentrol, cameraUp);
+	//projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100000.0f);
+	//model = glm::translate(model, transVec);
+	//model = glm::rotate(model, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));   //按住左键，上下拖动鼠标让立方体绕x轴旋转  
+	//model = glm::rotate(model, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));     //按住左键，左右拖动鼠标让立方体绕y轴旋转  
+	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	QMatrix4x4 view;
+	QMatrix4x4 projection;
+	QMatrix4x4 model;
+
+	view.lookAt(cameraPos1, worldCentrol1, cameraUp1);
+	projection.perspective(45.0f, 5.0f / 3.0f, 0.1f, 100000.0f);
+
+
+
 
 	glBindVertexArray(IDVAO[0]);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -163,23 +174,6 @@ void SceneWindow::paintGL()
 
 	//画坐标  
 	shaderCoor.bind();
-	glm::mat4 viewCoor;
-	glm::mat4 projectionCoor;
-	glm::mat4 modelCoor;
-	GLint modelCoorLoc = shaderCoor.uniformLocation("modelCoor");
-	GLint viewCoorLoc = shaderCoor.uniformLocation("viewCoor");
-	GLint projCoorLoc = shaderCoor.uniformLocation("projectionCoor");
-
-	viewCoor = glm::lookAt(cameraPos, worldCentrol, cameraUp);
-	projectionCoor = glm::perspective(glm::radians(45.0f), 5.0f / 3.0f, 0.1f, 100000.0f);
-	//modelCoor = glm::translate(modelCoor, glm::vec3(-0.38f, -0.28f, glm::length(cameraPos) - 0.8f));  
-	modelCoor = glm::translate(modelCoor, glm::vec3(-0.48f, -0.28f, glm::length(cameraPos) - 0.8f));
-	modelCoor = glm::rotate(modelCoor, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-	modelCoor = glm::rotate(modelCoor, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-	//glUniformMatrix4fv(viewCoorLoc, 1, GL_FALSE, glm::value_ptr(viewCoor));
-	//glUniformMatrix4fv(projCoorLoc, 1, GL_FALSE, glm::value_ptr(projectionCoor));
-	//glUniformMatrix4fv(modelCoorLoc, 1, GL_FALSE, glm::value_ptr(modelCoor));
-	
 
 	QMatrix4x4 viewCoor1;
 	QMatrix4x4 projectionCoor1;
