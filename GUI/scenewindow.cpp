@@ -78,10 +78,8 @@ void SceneWindow::initializeGL()
 		0.0f,  0.0f,  0.05f, 0.0f, 0.0f, 1.0f
 	};
 
-	/****************************************************************************/
-	/**************************** VAO\VBO\顶点属性指针 ****************************/
-	/****************************************************************************/
-
+	
+	// VAO　VBO
 	/* 创建相关对象 */
 	glGenVertexArrays(NumVAOGw, &IDVAO[0]);
 	glGenBuffers(NumVBOGw, &IDVBO[0]);
@@ -103,14 +101,13 @@ void SceneWindow::initializeGL()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindVertexArray(0);           //结束记录状态信息  
+	glBindVertexArray(0);                       //结束记录状态信息  
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);   //在VAO后解绑，是为了不让VAO把解绑EBO的信息包含进入  
 	/* 显示立方体 */
 
 
 	/* 显示坐标信息 */
 	glBindVertexArray(IDVAO[1]);    //开始记录状态信息  
-
 	glBindBuffer(GL_ARRAY_BUFFER, IDVBO[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(coorVertices), coorVertices, GL_STATIC_DRAW);
 
@@ -124,10 +121,8 @@ void SceneWindow::initializeGL()
 
 	glBindVertexArray(0);           //结束记录状态信息  
 	
-
 	/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
-
 
 }
 
@@ -141,32 +136,17 @@ void SceneWindow::paintGL()
 
 	//渲染彩色正方体  
 	shaderCube.bind();
-
-	//glm::mat4 view;
-	//glm::mat4 projection;
-	//glm::mat4 model;
-	//GLint modelLoc = shaderCube.uniformLocation("model");
-	//GLint viewLoc = shaderCube.uniformLocation("view");
-	//GLint projLoc = shaderCube.uniformLocation("projection");
-	
-	//view = glm::lookAt(cameraPos, worldCentrol, cameraUp);
-	//projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100000.0f);
-	//model = glm::translate(model, transVec);
-	//model = glm::rotate(model, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));   //按住左键，上下拖动鼠标让立方体绕x轴旋转  
-	//model = glm::rotate(model, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));     //按住左键，左右拖动鼠标让立方体绕y轴旋转  
-	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
 	QMatrix4x4 view;
 	QMatrix4x4 projection;
 	QMatrix4x4 model;
-
-	view.lookAt(cameraPos1, worldCentrol1, cameraUp1);
-	projection.perspective(45.0f, 5.0f / 3.0f, 0.1f, 100000.0f);
-
-
-
+	view.lookAt(cameraPos, worldCentrol, cameraUp);
+	projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100000.0f);
+	model.translate(transVec);
+	model.rotate(pitch, 1.0f, 0.0f, 0.0f); //按住左键，上下拖动鼠标让立方体绕x轴旋转  
+	model.rotate(yaw, 0.0f, 1.0f, 0.0f); //按住左键，左右拖动鼠标让立方体绕y轴旋转 
+	shaderCube.setUniformValue("view",view);
+	shaderCube.setUniformValue("projection",projection);
+	shaderCube.setUniformValue("model", model);
 
 	glBindVertexArray(IDVAO[0]);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -174,15 +154,14 @@ void SceneWindow::paintGL()
 
 	//画坐标  
 	shaderCoor.bind();
-
 	QMatrix4x4 viewCoor1;
 	QMatrix4x4 projectionCoor1;
 	QMatrix4x4 modelCoor1;
-	viewCoor1.lookAt(cameraPos1, worldCentrol1, cameraUp1);
+	viewCoor1.lookAt(cameraPos, worldCentrol, cameraUp);
 	projectionCoor1.perspective(45.0f, 5.0f / 3.0f,0.1f,100000.0f);
 	//modelCoor1.translate(QVector3D(-0.48f, -0.28f, cameraPos1.length()-0.8f));
 	modelCoor1.setToIdentity();
-	modelCoor1.translate(QVector3D(-0.48f, -0.28f, cameraPos1.length() - 0.8f));
+	modelCoor1.translate(QVector3D(-0.48f, -0.28f, cameraPos.length() - 0.8f));
 	modelCoor1.rotate(pitch, 1.0f, 0.0f, 0.0f);
 	modelCoor1.rotate(yaw, 0.0f, 1.0f, 0.0f);
 
@@ -249,7 +228,7 @@ void SceneWindow::mouseMoveEvent(QMouseEvent *event)
 		yoffset *= sensitivity;
 
 		//仅需在x-y平面内移动即可  
-		transVec += glm::vec3(xoffset, -yoffset, 0.0f);
+		transVec += QVector3D(xoffset, -yoffset, 0.0f);
 	}
 }
 
@@ -258,7 +237,6 @@ void SceneWindow::wheelEvent(QWheelEvent *event)
 {
 	GLfloat sensitivity = 0.0005f;
 	cameraPos *= (1.0f - event->delta() * sensitivity);
-	cameraPos1 *= (1.0f - event->delta() * sensitivity);
 }
 
 void SceneWindow::mousePressEvent(QMouseEvent *event)
