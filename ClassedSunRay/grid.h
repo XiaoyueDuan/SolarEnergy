@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cuda_runtime.h"
-#include "heliostat.h"
+#include "heliostat.cuh"
 #include <vector>
 
 using namespace std;
@@ -13,14 +13,15 @@ public:
 	int type_;
 	int helio_type_;
 	__device__ __host__ Grid(){}
+	
+	void virtual CGridHelioMatch(const vector<RectangleHelio *> &h_helios) = 0;				// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
 };
 
 
 class RectGrid :public Grid
 {
 public:
-	void CGridHelioMatch(const Heliostat *h_helios, const size_t &num_helios);	// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
-	void CGridHelioMatch(const vector<RectangleHelio> &h_helios);				// overload
+	void virtual CGridHelioMatch(const vector<Heliostat *> &h_helios);				// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
 
 	__device__ __host__ RectGrid():d_grid_helio_index_(nullptr), d_grid_helio_match_(nullptr){}
 

@@ -15,7 +15,7 @@ void RectGrid::CClear()
 	}
 }
 
-int boxIntersect(int &mirrowId, float3 &min_pos, float3 &max_pos, RectGrid &grid,
+int boxIntersect(const int &mirrowId, const float3 &min_pos, const float3 &max_pos, const RectGrid &grid,
 	vector<vector<int>> &grid_mirrow_match_vector)
 {
 	int size = 0;
@@ -37,21 +37,19 @@ int boxIntersect(int &mirrowId, float3 &min_pos, float3 &max_pos, RectGrid &grid
 	return size;
 }
 
-void RectGrid::CGridHelioMatch(const Heliostat *h_helios, const size_t &num_helios) // set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
+void RectGrid::CGridHelioMatch(const vector<Heliostat *> &h_helios) // set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
 {
 	float3 minPos, maxPos;
-	float length;
+	float  diagonal_length, radius;
 	num_grid_helio_match_ = 0;
 	vector<vector<int>> grid_mirrow_match_vector(size_.x * size_.y * size_.z);
-	for (int i = 0; i < num_helios; ++i)
+	for (int i = 0; i < h_helios.size(); ++i)
 	{
-		length = h_helios[i].size_.x * h_helios[i].size_.x +
-				h_helios[i].size_.y * h_helios[i].size_.y +
-				h_helios[i].size_.z * h_helios[i].size_.z;
+		diagonal_length = length(h_helios[i]->size_);
 
-		length = sqrt(length) / 2;
-		minPos = h_helios[i].pos_ - length;
-		maxPos = h_helios[i].pos_ + length;
+		radius = sqrt(diagonal_length) / 2;
+		minPos = h_helios[i]->pos_ - radius;
+		maxPos = h_helios[i]->pos_ + radius;
 
 		num_grid_helio_match_ += boxIntersect(i, minPos, maxPos, *this, grid_mirrow_match_vector);
 	}

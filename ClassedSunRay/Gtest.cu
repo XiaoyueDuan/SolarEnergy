@@ -2,6 +2,7 @@
  
 void test(SolarScene &solar_scene)
 {
+	//Heliostat *h = new RectangleHelio[4];
 	// Receiver
 	//solar_scene.receivers[0]->normal_ = make_float3(1.0f, 0.0f, 0.0f);
 	solar_scene.receivers[0]->CInit(100);
@@ -14,9 +15,13 @@ void test(SolarScene &solar_scene)
 	
 	// Heliostat
 	RectangleHelio *rectangle_helio =dynamic_cast<RectangleHelio *>(solar_scene.heliostats[0]);
+	RectangleHelio *r2 = &rectangle_helio[1];
+	r2->init(solar_scene.receivers[0]->pos_);
+	rectangle_helio->normal_ = make_float3(0, 0, 1);
 	rectangle_helio->Cset_sub_row_col(0.01f);
 	rectangle_helio->init(solar_scene.receivers[0]->pos_);
 
 	// Grid
-
+	RectGrid *rectgrid = dynamic_cast<RectGrid *>(solar_scene.grid0s[0]);
+	rectgrid->CGridHelioMatch(solar_scene.heliostats);
 }

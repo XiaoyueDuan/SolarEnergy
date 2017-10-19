@@ -1,4 +1,4 @@
-#include "heliostat.h"
+#include "heliostat.cuh"
 
 void RectangleHelio::Cset_sub_row_col(const float &pixel_length)
 {

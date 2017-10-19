@@ -24,7 +24,7 @@
     <ClInclude Include="global_function.cuh" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="Gtest.cuh" />
-    <ClInclude Include="heliostat.h" />
+    <ClInclude Include="heliostat.cuh" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="receiver.cuh" />
     <ClInclude Include="scene_file_proc.h" />

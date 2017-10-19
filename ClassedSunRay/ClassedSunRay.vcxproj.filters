@@ -18,9 +18,6 @@
     <ClInclude Include="grid.h">
       <Filter>DataStructure</Filter>
     </ClInclude>
-    <ClInclude Include="heliostat.h">
-      <Filter>DataStructure</Filter>
-    </ClInclude>
     <ClInclude Include="random_generator.h">
       <Filter>DataStructure</Filter>
     </ClInclude>
@@ -53,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="Gtest.cuh">
       <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="heliostat.cuh">
+      <Filter>DataStructure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
