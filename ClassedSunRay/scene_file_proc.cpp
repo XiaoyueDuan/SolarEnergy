@@ -204,7 +204,6 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							line_stream >> n;
 							grid0->num_helios_ = n;
 							helio_input_total = n;
-							heliostat = new RectangleHelio[n];
 							break;
 						case StringValue::type:
 							int helio_type;
@@ -250,18 +249,20 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							if (helio_input_num >= helio_input_total) {
 								std::cerr << "too many helistat" << std::endl;
 							}
-							float3 pos;
-							line_stream >> pos.x >> pos.y >> pos.z;
-							(heliostat+ helio_input_num)->pos_ = pos;
-							(heliostat + helio_input_num)->gap_ = gap_buf;//gap
-							(heliostat + helio_input_num)->row_col_ = matrix_buf;//matrix
-							if(helio_type_buf == 0) {
-								readHelioParamter(scene_stream, heliostat+helio_input_num);
-							}
-							if (helio_input_num ==0) {
+							if (helio_type_buf == 0) {
+								heliostat = new RectangleHelio;
+								float3 pos;
+								line_stream >> pos.x >> pos.y >> pos.z;
+								heliostat->pos_ = pos;
+								heliostat->gap_ = gap_buf;//gap
+								heliostat->row_col_ = matrix_buf;//matrix
+								if (helio_type_buf == 0) {
+									readHelioParamter(scene_stream, heliostat);
+								}
 								solarScene_->heliostats.push_back(heliostat);
+								heliostat = nullptr; //make sure heliostat is null
+								++helio_input_num;
 							}
-							++helio_input_num;
 							break;
 						default:
 							break;
