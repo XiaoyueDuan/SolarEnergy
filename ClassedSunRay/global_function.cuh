@@ -95,4 +95,18 @@ namespace global_func
 
 		return true;
 	}
+
+	template <typename T>
+	inline void cpu2gpu(T *&d_out, T *&h_in, const size_t &size)
+	{
+		checkCudaErrors(cudaMalloc((void **)&d_out, sizeof(T)*size));
+		checkCudaErrors(cudaMemcpy(d_out, h_in, sizeof(T)*size, cudaMemcpyHostToDevice));
+	}
+
+	template <typename T>
+	inline void gpu2cpu(T *&h_out, T *&d_in, const size_t &size)
+	{
+		h_out = new T[size];
+		checkCudaErrors(cudaMemcpy(h_out, d_in, sizeof(T)*size, cudaMemcpyDeviceToHost));
+	}
 }

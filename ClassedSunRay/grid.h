@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cuda_runtime.h"
-#include "heliostat.h"
+#include "heliostat.cuh"
 #include <vector>
 
 using namespace std;
@@ -13,18 +13,19 @@ public:
 	int type_;
 	int helio_type_;
 	__device__ __host__ Grid(){}
+	
+	void virtual CGridHelioMatch(const vector<RectangleHelio *> &h_helios) = 0;				// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
 };
 
 
 class RectGrid :public Grid
 {
 public:
-	__device__ __host__ void CGridHelioMatch(const Heliostat *h_helios, const size_t &num_helios);	// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
-	__device__ __host__ void CGridHelioMatch(const vector<RectangleHelio> &h_helios);					// overload
+	void virtual CGridHelioMatch(const vector<Heliostat *> &h_helios);				// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
 
-	RectGrid():d_grid_helio_index_(nullptr), d_grid_helio_match_(nullptr){}
+	__device__ __host__ RectGrid():d_grid_helio_index_(nullptr), d_grid_helio_match_(nullptr){}
 
-	~RectGrid()
+	__device__ __host__ ~RectGrid()
 	{
 		if(d_grid_helio_match_)
 			d_grid_helio_match_ = nullptr;
@@ -32,22 +33,8 @@ public:
 			d_grid_helio_index_ = nullptr;
 	}
 
-	__device__ __host__ void CClear()
-	{
-		if (d_grid_helio_match_)
-		{
-			cudaFree(d_grid_helio_match_);
-			d_grid_helio_match_ = nullptr;
-		}
+	void CClear();
 
-		if (d_grid_helio_index_)
-		{
-			cudaFree(d_grid_helio_index_);
-			d_grid_helio_index_ = nullptr;
-		}
-	}
-
-	float3 min_vertex_;
 	float3 pos_;
 	float3 size_;
 	float3 interval_;

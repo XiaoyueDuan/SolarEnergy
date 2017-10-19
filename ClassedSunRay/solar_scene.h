@@ -2,7 +2,7 @@
 
 #include "common_var.h"
 #include "grid.h"
-#include "heliostat.h"
+#include "heliostat.cuh"
 #include "random_generator.h"
 #include "receiver.cuh"
 #include "sunray.h"
