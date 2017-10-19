@@ -51,7 +51,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 	// prama to ensure the memery
 	int helio_input_num = 0;
 	int helio_input_total = 0;
-
+	int grid_start_helio_pos = 0;
 
 	InputMode inputMode = InputMode::none;
 	solarScene_ = solarscene;
@@ -130,6 +130,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 				}
 				grid0->type_ = grid_type;
 				helio_input_num = 0;
+				grid0->start_helio_pos_ = grid_start_helio_pos;
 				//reset the gap 
 				gap_set = false;
 				matrix_set = false;
@@ -204,6 +205,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							line_stream >> n;
 							grid0->num_helios_ = n;
 							helio_input_total = n;
+							grid_start_helio_pos += n;
 							break;
 						case StringValue::type:
 							int helio_type;

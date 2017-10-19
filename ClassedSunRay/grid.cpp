@@ -43,7 +43,7 @@ void RectGrid::CGridHelioMatch(const vector<Heliostat *> &h_helios) // set *d_gr
 	float  diagonal_length, radius;
 	num_grid_helio_match_ = 0;
 	vector<vector<int>> grid_mirrow_match_vector(size_.x * size_.y * size_.z);
-	for (int i = 0; i < h_helios.size(); ++i)
+	for (int i = start_helio_pos_; i < start_helio_pos_  + num_helios_; ++i)
 	{
 		diagonal_length = length(h_helios[i]->size_);
 
