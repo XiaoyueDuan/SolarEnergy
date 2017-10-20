@@ -13,6 +13,12 @@
     <Filter Include="test">
       <UniqueIdentifier>{d6b6a73c-ec77-4cf5-8e12-fc6cda265e60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PostProcess">
+      <UniqueIdentifier>{459657a5-e7b5-448d-b8c1-bf651fef420b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PreProcess">
+      <UniqueIdentifier>{0322dca0-7279-4acc-b595-3216c119b3a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grid.h">
@@ -53,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="heliostat.cuh">
       <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="destroy.h">
+      <Filter>PostProcess</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

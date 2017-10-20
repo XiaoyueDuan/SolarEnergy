@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-namespace free
+namespace free_scene
 {
 	template <typename T>
 	inline void cpu_free(T *t)
@@ -38,7 +38,7 @@ namespace free
 			for (int i = 0; i < Tarray.size(); ++i)
 			{
 				if (Tarray[i] != nullptr)				
-					Tarray->CClear();				
+					Tarray[i]->CClear();
 			}
 		}
 	}
@@ -49,4 +49,4 @@ namespace free
 		if (t != nullptr)
 			t->CClear();
 	}
-}
+};

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_var.h" />
+    <ClInclude Include="destroy.h" />
     <ClInclude Include="global_constant.h" />
     <ClInclude Include="global_function.cuh" />
     <ClInclude Include="grid.h" />

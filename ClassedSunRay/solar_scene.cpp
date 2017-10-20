@@ -24,17 +24,16 @@ SolarScene::SolarScene() {
 }
 
 SolarScene::~SolarScene() {
-
 	// 1. free memory on GPU
-	free::gpu_free(receivers);
-	free::gpu_free(grid0s);
-	free::gpu_free(sunray_);
+	free_scene::gpu_free(receivers);
+	free_scene::gpu_free(grid0s);
+	free_scene::gpu_free(sunray_);
 
 	// 2. free memory on CPU
-	free::cpu_free(receivers);
-	free::cpu_free(grid0s);
-	free::cpu_free(heliostats);
-	free::cpu_free(sunray_);
+	free_scene::cpu_free(receivers);
+	free_scene::cpu_free(grid0s);
+	free_scene::cpu_free(heliostats);
+	free_scene::cpu_free(sunray_);
 }
 
 bool SolarScene::InitSolarScece() {

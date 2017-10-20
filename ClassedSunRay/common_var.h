@@ -24,7 +24,7 @@ namespace solarenergy {
 
 	//default scene file
 	extern string  scene_filepath;
-}
+};
 
 
 #endif
