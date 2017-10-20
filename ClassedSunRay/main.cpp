@@ -17,6 +17,8 @@ int main() {
 
 	test(*solar_scene);
 
+	// Finally, destroy solar_scene
+	solar_scene->~SolarScene();
 	system("pause");
 	return 0;
 }

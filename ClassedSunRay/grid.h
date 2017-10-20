@@ -16,6 +16,7 @@ public:
 	__device__ __host__ Grid(){}
 	
 	void virtual CGridHelioMatch(const vector<Heliostat *> &h_helios) = 0;				// set *d_grid_helio_match_, *d_grid_helio_index_ and num_grid_helio_match_
+	void virtual CClear() = 0;
 };
 
 

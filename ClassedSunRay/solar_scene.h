@@ -6,7 +6,7 @@
 #include "random_generator.h"
 #include "receiver.cuh"
 #include "sunray.h"
-
+#include "destroy.h"
 
 
 //Singleton design model to  control the  access to resources

@@ -24,10 +24,17 @@ SolarScene::SolarScene() {
 }
 
 SolarScene::~SolarScene() {
-	if (sunray_) {
-		delete sunray_;
-	}
-	
+
+	// 1. free memory on GPU
+	free::gpu_free(receivers);
+	free::gpu_free(grid0s);
+	free::gpu_free(sunray_);
+
+	// 2. free memory on CPU
+	free::cpu_free(receivers);
+	free::cpu_free(grid0s);
+	free::cpu_free(heliostats);
+	free::cpu_free(sunray_);
 }
 
 bool SolarScene::InitSolarScece() {
