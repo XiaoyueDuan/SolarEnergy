@@ -15,6 +15,13 @@ namespace solarenergy {
 	extern float num_sunshape_groups;
 	extern float num_sunshape_lights_per_group;
 
+	extern float helio_pixel_length;
+	extern float receiver_pixel_length;
+	extern float reflected_rate;
+	extern float disturb_std;
+
+
+
 	//default scene file
 	extern string  scene_filepath;
 }

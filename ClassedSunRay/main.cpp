@@ -10,6 +10,8 @@ using namespace std;
 int main() {
 	cout <<"filepath: "<< solarenergy::scene_filepath << endl;
 
+
+	cout << solarenergy::disturb_std << endl;
 	SolarScene *solar_scene;
 	solar_scene = SolarScene::GetInstance();
 

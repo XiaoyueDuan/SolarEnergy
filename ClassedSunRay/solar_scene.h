@@ -30,7 +30,8 @@ public:
 	float ground_length_;
 	float ground_width_;
 	int grid_num_;
-
+	
+	SunRay *sunray_;
 	//scene object
 	vector<Grid *> grid0s;
 	vector<Heliostat *> heliostats;
