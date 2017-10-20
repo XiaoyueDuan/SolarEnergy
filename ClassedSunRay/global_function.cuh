@@ -109,4 +109,56 @@ namespace global_func
 		h_out = new T[size];
 		checkCudaErrors(cudaMemcpy(h_out, d_in, sizeof(T)*size, cudaMemcpyDeviceToHost));
 	}
+
+	__host__ __device__ inline bool setThreadsBlocks(dim3 &nBlocks, const int const &nThreads,
+		const size_t &size, const bool const &threadFixed)
+	{
+		if (size > global_const::MAX_ALL_THREADS)
+		{
+			printf("There are too many threads to cope with, please use less threads.\n");
+			return false;
+		}
+
+		int block_lastDim = (size + nThreads - 1) / nThreads;
+		if (block_lastDim < global_const::MAX_BLOCK_SINGLE_DIM)
+		{
+			nBlocks.x = block_lastDim;
+			nBlocks.y = nBlocks.z = 1;
+			return true;
+		}
+
+		block_lastDim = (block_lastDim + global_const::MAX_BLOCK_SINGLE_DIM - 1) / global_const::MAX_BLOCK_SINGLE_DIM;
+		if (block_lastDim < global_const::MAX_BLOCK_SINGLE_DIM)
+		{
+			nBlocks.x = global_const::MAX_BLOCK_SINGLE_DIM;
+			nBlocks.y = block_lastDim;
+			nBlocks.z = 1;
+			return true;
+		}
+		else
+		{
+			nBlocks.x = nBlocks.y = global_const::MAX_BLOCK_SINGLE_DIM;
+			nBlocks.z = (block_lastDim + global_const::MAX_BLOCK_SINGLE_DIM - 1) / global_const::MAX_BLOCK_SINGLE_DIM;
+			return true;
+		}
+	}
+
+	__host__ __device__ inline bool setThreadsBlocks(dim3 &nBlocks, int &nThreads, const size_t &size)
+	{
+		nThreads = (global_const::MAX_THREADS <= size) ? global_const::MAX_THREADS : size;
+		return setThreadsBlocks(nBlocks, nThreads, size, true);
+	}
+
+	__host__ __device__ inline unsigned long long int getThreadId()
+	{
+		// unique block index inside a 3D block grid
+		const unsigned long long int blockId = blockIdx.x //1D
+			+ blockIdx.y * gridDim.x //2D
+			+ gridDim.x * gridDim.y * blockIdx.z; //3D
+
+												  // global unique thread index, block dimension uses only x-coordinate
+		const unsigned long long int threadId = blockId * blockDim.x + threadIdx.x;
+
+		return threadId;
+	}
 }

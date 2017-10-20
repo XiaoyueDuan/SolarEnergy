@@ -15,7 +15,7 @@ public:
 
 	__device__ __host__ Heliostat() {}
 
-	virtual void Cinit(const float3 focus_center) = 0;
+	virtual void Crotate(const float3 focus_center) = 0;
 };
 
 class RectangleHelio :public Heliostat
@@ -28,7 +28,7 @@ public:
 	//	float t, u, v;
 	//	return global_func::rayParallelogramIntersect(orig, dir, vertex_[0], vertex_[1], vertex_[3], t, u, v);
 	//}
-	virtual void Cinit(const float3 focus_center);
+	virtual void Crotate(const float3 focus_center);
 
 	float3 vertex_[4];
 	int2 sub_row_col_;	// How many submirrors compose a mirror
@@ -38,7 +38,7 @@ private:
 	void Cset_worldvertex();
 	void Cset_normal(const float3 focus_center);
 };
-
+ 
 class ParaboloidHelio :public Heliostat	// has-RectangleHelio
 {
 public:
@@ -53,7 +53,7 @@ public:
 	//	return invisual_recthelio_.GIntersect(orig, dir);
 	//}
 
-	virtual void Cinit(const float3 focus_center) {}	// empty now
+	virtual void Crotate(const float3 focus_center) {}	// empty now
 
 	float2 a_b;					// y = x^2/a^2 + z^2/b^2
 

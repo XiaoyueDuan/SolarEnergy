@@ -77,6 +77,9 @@
     <ClCompile Include="grid.cpp">
       <Filter>DataStructure</Filter>
     </ClCompile>
+    <ClCompile Include="random_generator.cpp">
+      <Filter>DataStructure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="receiver.cu">
@@ -84,6 +87,9 @@
     </CudaCompile>
     <CudaCompile Include="Gtest.cu">
       <Filter>test</Filter>
+    </CudaCompile>
+    <CudaCompile Include="random_generator.cu">
+      <Filter>DataStructure</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>
