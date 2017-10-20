@@ -8,7 +8,7 @@ void RectangleHelio::Cset_sub_row_col(const float &pixel_length)
 	sub_row_col_.y = sub_helio_col_length / pixel_length;
 }
 
-void RectangleHelio::Crotate(const float3 focus_center)
+void RectangleHelio::CRotate(const float3 focus_center)
 {
 	Cset_normal(focus_center);
 	Cset_localvertex();
