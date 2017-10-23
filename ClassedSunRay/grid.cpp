@@ -1,5 +1,12 @@
 #include "grid.h"
 
+void RectGrid::Cinit()
+{
+	grid_num_.x = ceil(size_.x / interval_.x);
+	grid_num_.y = ceil(size_.y / interval_.y);
+	grid_num_.z = ceil(size_.z / interval_.z);
+}
+
 void RectGrid::CClear()
 {
 	if (d_grid_helio_match_)
@@ -30,7 +37,7 @@ int boxIntersect(const int &mirrowId, const float3 &min_pos, const float3 &max_p
 		for (int y = min_grid_pos.y; y <= max_grid_pos.y; ++y)
 			for (int z = min_grid_pos.z; z <= max_grid_pos.z; ++z)
 			{
-				int pos = x * grid.size_.y * grid.size_.z + y * grid.size_.z + z;
+				int pos = x * grid.grid_num_.y * grid.grid_num_.z + y * grid.grid_num_.z + z;
 				grid_mirrow_match_vector[pos].push_back(mirrowId);
 				++size;
 			}
@@ -42,7 +49,7 @@ void RectGrid::CGridHelioMatch(const vector<Heliostat *> &h_helios) // set *d_gr
 	float3 minPos, maxPos;
 	float  diagonal_length, radius;
 	num_grid_helio_match_ = 0;
-	vector<vector<int>> grid_mirrow_match_vector(size_.x * size_.y * size_.z);
+	vector<vector<int>> grid_mirrow_match_vector(grid_num_.x * grid_num_.y * grid_num_.z);
 	for (int i = start_helio_pos_; i < start_helio_pos_  + num_helios_; ++i)
 	{
 		diagonal_length = length(h_helios[i]->size_);
@@ -54,12 +61,12 @@ void RectGrid::CGridHelioMatch(const vector<Heliostat *> &h_helios) // set *d_gr
 		num_grid_helio_match_ += boxIntersect(i, minPos, maxPos, *this, grid_mirrow_match_vector);
 	}
 
-	int *h_grid_helio_index = new int[size_.x * size_.y * size_.z + 1];
+	int *h_grid_helio_index = new int[grid_num_.x * grid_num_.y * grid_num_.z + 1];
 	h_grid_helio_index[0] = 0;
 	int *h_grid_helio_match = new int[num_grid_helio_match_];
 
 	int index = 0;
-	for (int i = 0; i < size_.x * size_.y * size_.z; ++i)
+	for (int i = 0; i < grid_num_.x * grid_num_.y * grid_num_.z; ++i)
 	{
 		h_grid_helio_index[i + 1] = h_grid_helio_index[i] + grid_mirrow_match_vector[i].size();
 		for (int j = 0; j < grid_mirrow_match_vector[i].size(); ++j, ++index)
@@ -67,7 +74,7 @@ void RectGrid::CGridHelioMatch(const vector<Heliostat *> &h_helios) // set *d_gr
 	}
 
 	global_func::cpu2gpu(d_grid_helio_match_, h_grid_helio_match, num_grid_helio_match_);
-	global_func::cpu2gpu(d_grid_helio_index_, h_grid_helio_index, size_.x * size_.y * size_.z + 1);
+	global_func::cpu2gpu(d_grid_helio_index_, h_grid_helio_index, grid_num_.x * grid_num_.y * grid_num_.z + 1);
 
 	delete[] h_grid_helio_index;
 	delete[] h_grid_helio_match;

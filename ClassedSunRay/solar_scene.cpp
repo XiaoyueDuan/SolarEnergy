@@ -50,3 +50,16 @@ bool SolarScene::LoadSceneFromFile(string filepath) {
 	SceneFileProc proc;
 	return proc.SceneFileRead(this, filepath);
 }
+
+bool SolarScene::InitContent()
+{
+	//grid
+
+	// receiver
+
+	// helio
+
+	// sunray
+	
+	return true;
+}

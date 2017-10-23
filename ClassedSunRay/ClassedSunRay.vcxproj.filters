@@ -63,6 +63,9 @@
     <ClInclude Include="destroy.h">
       <Filter>PostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="scene_instance_process.h">
+      <Filter>PreProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solar_scene.cpp">
@@ -89,6 +92,9 @@
     <ClCompile Include="random_generator.cpp">
       <Filter>DataStructure</Filter>
     </ClCompile>
+    <ClCompile Include="scene_instance_process.cpp">
+      <Filter>PreProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="receiver.cu">
@@ -99,6 +105,9 @@
     </CudaCompile>
     <CudaCompile Include="random_generator.cu">
       <Filter>DataStructure</Filter>
+    </CudaCompile>
+    <CudaCompile Include="scene_instance_process.cu">
+      <Filter>PreProcess</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

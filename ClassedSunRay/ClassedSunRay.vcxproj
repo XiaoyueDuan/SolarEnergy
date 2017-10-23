@@ -29,6 +29,7 @@
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="receiver.cuh" />
     <ClInclude Include="scene_file_proc.h" />
+    <ClInclude Include="scene_instance_process.h" />
     <ClInclude Include="solar_scene.h" />
     <ClInclude Include="sunray.h" />
     <ClInclude Include="utils.h" />
@@ -42,12 +43,14 @@
     <ClCompile Include="random_generator.cpp" />
     <ClCompile Include="receiver.cpp" />
     <ClCompile Include="scene_file_proc.cpp" />
+    <ClCompile Include="scene_instance_process.cpp" />
     <ClCompile Include="solar_scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="Gtest.cu" />
     <CudaCompile Include="random_generator.cu" />
     <CudaCompile Include="receiver.cu" />
+    <CudaCompile Include="scene_instance_process.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B83FDF2-CFC3-416D-A55C-583E1B12A7BB}</ProjectGuid>

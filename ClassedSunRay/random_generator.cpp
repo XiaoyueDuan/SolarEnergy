@@ -4,7 +4,7 @@ bool RandomGenerator::cpu_Uniform(float *h_0_1_array, const size_t &array_length
 {
 	if (h_0_1_array == nullptr)
 		return false;
-	initSeed();
+	//initSeed();
 
 	for(int i=0;i<array_length;++i)
 		h_0_1_array[i] = (float)((float)rand() / (RAND_MAX));
