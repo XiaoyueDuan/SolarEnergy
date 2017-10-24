@@ -53,13 +53,18 @@ bool SolarScene::LoadSceneFromFile(string filepath) {
 
 bool SolarScene::InitContent()
 {
-	//grid
+	// 1. Sunray
+	SceneProcessor::set_sunray_content(*this->sunray_);
 
-	// receiver
+	// 2. Grid
+	SceneProcessor::set_grid_content(this->grid0s, this->heliostats);
 
-	// helio
+	// 3. Receiver
+	SceneProcessor::set_receiver_content(this->receivers);
 
-	// sunray
-	
+	// 4. Heliostats
+	float3 focus_center = this->receivers[0]->focus_center_;			// must after receiver init
+	SceneProcessor::set_helio_content(this->heliostats, focus_center);
+
 	return true;
 }

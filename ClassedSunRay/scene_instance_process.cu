@@ -81,7 +81,7 @@ void SceneProcessor::set_samplelights(SunRay &sunray)
 	float k = 0.9*logf(13.5*CSR)*powf(CSR, -0.3);
 	float gamma = 2.2*logf(0.52*CSR)*powf(CSR, 0.43) - 0.1;
 
-	//	Step 1:	Allocate memory for h_samplelights, h_tmp_theta and h_tmp_phi on CPU
+	//	Step 1:	Allocate memory temporarily used as h_samplelights, h_tmp_theta and h_tmp_phi on CPU
 	float3 *h_samplelights = new float3[num_all_lights];
 	float *h_tmp_theta = new float[lights_3groups];
 	float *h_tmp_phi = new float[lights_3groups];

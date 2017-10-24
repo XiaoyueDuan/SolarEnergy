@@ -12,6 +12,7 @@ void Receiver::Calloc_image()
 void RectangleReceiver::CInit(const int &geometry_info)
 {
 	Cinit_vertex();
+	Cset_focuscenter();
 	Cset_resolution(geometry_info);
 	Calloc_image();
 }
@@ -29,6 +30,11 @@ void RectangleReceiver::Cset_resolution(const int &geometry_info)
 	float width = length(rect_vertex_[1] - rect_vertex_[2]);
 	resolution_.x = width*float(geometry_info);
 	resolution_.y = height*float(geometry_info);
+}
+
+void RectangleReceiver::Cset_focuscenter()
+{
+	focus_center_ = (rect_vertex_[0] + rect_vertex_[2]) / 2;
 }
 
 void RectangleReceiver::Cset_localnormal()

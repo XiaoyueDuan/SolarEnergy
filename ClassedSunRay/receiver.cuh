@@ -43,6 +43,7 @@ public:
 	float3 normal_;
 	float3 pos_;
 	float3 size_;
+	float3 focus_center_;				// fixed for a scene
 	int face_num_;						// the number of receiving face
 	float pixel_length_;
 	float *d_image_;					// on GPU, size = resolution_.x * resolution_.y
@@ -51,6 +52,7 @@ public:
 private:
 	//__device__ __host__ void Cset_resolution(const float3 &geometry_info);
 	virtual void Cset_resolution(const int &geometry_info) = 0;
+	virtual void Cset_focuscenter()=0;
 };
 
 class RectangleReceiver :public Receiver
@@ -64,6 +66,7 @@ public:
 	
 	//__device__ __host__ virtual void CInit();
 	virtual void CInit(const int &geometry_info);
+
 	float3 rect_vertex_[4];
 
 private:
@@ -71,10 +74,11 @@ private:
 	//__device__ __host__ void Cset_localvertex();
 	//__device__ __host__ void Cset_vertex();
 	void Cinit_vertex();
-	void Cset_localnormal();
-	void Cset_localvertex();
-	void Cset_vertex();
+	void Cset_localnormal();									// set local normal
+	void Cset_localvertex();									// set local vertex position
+	void Cset_vertex();											// set world vertex
 	virtual void Cset_resolution(const int &geometry_info);
+	virtual void Cset_focuscenter();							// call this function after Cset_vertex();
 
 	float3 localnormal_;
 };
@@ -91,6 +95,7 @@ public:
 	float3 pos_;
 private:
 	virtual void Cset_resolution(const int &geometry_info) {}//empty now
+	virtual void Cset_focuscenter() {}//empty now
 };
 
 
@@ -107,4 +112,5 @@ public:
 	
 private:
 	virtual void Cset_resolution(const int &geometry_info) {}//empty now
+	virtual void Cset_focuscenter() {}//empty now
 };
