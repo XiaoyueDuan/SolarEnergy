@@ -17,7 +17,7 @@ inline __host__ __device__ T absDivide(const T &denominator, const T &numerator)
 }
 
 //	3DDDA
-//	Intersect with the mirror within the intersect grid
+//	Intersect with the heliostat within this rectangle grid
 __device__ bool Intersect(const float3 &orig, const float3 &dir,
 	const int &grid_address, const float3 *d_heliostat_vertexs,
 	const int const *d_grid_heliostat_match, const int const *d_grid_heliostat_index)
@@ -36,13 +36,11 @@ __device__ bool Intersect(const float3 &orig, const float3 &dir,
 }
 
 __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
-	Grid &grid, const float3 *d_helio_vertexs)
+	RectGrid &rectgrid, const float3 *d_helio_vertexs)
 {
-	RectGrid *rectgrid = dynamic_cast<RectGrid *>(&grid);
-
 	// Step 1 - Initialization
 	//	Step 1.1 Initial current position of origin in the scene
-	int3 pos = make_int3((d_orig - rectgrid->pos_) / rectgrid->interval_);
+	int3 pos = make_int3((d_orig - rectgrid.pos_) / rectgrid.interval_);
 
 	//	Step 1.2 StepX, StepY, StepZ
 	int3 Step;
@@ -52,9 +50,9 @@ __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
 
 	//	Step 1.3 Initial tmaxX, tmaxY, tmaxZ
 	float3 tMax, t;
-	t.x = calTMax(d_dir.x, rectgrid->interval_.x, pos.x, d_orig.x - rectgrid->pos_.x);
-	t.y = calTMax(d_dir.y, rectgrid->interval_.y, pos.y, d_orig.y - rectgrid->pos_.y);
-	t.z = calTMax(d_dir.z, rectgrid->interval_.z, pos.z, d_orig.z - rectgrid->pos_.z);
+	t.x = calTMax(d_dir.x, rectgrid.interval_.x, pos.x, d_orig.x - rectgrid.pos_.x);
+	t.y = calTMax(d_dir.y, rectgrid.interval_.y, pos.y, d_orig.y - rectgrid.pos_.y);
+	t.z = calTMax(d_dir.z, rectgrid.interval_.z, pos.z, d_orig.z - rectgrid.pos_.z);
 
 	tMax.x = absDivide(t.x, d_dir.x);	// avoid divide 0
 	tMax.y = absDivide(t.y, d_dir.y);
@@ -62,13 +60,13 @@ __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
 
 	//	Step 1.4 Initial tDeltaX, tDeltaY, tDeltaZ
 	float3 tDelta;
-	tDelta.x = absDivide(rectgrid->interval_.x, d_dir.x);// avoid divide 0
-	tDelta.y = absDivide(rectgrid->interval_.y, d_dir.y);
-	tDelta.z = absDivide(rectgrid->interval_.z, d_dir.z);
+	tDelta.x = absDivide(rectgrid.interval_.x, d_dir.x);// avoid divide 0
+	tDelta.y = absDivide(rectgrid.interval_.y, d_dir.y);
+	tDelta.z = absDivide(rectgrid.interval_.z, d_dir.z);
 
 	// Step 2 - Intersection
 	int3 grid_index = pos;
-	int grid_address = global_func::unroll_index(grid_index, rectgrid->grid_num_);
+	int grid_address = global_func::unroll_index(grid_index, rectgrid.grid_num_);
 	while (true)
 	{
 		if (tMax.x < tMax.y)
@@ -76,7 +74,7 @@ __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
 			if (tMax.x < tMax.z)
 			{
 				grid_index.x += Step.x;
-				if (grid_index.x >= rectgrid->grid_num_.x || grid_index.x<0)
+				if (grid_index.x >= rectgrid.grid_num_.x || grid_index.x<0)
 					// Outside grid
 					return true;
 				tMax.x += tDelta.x;
@@ -84,7 +82,7 @@ __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
 			else
 			{
 				grid_index.z += Step.z;
-				if (grid_index.z >= rectgrid->grid_num_.z || grid_index.z<0)
+				if (grid_index.z >= rectgrid.grid_num_.z || grid_index.z<0)
 					// Outside grid
 					return true;
 				tMax.z += tDelta.z;
@@ -95,7 +93,7 @@ __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
 			if (tMax.y < tMax.z)
 			{
 				grid_index.y += Step.y;
-				if (grid_index.y >= rectgrid->grid_num_.y || grid_index.y<0)
+				if (grid_index.y >= rectgrid.grid_num_.y || grid_index.y<0)
 					// Outside grid
 					return true;
 				tMax.y += tDelta.y;
@@ -103,23 +101,23 @@ __device__ bool NotCollision(const float3 &d_orig, const float3 &d_dir,
 			else
 			{
 				grid_index.z += Step.z;
-				if (grid_index.z >= rectgrid->grid_num_.z || grid_index.z<0)
+				if (grid_index.z >= rectgrid.grid_num_.z || grid_index.z<0)
 					// Outside grid
 					return true;
 				tMax.z += tDelta.z;
 			}
 		}
-		grid_address = global_func::unroll_index(grid_index, rectgrid->grid_num_);
+		grid_address = global_func::unroll_index(grid_index, rectgrid.grid_num_);
 
 		if (Intersect(d_orig, d_dir,
-			grid_address, d_helio_vertexs, rectgrid->d_grid_helio_match_, rectgrid->d_grid_helio_index_))
+			grid_address, d_helio_vertexs, rectgrid.d_grid_helio_match_, rectgrid.d_grid_helio_index_))
 			return false;
 	}
 	return false;
 }
 
 // Step 3: intersect with receiver
-__device__ float eta_aAlpha(const float &d)
+inline __device__ float eta_aAlpha(const float &d)
 {
 	if (d <= 1000.0f)
 		return 0.99331f - 0.0001176f*d + 1.97f*(1e-8f) * d*d;
@@ -127,7 +125,7 @@ __device__ float eta_aAlpha(const float &d)
 		return expf(-0.0001106f*d);
 }
 
-__device__ float calEnergy(const float3 &sun_dir, const float3 &normal, const float &eta)
+inline __device__ float calEnergy(const float3 &sun_dir, const float3 &normal, const float &eta)
 {
 	float cosine = fabsf(dot(sun_dir, normal));
 	return cosine*eta;
@@ -143,7 +141,7 @@ __device__ void receiver_drawing(Receiver &receiver, const SunRay &sunray,
 
 	int2 row_col = make_int2(u* receiver.resolution_.y, v* receiver.resolution_.x); // Intersect location
 
-																					//	Step2: Calculate the energy of the light
+	//	Step2: Calculate the energy of the light
 	float eta = eta_aAlpha(t);
 	float energy = calEnergy(sunray.sun_dir_, normal, eta);
 
@@ -153,7 +151,7 @@ __device__ void receiver_drawing(Receiver &receiver, const SunRay &sunray,
 }
 
 __global__ void map_tracing(const SunRay sunray,		// sun
-	Grid grid,					// grid
+	RectGrid grid,					// grid
 	Receiver receiver,			// receiver
 	const float3 *d_helio_vertexs,	// 3 vertexs of heliostats
 	const float3 *d_microhelio_normals,	// micro-heliostat's normal
@@ -193,7 +191,7 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 }
 
 void ray_tracing(const SunRay &sunray,		// sun
-	const Grid &grid,			// grid
+	Grid &grid,			// grid
 	Receiver &receiver,			// receiver
 	const float3 *d_helio_vertexs,	// 3 vertexs of heliostats
 	const float3 *d_microhelio_normals,	// micro-heliostat's normal
@@ -206,7 +204,17 @@ void ray_tracing(const SunRay &sunray,		// sun
 	global_func::setThreadsBlocks(nBlocks, nThreads, microhelio_num.x*microhelio_num.y*sunray.num_sunshape_lights_per_group_, true);
 
 	//	tracing every single light
-	map_tracing<<<nBlocks, nThreads>>>(sunray, grid, receiver,
-		d_helio_vertexs, d_microhelio_normals, d_microhelio_origs, d_microhelio_groups,
-		microhelio_num);
+	switch (grid.type_) 
+	{
+	case 0: 
+	{
+		RectGrid *rectgrid = dynamic_cast<RectGrid *> (&grid);
+		map_tracing << <nBlocks, nThreads >> >(sunray, *rectgrid, receiver,
+			d_helio_vertexs, d_microhelio_normals, d_microhelio_origs, d_microhelio_groups,
+			microhelio_num);
+		break;
+	}
+	default:
+		break;
+	}
 }
