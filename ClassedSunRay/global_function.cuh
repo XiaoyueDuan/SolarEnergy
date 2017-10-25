@@ -170,4 +170,17 @@ namespace global_func
 			cosf(d_angles.x),
 			sinf(d_angles.x)*sinf(d_angles.y));
 	}
+
+	//	Unroll and roll the index and address
+	__host__ __device__ inline int unroll_index(int3 index, int3 matrix_size)
+	{
+		int address = index.x*matrix_size.y*matrix_size.z + index.y*matrix_size.z + index.z;
+		return address;
+	}
+
+	__host__ __device__ inline int unroll_index(int2 index, int2 matrix_size)
+	{
+		int address = index.x*matrix_size.y + index.y;
+		return address;
+	}
 }

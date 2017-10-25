@@ -8,9 +8,8 @@ class Receiver
 {
 public:
 	// sub-class needs to redefine it
-	__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) = 0;
-	//__device__ __host__ virtual void CInit() = 0;
-	virtual void CInit(const int &geometry_info) = 0;
+	__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return true; }
+	virtual void CInit(const int &geometry_info) {}
 
 	// sub-class does NOT need to redefine it
 	//__device__ void GAddEnergy(const float &u, const float &v, const float &energy);	// add energy to d_image
@@ -51,8 +50,8 @@ public:
 
 private:
 	//__device__ __host__ void Cset_resolution(const float3 &geometry_info);
-	virtual void Cset_resolution(const int &geometry_info) = 0;
-	virtual void Cset_focuscenter()=0;
+	virtual void Cset_resolution(const int &geometry_info) {}
+	virtual void Cset_focuscenter() {}
 };
 
 class RectangleReceiver :public Receiver
