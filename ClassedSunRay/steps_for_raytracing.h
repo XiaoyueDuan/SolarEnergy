@@ -1,8 +1,12 @@
 #pragma once
 #include "solar_scene.h"
 
-//	Step 1: Generate micro-heliostats' normals
+// float3 *d_microhelio_centers
+// float3 *d_microhelio_normals
+// microhelio_num
+bool set_microhelio_centers(const RectangleHelio &recthelio, float3 *d_microhelio_centers, float3 *d_microhelio_normals, size_t &size);
 
-//	Step 2: Generate micro-heliostats' centers
+// const float3 *d_helio_vertexs
 
-//	Step 3: Generate which group sunray a micro-heliostat should be choosen
+
+// const int *d_microhelio_groups

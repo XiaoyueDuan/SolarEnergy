@@ -22,7 +22,7 @@ void SceneProcessor::set_helio_content(vector<Heliostat *> &heliostats, const fl
 {
 	for (int i = 0; i < heliostats.size(); ++i)
 	{
-		heliostats[i]->Cset_sub_row_col(solarenergy::helio_pixel_length);
+		heliostats[i]->Cset_pixel_length(solarenergy::helio_pixel_length);
 		heliostats[i]->CRotate(focus_center);
 	}
 }
@@ -34,7 +34,7 @@ bool SceneProcessor::set_helio_content(vector<Heliostat *> &heliostats, const fl
 
 	for (int i = 0; i < heliostats.size(); ++i)
 	{
-		heliostats[i]->Cset_sub_row_col(solarenergy::helio_pixel_length);
+		heliostats[i]->Cset_pixel_length(solarenergy::helio_pixel_length);
 		heliostats[i]->CRotate(focus_centers[i]);
 	}
 	return true;

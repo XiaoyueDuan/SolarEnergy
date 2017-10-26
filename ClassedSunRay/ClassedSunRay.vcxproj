@@ -32,6 +32,7 @@
     <ClInclude Include="scene_file_proc.h" />
     <ClInclude Include="scene_instance_process.h" />
     <ClInclude Include="solar_scene.h" />
+    <ClInclude Include="steps_for_raytracing.h" />
     <ClInclude Include="sunray.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vector_arithmetic.cuh" />
@@ -53,6 +54,7 @@
     <CudaCompile Include="ray_tracing.cu" />
     <CudaCompile Include="receiver.cu" />
     <CudaCompile Include="scene_instance_process.cu" />
+    <CudaCompile Include="steps_for_raytracing.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B83FDF2-CFC3-416D-A55C-583E1B12A7BB}</ProjectGuid>

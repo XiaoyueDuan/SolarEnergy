@@ -157,10 +157,10 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 	const float3 *d_microhelio_normals,	// micro-heliostat's normal
 	const float3 *d_microhelio_center,	// micro-heliostat's origins
 	const int *d_microhelio_groups,		// micro-heliostat's belonging group number
-	const int2 microhelio_num)
+	const int microhelio_num)
 {
 	unsigned long long int myId = global_func::getThreadId();
-	if (myId >= microhelio_num.x*microhelio_num.y*sunray.num_sunshape_lights_per_group_)
+	if (myId >= microhelio_num*sunray.num_sunshape_lights_per_group_)
 		return;
 
 	//	Step 1: whether the incident light is shadowed by other heliostats
@@ -191,17 +191,17 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 }
 
 void ray_tracing(const SunRay &sunray,		// sun
-	Grid &grid,			// grid
-	Receiver &receiver,			// receiver
-	const float3 *d_helio_vertexs,	// 3 vertexs of heliostats
-	const float3 *d_microhelio_normals,	// micro-heliostat's normal
-	const float3 *d_microhelio_origs,	// micro-heliostat's origins
-	const int *d_microhelio_groups,		// micro-heliostat's belonging group number
-	const int2 &microhelio_num)
+	Grid &grid,								// grid
+	Receiver &receiver,						// receiver
+	const float3 *d_helio_vertexs,			// 3 vertexs of heliostats
+	const float3 *d_microhelio_normals,		// micro-heliostat's normal
+	const float3 *d_microhelio_origs,		// micro-heliostat's origins
+	const int *d_microhelio_groups,			// micro-heliostat's belonging group number
+	const int &microhelio_num)
 {
 	int nThreads = 128;
 	dim3 nBlocks;
-	global_func::setThreadsBlocks(nBlocks, nThreads, microhelio_num.x*microhelio_num.y*sunray.num_sunshape_lights_per_group_, true);
+	global_func::setThreadsBlocks(nBlocks, nThreads, microhelio_num*sunray.num_sunshape_lights_per_group_, true);
 
 	//	tracing every single light
 	switch (grid.type_) 
