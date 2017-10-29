@@ -25,15 +25,23 @@ namespace global_func
 		float3 u, n, v;// could be shared
 
 		n = aligned_normal;
-		v = cross(n, make_float3(0.0f, 1.0f, 0.0f));
-		if (abs(v.x)<Epsilon&&
-			abs(v.y)<Epsilon&&
-			abs(v.z)<Epsilon)		//	parallel to (0,1,0), don't need to transform
-			return d_local;
+
+		if (abs(n.x)<Epsilon&&abs(n.z)<Epsilon)
+			return d_local; //	parallel to (0,1,0), don't need to transform
+
+		if (abs(n.x) > abs(n.z))
+		{
+			v = cross(n, make_float3(0.0f, 1.0f, 0.0f));
+			v = normalize(v);
+			u = cross(n, v);
+			u = normalize(u);
+		}
 		else
 		{
-			v = normalize(v);
-			u = cross(n, v); u = normalize(u);
+			u = cross(make_float3(0.0f, 1.0f, 0.0f), n);
+			u = normalize(u);
+			v = cross(u, n);
+			u = normalize(u);
 		}
 
 		float3 d_world = make_float3(d_local.x*u.x + d_local.y*n.x + d_local.z*v.x,
