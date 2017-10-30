@@ -1,5 +1,6 @@
 #pragma once
 #include "solar_scene.h"
+#include "rectgrid_raytracing.cuh"
 
 void ray_tracing(const SunRay &sunray,				// sun
 				const Grid &grid,					// grid

@@ -15,15 +15,16 @@ public:
 
 	__device__ __host__ Heliostat() {}
 
-	void virtual Cset_pixel_length(const float &pixel_length) = 0;
+	virtual void Cset_pixel_length(const float &pixel_length) = 0;
 	virtual void CRotate(const float3 focus_center) = 0;
+	virtual void Cget_vertex(float3 &v0, float3 &v1, float3 &v3) = 0;
 };
 
 class RectangleHelio :public Heliostat
 {
 public:
 	__device__ __host__ RectangleHelio() {}
-	void virtual Cset_pixel_length(const float &pixel_length);
+	virtual void Cset_pixel_length(const float &pixel_length);
 	//void virtual Cset_sub_row_col(const float &pixel_length);
 	//__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir)	// whether the light with orig and dir can intersect with this heliostat
 	//{
@@ -31,6 +32,12 @@ public:
 	//	return global_func::rayParallelogramIntersect(orig, dir, vertex_[0], vertex_[1], vertex_[3], t, u, v);
 	//}
 	virtual void CRotate(const float3 focus_center);
+	virtual void Cget_vertex(float3 &v0, float3 &v1, float3 &v3)
+	{
+		v0 = vertex_[0];
+		v1 = vertex_[1];
+		v3 = vertex_[3];
+	}
 
 	float3 vertex_[4];
 	//int2 sub_row_col_;	// How many submirrors compose a mirror
@@ -46,9 +53,13 @@ class ParaboloidHelio :public Heliostat	// has-RectangleHelio
 {
 public:
 	__device__ __host__ ParaboloidHelio() {}
-	void virtual Cset_pixel_length(const float &pixel_length)
+	virtual void Cset_pixel_length(const float &pixel_length)
 	{
 		invisual_recthelio_.Cset_pixel_length(pixel_length);
+	}
+	virtual void Cget_vertex(float3 &v0, float3 &v1, float3 &v3)
+	{
+		invisual_recthelio_.Cget_vertex(v0, v1, v3);
 	}
 
 	//__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir)	// whether the light with orig and dir can intersect with this heliostat

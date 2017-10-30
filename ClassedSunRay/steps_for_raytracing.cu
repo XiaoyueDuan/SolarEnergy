@@ -1,6 +1,6 @@
 #include "steps_for_raytracing.h"
 
-// Step 1: Generate micro-heliostats' centers
+// Step 1: Generate local micro-heliostats' centers
 __global__ void map_microhelio_centers(float3 *d_microhelio_centers, float3 helio_size,
 	const int2 row_col, const int2 sub_row_col,
 	const float2 gap,
@@ -48,7 +48,7 @@ __global__ void map_microhelio_center2world(float3 *d_microhelio_world_centers, 
 	d_microhelio_world_centers[myId] = local;
 }
 
-bool set_microhelio_centers(const RectangleHelio &recthelio, float3 *d_microhelio_centers, float3 *d_microhelio_normals, size_t &size)
+bool set_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhelio_centers, float3 *&d_microhelio_normals, size_t &size)
 {
 	int2 row_col = recthelio.row_col_;
 	float3 helio_size = recthelio.size_;
@@ -76,19 +76,48 @@ bool set_microhelio_centers(const RectangleHelio &recthelio, float3 *d_microheli
 
 	// 1. local center position
 	if (d_microhelio_centers == nullptr)
-		return false;
-	//cudaMalloc((void **)&d_microhelio_centers, sizeof(d_microhelio_centers)*size);
+		cudaMalloc((void **)&d_microhelio_centers, sizeof(float3)*size);
 	map_microhelio_centers << <nBlocks, nThreads >> >
 		(d_microhelio_centers, helio_size, row_col, sub_row_col, gap, pixel_length, subhelio_rowlength_collength, size);
 
 	// 2. normal
 	if (d_microhelio_normals == nullptr)
-		return false;
-	//cudaMalloc((void **)&d_microhelio_normals, sizeof(d_microhelio_normals)*size);
+		cudaMalloc((void **)&d_microhelio_normals, sizeof(float3)*size);
 	map_microhelio_normals <<<nBlocks, nThreads >>>(d_microhelio_normals, d_microhelio_centers, recthelio.normal_, size);
 
 	// 3. world center position
 	map_microhelio_center2world <<<nBlocks, nThreads >>>(d_microhelio_centers, d_microhelio_centers, recthelio.normal_, recthelio.pos_, size);
 
+	return true;
+}
+
+
+// const float3 *d_helio_vertexs
+bool set_helios_vertexes(vector<Heliostat *> heliostats, const int start_pos, const int end_pos,
+	float3 *&d_helio_vertexs)
+{
+	int size = end_pos-start_pos;
+	float3 *h_helio_vertexes = new float3[size * 3];
+
+	for (int i = start_pos; i < end_pos; ++i)
+	{
+		int j = i - start_pos;
+		heliostats[i]->Cget_vertex(h_helio_vertexes[3 * j], h_helio_vertexes[3 * j + 1], h_helio_vertexes[3 * j + 2]);
+	}
+		
+	
+	global_func::cpu2gpu(d_helio_vertexs, h_helio_vertexes,  3 * size);
+
+	delete[] h_helio_vertexes;
+	return true;
+}
+
+// int *d_microhelio_groups
+bool set_microhelio_groups(int *&d_microhelio_groups, const int num_group, const size_t &size)
+{
+	if (d_microhelio_groups == nullptr)
+		checkCudaErrors(cudaMalloc((void **)&d_microhelio_groups, sizeof(int)*size));
+
+	RandomGenerator::gpu_Uniform(d_microhelio_groups, 0, num_group, size);
 	return true;
 }
