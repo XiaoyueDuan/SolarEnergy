@@ -104,7 +104,7 @@ public:
 
 	float3 topradius_bottomradius_hight_;	// topradius_bottomradius_hight_.x and while topradius_bottomradius_hight_.y is top radius and bottom radius respectively,
 											// while radius_hight.z is hight
-	float3 pos_;
+	
 private:
 	virtual void Cset_resolution(const int &geometry_info) {}//empty now
 };

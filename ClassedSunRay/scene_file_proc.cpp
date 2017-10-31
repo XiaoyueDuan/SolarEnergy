@@ -51,7 +51,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 	// prama to ensure the memery
 	int helio_input_num = 0;
 	int helio_input_total = 0;
-
+	int grid_start_helio_pos = 0;
 
 	InputMode inputMode = InputMode::none;
 	solarScene_ = solarscene;
@@ -130,6 +130,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 				}
 				grid0->type_ = grid_type;
 				helio_input_num = 0;
+				grid0->start_helio_pos_ = grid_start_helio_pos;
 				//reset the gap 
 				gap_set = false;
 				matrix_set = false;
@@ -204,7 +205,7 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							line_stream >> n;
 							grid0->num_helios_ = n;
 							helio_input_total = n;
-							heliostat = new RectangleHelio[n];
+							grid_start_helio_pos += n;
 							break;
 						case StringValue::type:
 							int helio_type;
@@ -250,18 +251,20 @@ bool SceneFileProc::SceneFileRead(SolarScene *solarscene, std::string filepath) 
 							if (helio_input_num >= helio_input_total) {
 								std::cerr << "too many helistat" << std::endl;
 							}
-							float3 pos;
-							line_stream >> pos.x >> pos.y >> pos.z;
-							(heliostat+ helio_input_num)->pos_ = pos;
-							(heliostat + helio_input_num)->gap_ = gap_buf;//gap
-							(heliostat + helio_input_num)->row_col_ = matrix_buf;//matrix
-							if(helio_type_buf == 0) {
-								readHelioParamter(scene_stream, heliostat+helio_input_num);
-							}
-							if (helio_input_num ==0) {
+							if (helio_type_buf == 0) {
+								heliostat = new RectangleHelio;
+								float3 pos;
+								line_stream >> pos.x >> pos.y >> pos.z;
+								heliostat->pos_ = pos;
+								heliostat->gap_ = gap_buf;//gap
+								heliostat->row_col_ = matrix_buf;//matrix
+								if (helio_type_buf == 0) {
+									readHelioParamter(scene_stream, heliostat);
+								}
 								solarScene_->heliostats.push_back(heliostat);
+								heliostat = nullptr; //make sure heliostat is null
+								++helio_input_num;
 							}
-							++helio_input_num;
 							break;
 						default:
 							break;

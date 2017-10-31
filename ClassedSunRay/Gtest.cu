@@ -1,25 +1,18 @@
 #include "Gtest.cuh"
-
-__global__ void add(float u, float v)
-{
-
-}
+#include "scene_instance_process.h"
  
 void test(SolarScene &solar_scene)
 {
-	// test receiver.cuh
-	//solar_scene.receivers[0]->normal_ = make_float3(1.0f, 0.0f, 0.0f);
-	solar_scene.receivers[0]->CInit(100);
+	// 1
+	SceneProcessor::set_grid_content(solar_scene.grid0s, solar_scene.heliostats);
 	
-	float3 dir = make_float3(0.0f, 0.0f, - 1.0f);
-	float3 orig = make_float3(4.0f, 104.0f, 100.0f);
+	// 2
+	float3 focus_center = solar_scene.receivers[0]->pos_;
+	SceneProcessor::set_helio_content(solar_scene.heliostats, focus_center);
 
-	// CPU
-	float t, u, v;
-	solar_scene.receivers[0]->GIntersect(orig, dir, t, u, v);
-	
-	// 
-	RectangleHelio *rectangle_helio =dynamic_cast<RectangleHelio *>(solar_scene.heliostats[0]);
-	rectangle_helio->Cset_sub_row_col(0.01f);
-	rectangle_helio->init(solar_scene.receivers[0]->pos_);
+	// 3
+	SceneProcessor::set_receiver_content(solar_scene.receivers);
+
+	// 4
+	SceneProcessor::set_sunray_content(*solar_scene.sunray_);
 }

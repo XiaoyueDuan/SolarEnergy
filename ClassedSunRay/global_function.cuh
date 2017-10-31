@@ -26,9 +26,9 @@ namespace global_func
 
 		n = aligned_normal;
 		u = cross(n, make_float3(0.0f, 1.0f, 0.0f));
-		if (abs(u.x)<global_const::Epsilon&&
-			abs(u.y)<global_const::Epsilon&&
-			abs(u.z)<global_const::Epsilon)		//	parallel to (0,1,0), don't need to transform
+		if (abs(u.x)<Epsilon&&
+			abs(u.y)<Epsilon&&
+			abs(u.z)<Epsilon)		//	parallel to (0,1,0), don't need to transform
 			return d_local;		
 		else
 		{
@@ -78,7 +78,7 @@ namespace global_func
 		float det = dot(E1, pvec);
 
 		// ray and triangle are parallel if det is close to 0
-		if (fabsf(det) < global_const::Epsilon) return false;
+		if (fabsf(det) < Epsilon) return false;
 
 		float invDet = 1 / det;
 
@@ -91,8 +91,83 @@ namespace global_func
 		if (v < 0 || v > 1) return false;
 
 		t = dot(E2, qvec)*invDet;
-		if (t < global_const::Epsilon) return false;
+		if (t < Epsilon) return false;
 
 		return true;
+	}
+
+	template <typename T>
+	inline void cpu2gpu(T *&d_out, T *&h_in, const size_t &size)
+	{
+		if(d_out==nullptr)
+			checkCudaErrors(cudaMalloc((void **)&d_out, sizeof(T)*size));
+		checkCudaErrors(cudaMemcpy(d_out, h_in, sizeof(T)*size, cudaMemcpyHostToDevice));
+	}
+
+	template <typename T>
+	inline void gpu2cpu(T *&h_out, T *&d_in, const size_t &size)
+	{
+		if(h_out==nullptr)
+			h_out = new T[size];
+		checkCudaErrors(cudaMemcpy(h_out, d_in, sizeof(T)*size, cudaMemcpyDeviceToHost));
+	}
+
+	__host__ __device__ inline bool setThreadsBlocks(dim3 &nBlocks, const int const &nThreads,
+		const size_t &size, const bool const &threadFixed)
+	{
+		if (size > MAX_ALL_THREADS)
+		{
+			printf("There are too many threads to cope with, please use less threads.\n");
+			return false;
+		}
+
+		int block_lastDim = (size + nThreads - 1) / nThreads;
+		if (block_lastDim < MAX_BLOCK_SINGLE_DIM)
+		{
+			nBlocks.x = block_lastDim;
+			nBlocks.y = nBlocks.z = 1;
+			return true;
+		}
+
+		block_lastDim = (block_lastDim + MAX_BLOCK_SINGLE_DIM - 1) / MAX_BLOCK_SINGLE_DIM;
+		if (block_lastDim < MAX_BLOCK_SINGLE_DIM)
+		{
+			nBlocks.x = MAX_BLOCK_SINGLE_DIM;
+			nBlocks.y = block_lastDim;
+			nBlocks.z = 1;
+			return true;
+		}
+		else
+		{
+			nBlocks.x = nBlocks.y = MAX_BLOCK_SINGLE_DIM;
+			nBlocks.z = (block_lastDim + MAX_BLOCK_SINGLE_DIM - 1) / MAX_BLOCK_SINGLE_DIM;
+			return true;
+		}
+	}
+
+	__host__ __device__ inline bool setThreadsBlocks(dim3 &nBlocks, int &nThreads, const size_t &size)
+	{
+		nThreads = (MAX_THREADS <= size) ? MAX_THREADS : size;
+		return setThreadsBlocks(nBlocks, nThreads, size, true);
+	}
+
+	__host__ __device__ inline unsigned long long int getThreadId()
+	{
+		// unique block index inside a 3D block grid
+		const unsigned long long int blockId = blockIdx.x //1D
+			+ blockIdx.y * gridDim.x //2D
+			+ gridDim.x * gridDim.y * blockIdx.z; //3D
+
+		// global unique thread index, block dimension uses only x-coordinate
+		const unsigned long long int threadId = blockId * blockDim.x + threadIdx.x;
+
+		return threadId;
+	}
+	
+	__host__ __device__ inline float3 angle2xyz(float2 d_angles)
+	{
+		return make_float3(sinf(d_angles.x)*cosf(d_angles.y),
+			cosf(d_angles.x),
+			sinf(d_angles.x)*sinf(d_angles.y));
 	}
 }

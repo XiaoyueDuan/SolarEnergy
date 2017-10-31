@@ -6,6 +6,14 @@ class SunRay
 public:
 	__device__ __host__ SunRay() :d_samplelights_(nullptr), d_perturbation_(nullptr) {}
 
+	__device__ __host__ SunRay(float3 sun_dir,int num_sunshape_groups,int lights_per_group,
+		float dni = 1000.0f,float csr = 0.001) : SunRay(){
+		sun_dir_ = sun_dir;
+		dni_ = dni;
+		csr_ = csr;
+		num_sunshape_groups_ = num_sunshape_groups;
+		num_sunshape_lights_per_group_ = lights_per_group;
+	}
 	//__device__ __host__ SunRay(const SunRay &sunray)
 	//{
 	//	sun_dir_ = sunray.sun_dir_;
