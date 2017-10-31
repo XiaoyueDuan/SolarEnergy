@@ -18,11 +18,11 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include <scenewindow.h>
 
@@ -46,10 +46,10 @@ public:
     QAction *actionRayTrace_Option;
     QAction *actionAbout;
     QWidget *centralWidget;
-    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
+    QSplitter *splitter_2;
     SceneWindow *sceneWidget;
-    QVBoxLayout *verticalLayout;
+    QSplitter *splitter;
     QTreeWidget *nodeTreeWidget;
     QTableWidget *parameterTableWidget;
     QMenuBar *menuBar;
@@ -68,12 +68,12 @@ public:
         GUIClass->setEnabled(true);
         GUIClass->resize(1265, 853);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHorizontalStretch(1);
+        sizePolicy.setVerticalStretch(1);
         sizePolicy.setHeightForWidth(GUIClass->sizePolicy().hasHeightForWidth());
         GUIClass->setSizePolicy(sizePolicy);
         GUIClass->setMinimumSize(QSize(1265, 853));
-        GUIClass->setMaximumSize(QSize(1265, 853));
+        GUIClass->setMaximumSize(QSize(10000, 10000));
         QIcon icon;
         icon.addFile(QStringLiteral(":/GUI/icons/sunIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
         GUIClass->setWindowIcon(icon);
@@ -116,28 +116,34 @@ public:
         actionAbout->setObjectName(QStringLiteral("actionAbout"));
         centralWidget = new QWidget(GUIClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        layoutWidget = new QWidget(centralWidget);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(0, 0, 1261, 771));
-        horizontalLayout = new QHBoxLayout(layoutWidget);
+        sizePolicy.setHeightForWidth(centralWidget->sizePolicy().hasHeightForWidth());
+        centralWidget->setSizePolicy(sizePolicy);
+        horizontalLayout = new QHBoxLayout(centralWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        sceneWidget = new SceneWindow(layoutWidget);
-        sceneWidget->setObjectName(QStringLiteral("sceneWidget"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        splitter_2 = new QSplitter(centralWidget);
+        splitter_2->setObjectName(QStringLiteral("splitter_2"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(1);
         sizePolicy1.setVerticalStretch(1);
-        sizePolicy1.setHeightForWidth(sceneWidget->sizePolicy().hasHeightForWidth());
-        sceneWidget->setSizePolicy(sizePolicy1);
-
-        horizontalLayout->addWidget(sceneWidget);
-
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        nodeTreeWidget = new QTreeWidget(layoutWidget);
+        sizePolicy1.setHeightForWidth(splitter_2->sizePolicy().hasHeightForWidth());
+        splitter_2->setSizePolicy(sizePolicy1);
+        splitter_2->setOrientation(Qt::Horizontal);
+        sceneWidget = new SceneWindow(splitter_2);
+        sceneWidget->setObjectName(QStringLiteral("sceneWidget"));
+        sizePolicy.setHeightForWidth(sceneWidget->sizePolicy().hasHeightForWidth());
+        sceneWidget->setSizePolicy(sizePolicy);
+        splitter_2->addWidget(sceneWidget);
+        splitter = new QSplitter(splitter_2);
+        splitter->setObjectName(QStringLiteral("splitter"));
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(1);
+        sizePolicy2.setHeightForWidth(splitter->sizePolicy().hasHeightForWidth());
+        splitter->setSizePolicy(sizePolicy2);
+        splitter->setOrientation(Qt::Vertical);
+        nodeTreeWidget = new QTreeWidget(splitter);
         QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
         __qtreewidgetitem->setText(0, QStringLiteral("Node"));
         nodeTreeWidget->setHeaderItem(__qtreewidgetitem);
@@ -147,10 +153,13 @@ public:
         new QTreeWidgetItem(__qtreewidgetitem1);
         new QTreeWidgetItem(__qtreewidgetitem1);
         nodeTreeWidget->setObjectName(QStringLiteral("nodeTreeWidget"));
-
-        verticalLayout->addWidget(nodeTreeWidget);
-
-        parameterTableWidget = new QTableWidget(layoutWidget);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(1);
+        sizePolicy3.setHeightForWidth(nodeTreeWidget->sizePolicy().hasHeightForWidth());
+        nodeTreeWidget->setSizePolicy(sizePolicy3);
+        splitter->addWidget(nodeTreeWidget);
+        parameterTableWidget = new QTableWidget(splitter);
         if (parameterTableWidget->columnCount() < 2)
             parameterTableWidget->setColumnCount(2);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
@@ -164,12 +173,13 @@ public:
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
         parameterTableWidget->setVerticalHeaderItem(1, __qtablewidgetitem3);
         parameterTableWidget->setObjectName(QStringLiteral("parameterTableWidget"));
+        sizePolicy3.setHeightForWidth(parameterTableWidget->sizePolicy().hasHeightForWidth());
+        parameterTableWidget->setSizePolicy(sizePolicy3);
         parameterTableWidget->setColumnCount(2);
+        splitter->addWidget(parameterTableWidget);
+        splitter_2->addWidget(splitter);
 
-        verticalLayout->addWidget(parameterTableWidget);
-
-
-        horizontalLayout->addLayout(verticalLayout);
+        horizontalLayout->addWidget(splitter_2);
 
         GUIClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GUIClass);

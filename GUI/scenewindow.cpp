@@ -52,16 +52,17 @@ void SceneWindow::initializeGL()
 void SceneWindow::paintGL()
 {
 	//清理屏幕  
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 	//实现参数的刷新  
 	update();
-
+	float width = this->width();
+	float height = this->height();
 	glDepthMask(GL_FALSE); // 禁止写入深度缓冲区
 	QMatrix4x4 view;
 	QMatrix4x4 projection;
 	view = camera.GetViewMatrix();
-	projection.perspective(camera.Zoom, 4.0f / 3.0f, 0.1f, 100000.0f);
+	projection.perspective(camera.Zoom, width/height, 1.0f, 100000.0f);
 
 	//渲染skybox  
 	texture_skybox->bind();
@@ -76,7 +77,7 @@ void SceneWindow::paintGL()
 	glBindVertexArray(0);
 	glDepthMask(GL_TRUE); // 禁止写入深度缓冲区
 
-						  //渲染cube
+	//渲染cube
 	textures_stone->bind();
 	shaderCube.bind();
 	view = camera.GetViewMatrix();
@@ -135,8 +136,9 @@ void SceneWindow::paintGL()
 void SceneWindow::resizeGL(int width, int height)
 {
 	//未使用  
-	Q_UNUSED(width);
-	Q_UNUSED(height);
+	/*Q_UNUSED(width);
+	Q_UNUSED(height);*/
+	glViewport(0, 0, width, height);
 }
 
 void SceneWindow::initHelioParam() {
