@@ -6,11 +6,10 @@ void Receiver::Calloc_image()
 	checkCudaErrors(cudaMalloc((void **)&d_image_, sizeof(float)*resolution_.x*resolution_.y));
 }
 
-
-
 // RectangleReceiver
 void RectangleReceiver::CInit(const int &geometry_info)
 {
+	pixel_length_ = 1.0f / float(geometry_info);
 	Cinit_vertex();
 	Cset_focuscenter();
 	Cset_resolution(geometry_info);

@@ -19,7 +19,8 @@ void ray_tracing(const SunRay &sunray,		// sun
 	case 0: 
 	{
 		RectGrid *rectgrid = dynamic_cast<RectGrid *> (&grid);
-		map_tracing << <nBlocks, nThreads >> >(sunray, *rectgrid, receiver,
+		RectangleReceiver *rect_receiver = dynamic_cast<RectangleReceiver *> (&receiver);
+		map_tracing << <nBlocks, nThreads >> >(sunray, *rectgrid, *rect_receiver,
 			d_helio_vertexs, d_microhelio_normals, d_microhelio_origs, d_microhelio_groups,
 			microhelio_num);
 		break;

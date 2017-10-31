@@ -3,7 +3,7 @@
 #include "rectgrid_raytracing.cuh"
 
 void ray_tracing(const SunRay &sunray,				// sun
-				const Grid &grid,					// grid
+				Grid &grid,					// grid
 				Receiver &receiver,					// receiver
 				const float3 *d_helio_vertexs,		// 3 vertexs of heliostats
 				const float3 *d_microhelio_normals,	// micro-heliostat's normal

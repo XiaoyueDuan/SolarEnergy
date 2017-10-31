@@ -16,6 +16,6 @@ void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heli
 void recthelio_ray_tracing(const SunRay &sunray,
 							Receiver &receiver,
 							const RectangleHelio &recthelio,		//	which heliostat will be traced
-							const Grid &grid,						//	the grid heliostat belongs to
+							Grid &grid,								//	the grid heliostat belongs to
 							const vector<Heliostat *> heliostats);	//	all heliostats
 							

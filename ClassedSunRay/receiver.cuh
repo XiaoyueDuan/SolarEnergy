@@ -8,7 +8,7 @@ class Receiver
 {
 public:
 	// sub-class needs to redefine it
-	__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return true; }
+	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return true; }
 	virtual void CInit(const int &geometry_info) {}
 
 	// sub-class does NOT need to redefine it
@@ -18,10 +18,18 @@ public:
 
 	__device__ __host__ Receiver() :d_image_(nullptr) {}
 
-	//__device__ __host__ Receiver(Receiver &rece)
-	//{
-	//
-	//}
+	__device__ __host__ Receiver(const Receiver &rect)
+	{
+		type_=rect.type_;
+		normal_ = rect.normal_;
+		pos_ = rect.pos_;
+		size_ = rect.size_;
+		focus_center_ = rect.focus_center_;
+		face_num_ = rect.face_num_;
+		pixel_length_ = rect.pixel_length_;
+		d_image_ = rect.d_image_;
+		resolution_ = rect.resolution_;
+	}
 
 	__device__ __host__ ~Receiver()
 	{
@@ -58,7 +66,16 @@ class RectangleReceiver :public Receiver
 {
 public:
 	__device__ __host__ RectangleReceiver() {}
-	__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v)
+	__device__ __host__ RectangleReceiver(const RectangleReceiver &rect_receiver):Receiver(rect_receiver)
+	{
+		rect_vertex_[0] = rect_receiver.rect_vertex_[0];
+		rect_vertex_[1] = rect_receiver.rect_vertex_[1];
+		rect_vertex_[2] = rect_receiver.rect_vertex_[2];
+		rect_vertex_[3] = rect_receiver.rect_vertex_[3];
+		localnormal_ = rect_receiver.localnormal_;
+	}
+
+	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v)
 	{
 		return global_func::rayParallelogramIntersect(orig, dir, rect_vertex_[0], rect_vertex_[1], rect_vertex_[3], t, u, v);	
 	}
@@ -86,7 +103,13 @@ class CylinderReceiver : public Receiver
 {
 public:
 	__device__ __host__ CylinderReceiver() {}
-	__device__ __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return false; }//empty now
+	__device__ __host__ CylinderReceiver(const CylinderReceiver &cylinder_receiver):Receiver(cylinder_receiver)
+	{
+		radius_hight_ = cylinder_receiver.radius_hight_;
+		pos_ = cylinder_receiver.pos_;
+	}
+
+	__device__ __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return false; }//empty now
 	//__device__ __host__ virtual void CInit();
 	virtual void CInit(const int &geometry_info) {}//empty now
 
@@ -102,7 +125,12 @@ class CircularTruncatedConeReceiver : public Receiver
 {
 public:
 	__device__ __host__ CircularTruncatedConeReceiver() {}
-	__device__  __host__ virtual bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return false; }//empty now
+	__device__ __host__ CircularTruncatedConeReceiver
+	(const CircularTruncatedConeReceiver &cirtru_rece): Receiver(cirtru_rece)
+	{
+		topradius_bottomradius_hight_ = cirtru_rece.topradius_bottomradius_hight_;
+	}
+	__device__  __host__ bool GIntersect(const float3 &orig, const float3 &dir, float &t, float &u, float &v) { return false; }//empty now
 	//__device__ __host__ virtual void CInit();
 	virtual void CInit(const int &geometry_info) {}//empty now
 

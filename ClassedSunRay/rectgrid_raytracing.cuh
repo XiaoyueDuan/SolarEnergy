@@ -4,7 +4,7 @@
 
 __global__ void map_tracing(const SunRay sunray,		// sun
 	RectGrid grid,					// grid
-	Receiver receiver,			// receiver
+	RectangleReceiver receiver,			// receiver
 	const float3 *d_helio_vertexs,	// 3 vertexs of heliostats
 	const float3 *d_microhelio_normals,	// micro-heliostat's normal
 	const float3 *d_microhelio_center,	// micro-heliostat's origins

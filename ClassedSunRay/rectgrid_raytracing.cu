@@ -131,11 +131,12 @@ inline __device__ float calEnergy(const float3 &sun_dir, const float3 &normal, c
 	return cosine*eta;
 }
 
-__device__ void receiver_drawing(Receiver &receiver, const SunRay &sunray,
+__device__ void receiver_drawing(RectangleReceiver &receiver, const SunRay &sunray,
 	const float3 &orig, const float3 const &dir, const float3 const &normal)
 {
 	//	Step1: Intersect with receiver
 	float t, u, v;
+	bool intersect = receiver.GIntersect(orig, dir, t, u, v);
 	if (!receiver.GIntersect(orig, dir, t, u, v))
 		return;
 
@@ -152,7 +153,7 @@ __device__ void receiver_drawing(Receiver &receiver, const SunRay &sunray,
 
 __global__ void map_tracing(const SunRay sunray,		// sun
 	RectGrid grid,					// grid
-	Receiver receiver,			// receiver
+	RectangleReceiver receiver,			// receiver
 	const float3 *d_helio_vertexs,	// 3 vertexs of heliostats
 	const float3 *d_microhelio_normals,	// micro-heliostat's normal
 	const float3 *d_microhelio_center,	// micro-heliostat's origins

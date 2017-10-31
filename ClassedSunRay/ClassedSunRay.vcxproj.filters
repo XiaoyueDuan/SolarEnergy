@@ -87,6 +87,9 @@
     <ClInclude Include="steps_for_raytracing.h">
       <Filter>RayTracing</Filter>
     </ClInclude>
+    <ClInclude Include="image_save.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solar_scene.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="recthelio_tracing.cpp">
       <Filter>RayTracing\RectHelio</Filter>
+    </ClCompile>
+    <ClCompile Include="image_save.cpp">
+      <Filter>PostProcess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

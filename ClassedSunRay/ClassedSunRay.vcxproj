@@ -26,6 +26,7 @@
     <ClInclude Include="grid.h" />
     <ClInclude Include="Gtest.cuh" />
     <ClInclude Include="heliostat.cuh" />
+    <ClInclude Include="image_save.h" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="ray_tracing.h" />
     <ClInclude Include="receiver.cuh" />
@@ -43,6 +44,7 @@
     <ClCompile Include="common_var.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="heliostat.cpp" />
+    <ClCompile Include="image_save.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="random_generator.cpp" />
     <ClCompile Include="receiver.cpp" />
