@@ -51,7 +51,16 @@
         <file>icons/zoom-out.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>shader/simple.frag</file>
-        <file>shader/simple.vert</file>
+        <file>Resources/images/skybox/negx.jpg</file>
+        <file>Resources/images/skybox/negy.jpg</file>
+        <file>Resources/images/skybox/negz.jpg</file>
+        <file>Resources/images/skybox/posx.jpg</file>
+        <file>Resources/images/skybox/posy.jpg</file>
+        <file>Resources/images/skybox/posz.jpg</file>
+        <file>Resources/images/grassland.jpg</file>
+        <file>Resources/images/metal.png</file>
+        <file>Resources/images/side1.png</file>
+        <file>Resources/images/skytop.jpg</file>
+        <file>Resources/images/stone1.jpg</file>
     </qresource>
 </RCC>

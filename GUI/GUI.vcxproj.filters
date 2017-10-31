@@ -123,6 +123,9 @@
     <ClInclude Include="GeneratedFiles\ui_sunlight.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GUI.rc" />
@@ -131,13 +134,34 @@
     <Image Include="bitmap1.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader\coordinate.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\coordinate.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\helio.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\helio.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\land.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\land.vert">
+      <Filter>shader</Filter>
+    </None>
     <None Include="shader\simple.frag">
       <Filter>shader</Filter>
     </None>
     <None Include="shader\simple.vert">
       <Filter>shader</Filter>
     </None>
-    <None Include="shader\coordinate.vert">
+    <None Include="shader\skybox.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\skybox.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

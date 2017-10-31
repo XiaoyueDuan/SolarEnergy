@@ -231,6 +231,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="GeneratedFiles\ui_gui.h" />
     <CustomBuild Include="scenewindow.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -316,9 +317,6 @@
     <Image Include="bitmap1.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\coordinate.vert" />
-    <None Include="shader\simple.frag" />
-    <None Include="shader\simple.vert" />
     <CustomBuild Include="sunlight.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>
@@ -337,6 +335,18 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\coordinate.frag" />
+    <None Include="shader\coordinate.vert" />
+    <None Include="shader\helio.frag" />
+    <None Include="shader\helio.vert" />
+    <None Include="shader\land.frag" />
+    <None Include="shader\land.vert" />
+    <None Include="shader\simple.frag" />
+    <None Include="shader\simple.vert" />
+    <None Include="shader\skybox.frag" />
+    <None Include="shader\skybox.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
