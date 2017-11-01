@@ -64,7 +64,7 @@ bool SolarScene::InitContent()
 
 	// 4. Heliostats
 	float3 focus_center = this->receivers[0]->focus_center_;			// must after receiver init
-	SceneProcessor::set_helio_content(this->heliostats, focus_center);
+	SceneProcessor::set_helio_content(this->heliostats, focus_center, this->sunray_->sun_dir_);
 
 	return true;
 }

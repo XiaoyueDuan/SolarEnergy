@@ -5,7 +5,7 @@
  
 void test(SolarScene &solar_scene)
 {
-	solar_scene.InitContent();
+	//solar_scene.InitContent();
 	
 	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[1]);
 	recthelio_ray_tracing(*solar_scene.sunray_,

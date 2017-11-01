@@ -12,9 +12,9 @@ public:
 	static void set_receiver_content(vector<Receiver *> &receivers);
 
 	// helio
-	static void set_helio_content(vector<Heliostat *> &heliostats, const float3 &focus_center);
+	static void set_helio_content(vector<Heliostat *> &heliostats, const float3 &focus_center, const float3 &sunray_dir);
 	// focus_centers is the head of array
-	static bool set_helio_content(vector<Heliostat *> &heliostats, const float3 *focus_centers, const size_t &size);
+	static bool set_helio_content(vector<Heliostat *> &heliostats, const float3 *focus_centers, const float3 &sunray_dir, const size_t &size);
 
 	// sunray
 	static void set_sunray_content(SunRay &sunray);
