@@ -91,12 +91,18 @@ public:
         label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
 
-        gridLayout->addWidget(label_2, 1, 0, 1, 1);
+        gridLayout->addWidget(label_2, 2, 0, 1, 1);
 
         tableWidget = new QTableWidget(layoutWidget);
+        if (tableWidget->columnCount() < 2)
+            tableWidget->setColumnCount(2);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
 
-        gridLayout->addWidget(tableWidget, 1, 1, 1, 1);
+        gridLayout->addWidget(tableWidget, 2, 1, 1, 1);
 
         sunLightWidget->addTab(tab, QString());
         tab_2 = new QWidget();
@@ -155,7 +161,7 @@ public:
 
         retranslateUi(SunLight);
 
-        sunLightWidget->setCurrentIndex(1);
+        sunLightWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(SunLight);
@@ -166,6 +172,10 @@ public:
         SunLight->setWindowTitle(QApplication::translate("SunLight", "SunLight", Q_NULLPTR));
         label->setText(QApplication::translate("SunLight", "Sunshape Type:", Q_NULLPTR));
         label_2->setText(QApplication::translate("SunLight", "Parameter:", Q_NULLPTR));
+        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
+        ___qtablewidgetitem->setText(QApplication::translate("SunLight", "parameter", Q_NULLPTR));
+        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
+        ___qtablewidgetitem1->setText(QApplication::translate("SunLight", "value", Q_NULLPTR));
         sunLightWidget->setTabText(sunLightWidget->indexOf(tab), QApplication::translate("SunLight", "Sun Shape", Q_NULLPTR));
         label_3->setText(QApplication::translate("SunLight", "Azimuth(degrees from North):", Q_NULLPTR));
         label_4->setText(QApplication::translate("SunLight", "Elevation(degree):", Q_NULLPTR));

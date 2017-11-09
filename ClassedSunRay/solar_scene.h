@@ -8,7 +8,6 @@
 #include "sunray.h"
 #include "destroy.h"
 
-
 //Singleton design model to  control the  access to resources
 class SolarScene {
 protected:

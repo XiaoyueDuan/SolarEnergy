@@ -42,6 +42,9 @@
     <Filter Include="Scene Window">
       <UniqueIdentifier>{5dfcbb96-df30-400f-8a97-5d47ca3b2bc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{3efec647-1064-4fed-ab95-71d1518aab9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +92,18 @@
     <ClCompile Include="GeneratedFiles\Release\moc_scenewindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="scenetreewidget.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scenetreewidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scenetreewidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="convert_type.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="gui.h">
@@ -112,6 +127,9 @@
     <CustomBuild Include="scenewindow.h">
       <Filter>Scene Window</Filter>
     </CustomBuild>
+    <CustomBuild Include="scenetreewidget.hpp">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_gui.h">
@@ -124,7 +142,10 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>Header Files</Filter>
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="convert_type.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

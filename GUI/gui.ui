@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1265</width>
-    <height>853</height>
+    <width>1561</width>
+    <height>952</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,8 +21,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1265</width>
-    <height>853</height>
+    <width>400</width>
+    <height>300</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -48,12 +48,6 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QSplitter" name="splitter_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>1</horstretch>
-        <verstretch>1</verstretch>
-       </sizepolicy>
-      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -66,52 +60,22 @@
        </property>
       </widget>
       <widget class="QSplitter" name="splitter">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QTreeWidget" name="nodeTreeWidget">
+       <widget class="sceneTreeWidget" name="nodeTreeWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>1</verstretch>
          </sizepolicy>
         </property>
-        <column>
-         <property name="text">
-          <string notr="true">Node</string>
-         </property>
-        </column>
-        <item>
-         <property name="text">
-          <string>ground</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>receiver</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>grid</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>heliostat0</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>heliostat1</string>
-          </property>
-         </item>
-        </item>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
        </widget>
        <widget class="QTableWidget" name="parameterTableWidget">
         <property name="sizePolicy">
@@ -119,6 +83,12 @@
           <horstretch>0</horstretch>
           <verstretch>1</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="columnCount">
          <number>2</number>
@@ -154,7 +124,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1265</width>
+     <width>1561</width>
      <height>23</height>
     </rect>
    </property>
@@ -307,6 +277,11 @@
    <extends>QWidget</extends>
    <header location="global">scenewindow.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>sceneTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">scenetreewidget.hpp</header>
   </customwidget>
  </customwidgets>
  <resources>

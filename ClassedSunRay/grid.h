@@ -12,6 +12,7 @@ class Grid
 public:
 	int type_;
 	int helio_type_;
+	int num_helios_;					// How many heliostats in the grid
 	int start_helio_pos_;			// the first helio index of the helio lists in this grid
 	__device__ __host__ Grid(){}
 	
@@ -42,7 +43,6 @@ public:
 	float3 size_;
 	float3 interval_;
 	int3 grid_num_;						// x * y * z 's sub-grid
-	int num_helios_;					// How many heliostats in the grid
 	int *d_grid_helio_match_;			// size = num_grid_helio_match_
 	int *d_grid_helio_index_;			// size = size.x * size.y * size.z +1
 	size_t num_grid_helio_match_;

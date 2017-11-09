@@ -18,8 +18,6 @@ public:
 private:
 	void initParamerter();
 	
-	
-
 private slots:
 	void openFile();
 	void saveFile();
@@ -28,7 +26,6 @@ private slots:
 
 private:
 	Ui::GUIClass ui;
-
 	QString curFilePath;
 	bool curFileModified;
 	

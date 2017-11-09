@@ -22,8 +22,8 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
-#include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QWidget>
+#include <scenetreewidget.hpp>
 #include <scenewindow.h>
 
 QT_BEGIN_NAMESPACE
@@ -50,7 +50,7 @@ public:
     QSplitter *splitter_2;
     SceneWindow *sceneWidget;
     QSplitter *splitter;
-    QTreeWidget *nodeTreeWidget;
+    sceneTreeWidget *nodeTreeWidget;
     QTableWidget *parameterTableWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -66,13 +66,13 @@ public:
         if (GUIClass->objectName().isEmpty())
             GUIClass->setObjectName(QStringLiteral("GUIClass"));
         GUIClass->setEnabled(true);
-        GUIClass->resize(1265, 853);
+        GUIClass->resize(1561, 952);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(1);
         sizePolicy.setVerticalStretch(1);
         sizePolicy.setHeightForWidth(GUIClass->sizePolicy().hasHeightForWidth());
         GUIClass->setSizePolicy(sizePolicy);
-        GUIClass->setMinimumSize(QSize(1265, 853));
+        GUIClass->setMinimumSize(QSize(400, 300));
         GUIClass->setMaximumSize(QSize(10000, 10000));
         QIcon icon;
         icon.addFile(QStringLiteral(":/GUI/icons/sunIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -124,11 +124,6 @@ public:
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         splitter_2 = new QSplitter(centralWidget);
         splitter_2->setObjectName(QStringLiteral("splitter_2"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(1);
-        sizePolicy1.setVerticalStretch(1);
-        sizePolicy1.setHeightForWidth(splitter_2->sizePolicy().hasHeightForWidth());
-        splitter_2->setSizePolicy(sizePolicy1);
         splitter_2->setOrientation(Qt::Horizontal);
         sceneWidget = new SceneWindow(splitter_2);
         sceneWidget->setObjectName(QStringLiteral("sceneWidget"));
@@ -137,27 +132,15 @@ public:
         splitter_2->addWidget(sceneWidget);
         splitter = new QSplitter(splitter_2);
         splitter->setObjectName(QStringLiteral("splitter"));
-        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(1);
-        sizePolicy2.setHeightForWidth(splitter->sizePolicy().hasHeightForWidth());
-        splitter->setSizePolicy(sizePolicy2);
         splitter->setOrientation(Qt::Vertical);
-        nodeTreeWidget = new QTreeWidget(splitter);
-        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QStringLiteral("Node"));
-        nodeTreeWidget->setHeaderItem(__qtreewidgetitem);
-        new QTreeWidgetItem(nodeTreeWidget);
-        new QTreeWidgetItem(nodeTreeWidget);
-        QTreeWidgetItem *__qtreewidgetitem1 = new QTreeWidgetItem(nodeTreeWidget);
-        new QTreeWidgetItem(__qtreewidgetitem1);
-        new QTreeWidgetItem(__qtreewidgetitem1);
+        nodeTreeWidget = new sceneTreeWidget(splitter);
         nodeTreeWidget->setObjectName(QStringLiteral("nodeTreeWidget"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(1);
-        sizePolicy3.setHeightForWidth(nodeTreeWidget->sizePolicy().hasHeightForWidth());
-        nodeTreeWidget->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(1);
+        sizePolicy1.setHeightForWidth(nodeTreeWidget->sizePolicy().hasHeightForWidth());
+        nodeTreeWidget->setSizePolicy(sizePolicy1);
+        nodeTreeWidget->setMinimumSize(QSize(300, 0));
         splitter->addWidget(nodeTreeWidget);
         parameterTableWidget = new QTableWidget(splitter);
         if (parameterTableWidget->columnCount() < 2)
@@ -173,8 +156,9 @@ public:
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
         parameterTableWidget->setVerticalHeaderItem(1, __qtablewidgetitem3);
         parameterTableWidget->setObjectName(QStringLiteral("parameterTableWidget"));
-        sizePolicy3.setHeightForWidth(parameterTableWidget->sizePolicy().hasHeightForWidth());
-        parameterTableWidget->setSizePolicy(sizePolicy3);
+        sizePolicy1.setHeightForWidth(parameterTableWidget->sizePolicy().hasHeightForWidth());
+        parameterTableWidget->setSizePolicy(sizePolicy1);
+        parameterTableWidget->setMinimumSize(QSize(300, 0));
         parameterTableWidget->setColumnCount(2);
         splitter->addWidget(parameterTableWidget);
         splitter_2->addWidget(splitter);
@@ -184,7 +168,7 @@ public:
         GUIClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GUIClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1265, 23));
+        menuBar->setGeometry(QRect(0, 0, 1561, 23));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuEnvironment = new QMenu(menuBar);
@@ -250,21 +234,6 @@ public:
         actionFlux_Analysis->setText(QApplication::translate("GUIClass", "Flux Analysis", Q_NULLPTR));
         actionRayTrace_Option->setText(QApplication::translate("GUIClass", "RayTrace Option", Q_NULLPTR));
         actionAbout->setText(QApplication::translate("GUIClass", "About", Q_NULLPTR));
-
-        const bool __sortingEnabled = nodeTreeWidget->isSortingEnabled();
-        nodeTreeWidget->setSortingEnabled(false);
-        QTreeWidgetItem *___qtreewidgetitem = nodeTreeWidget->topLevelItem(0);
-        ___qtreewidgetitem->setText(0, QApplication::translate("GUIClass", "ground", Q_NULLPTR));
-        QTreeWidgetItem *___qtreewidgetitem1 = nodeTreeWidget->topLevelItem(1);
-        ___qtreewidgetitem1->setText(0, QApplication::translate("GUIClass", "receiver", Q_NULLPTR));
-        QTreeWidgetItem *___qtreewidgetitem2 = nodeTreeWidget->topLevelItem(2);
-        ___qtreewidgetitem2->setText(0, QApplication::translate("GUIClass", "grid", Q_NULLPTR));
-        QTreeWidgetItem *___qtreewidgetitem3 = ___qtreewidgetitem2->child(0);
-        ___qtreewidgetitem3->setText(0, QApplication::translate("GUIClass", "heliostat0", Q_NULLPTR));
-        QTreeWidgetItem *___qtreewidgetitem4 = ___qtreewidgetitem2->child(1);
-        ___qtreewidgetitem4->setText(0, QApplication::translate("GUIClass", "heliostat1", Q_NULLPTR));
-        nodeTreeWidget->setSortingEnabled(__sortingEnabled);
-
         QTableWidgetItem *___qtablewidgetitem = parameterTableWidget->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("GUIClass", "parameter", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem1 = parameterTableWidget->horizontalHeaderItem(1);

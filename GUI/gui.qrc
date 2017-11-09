@@ -49,6 +49,8 @@
         <file>icons/WorldMapGray.BMP</file>
         <file>icons/zoom-in.png</file>
         <file>icons/zoom-out.png</file>
+        <file>icons/helio.png</file>
+        <file>icons/receiver.png</file>
     </qresource>
     <qresource prefix="/">
         <file>Resources/images/skybox/negx.jpg</file>

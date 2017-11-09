@@ -15,10 +15,7 @@ GUI::GUI(QWidget *parent)
 	ui.parameterTableWidget->setItem(0, 1, new QTableWidgetItem(QString("100 100 2")));
 	ui.parameterTableWidget->setItem(1, 0, new QTableWidgetItem(QString("pos")));
 	ui.parameterTableWidget->setItem(1, 1, new QTableWidgetItem(QString("100 100 2")));
-	//ui.parameterTableWidget->reset();
-	//ui.parameterTableWidget->repaint();
-	//ui.parameterTableWidget->show();
-	
+
 	connect(ui.actionopen,&QAction::triggered, this,&GUI::openFile);
 	connect(ui.actionsave, &QAction::triggered, this, &GUI::saveFile);
 	connect(ui.actionsave_as, &QAction::triggered, this, &GUI::saveAsFile);
