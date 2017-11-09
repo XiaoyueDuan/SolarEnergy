@@ -9,7 +9,7 @@ void ray_tracing(const SunRay &sunray,		// sun
 	const int *d_microhelio_groups,			// micro-heliostat's belonging group number
 	const int &microhelio_num)
 {
-	int nThreads = 128;
+	int nThreads = 256;
 	dim3 nBlocks;
 	global_func::setThreadsBlocks(nBlocks, nThreads, microhelio_num*sunray.num_sunshape_lights_per_group_, true);
 
@@ -23,6 +23,8 @@ void ray_tracing(const SunRay &sunray,		// sun
 		map_tracing << <nBlocks, nThreads >> >(sunray, *rectgrid, *rect_receiver,
 			d_helio_vertexs, d_microhelio_normals, d_microhelio_origs, d_microhelio_groups,
 			microhelio_num);
+		auto a = cudaGetLastError();
+		cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
 		break;
 	}
 	default:

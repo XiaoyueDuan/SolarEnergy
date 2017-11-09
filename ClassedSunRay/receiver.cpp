@@ -63,27 +63,27 @@ void RectangleReceiver::Cset_localvertex()
 	{
 	case 0:
 		rect_vertex_[0] = make_float3(-size_.x / 2, -size_.y / 2, size_.z / 2);
-		rect_vertex_[1] = make_float3(-size_.x / 2, size_.y / 2, size_.z / 2);
+		rect_vertex_[1] = make_float3(size_.x / 2, -size_.y / 2, size_.z / 2);
 		rect_vertex_[2] = make_float3(size_.x / 2, size_.y / 2, size_.z / 2);
-		rect_vertex_[3] = make_float3(size_.x / 2, -size_.y / 2, size_.z / 2);
+		rect_vertex_[3] = make_float3(-size_.x / 2, size_.y / 2, size_.z / 2);
 		break;
 	case 1:
 		rect_vertex_[0] = make_float3(size_.x / 2, -size_.y / 2, size_.z / 2);
-		rect_vertex_[1] = make_float3(size_.x / 2, size_.y / 2, size_.z / 2);
+		rect_vertex_[1] = make_float3(size_.x / 2, -size_.y / 2, -size_.z / 2);
 		rect_vertex_[2] = make_float3(size_.x / 2, size_.y / 2, -size_.z / 2);
-		rect_vertex_[3] = make_float3(size_.x / 2, -size_.y / 2, -size_.z / 2);
+		rect_vertex_[3] = make_float3(size_.x / 2, size_.y / 2, size_.z / 2);		
 		break;
 	case 2:
 		rect_vertex_[0] = make_float3(size_.x / 2, -size_.y / 2, -size_.z / 2);
-		rect_vertex_[1] = make_float3(size_.x / 2, size_.y / 2, -size_.z / 2);
+		rect_vertex_[1] = make_float3(-size_.x / 2, -size_.y / 2, -size_.z / 2);		
 		rect_vertex_[2] = make_float3(-size_.x / 2, size_.y / 2, -size_.z / 2);
-		rect_vertex_[3] = make_float3(-size_.x / 2, -size_.y / 2, -size_.z / 2);
+		rect_vertex_[3] = make_float3(size_.x / 2, size_.y / 2, -size_.z / 2);
 		break;
 	case 3:
 		rect_vertex_[0] = make_float3(-size_.x / 2, -size_.y / 2, -size_.z / 2);
-		rect_vertex_[1] = make_float3(-size_.x / 2, size_.y / 2, -size_.z / 2);
+		rect_vertex_[1] = make_float3(-size_.x / 2, -size_.y / 2, size_.z / 2);
 		rect_vertex_[2] = make_float3(-size_.x / 2, size_.y / 2, size_.z / 2);
-		rect_vertex_[3] = make_float3(-size_.x / 2, -size_.y / 2, size_.z / 2);
+		rect_vertex_[3] = make_float3(-size_.x / 2, size_.y / 2, -size_.z / 2);
 		break;
 	default:
 		break;

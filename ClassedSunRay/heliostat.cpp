@@ -44,7 +44,8 @@ void RectangleHelio::Cset_worldvertex()
 void RectangleHelio::Cset_normal(const float3 &focus_center, const float3 &sunray_dir)
 {
 	float3 local_center = make_float3(pos_.x, pos_.y, pos_.z);
-	float3 reflect_dir = focus_center - local_center; reflect_dir = normalize(reflect_dir);
+	float3 reflect_dir = focus_center - local_center; 
+	reflect_dir = normalize(reflect_dir); 
 	float3 dir = reflect_dir - sunray_dir;
 	normal_ = normalize(dir);
 }

@@ -140,7 +140,7 @@ __device__ void receiver_drawing(RectangleReceiver &receiver, const SunRay &sunr
 	if (!receiver.GIntersect(orig, dir, t, u, v))
 		return;
 
-	int2 row_col = make_int2(u* receiver.resolution_.y, v* receiver.resolution_.x); // Intersect location
+	int2 row_col = make_int2(v* receiver.resolution_.y, u* receiver.resolution_.x); // Intersect location
 
 																					//	Step2: Calculate the energy of the light
 	float eta = eta_aAlpha(t);
@@ -178,11 +178,11 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 
 	//	Step 2: whether the reflect light is shadowed by other heliostats	
 	float3 normal = d_microhelio_normals[myId / nLights];
-	float3 turbulence = sunray.d_perturbation_[myId % nLights];
-	normal = global_func::local2world(turbulence, normal); normal = normalize(normal);
+	//float3 turbulence = sunray.d_perturbation_[myId % nLights];
+	//normal = global_func::local2world(turbulence, normal); normal = normalize(normal);
 
 	dir = -dir;
-	dir = reflect(dir, normal);				// reflect light
+	dir = reflect(dir, normal);					// reflect light
 	dir = normalize(dir);
 	if (!NotCollision(orig, dir, grid, d_helio_vertexs))
 		return;
