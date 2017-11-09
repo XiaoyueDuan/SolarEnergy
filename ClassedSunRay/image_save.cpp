@@ -8,9 +8,15 @@ void ImageSaver::savetxt(const string filename, int w, int h, float *h_data)
 	for (int r = 0; r < h; ++r)
 	{
 		for (int c = 0; c < w; ++c)
-		{
+		{	
 			address = (h - 1 - r)*w + c;
-			out << h_data[address] << ',';
+			if (c) {
+				out <<","<< h_data[address];
+			}
+			else {
+				out << h_data[address];
+			}
+			
 		}
 		out << endl;
 	}
