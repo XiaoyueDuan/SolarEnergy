@@ -44,6 +44,16 @@ void SceneWindow::initializeGL()
 	initShader();
 	initVAO();
 	initTexture();
+	glContext = QOpenGLContext::currentContext();
+	glFuncs = glContext->versionFunctions<QOpenGLFunctions_3_3_Core>();
+	if (!glFuncs) {
+		qWarning() << "Could not obtain required OpenGL context version";
+		exit(1);
+	}
+	// 加载 mesh数据
+	//modelObj.loadModel("Resources/rock/rock.obj", glFuncs);
+	modelObj.loadModel("./Resources/nanosuit/nanosuit.obj", glFuncs);
+
 	/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
 
@@ -129,6 +139,15 @@ void SceneWindow::paintGL()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 	glBindVertexArray(0);
+
+	//绘制mehs结构
+	shaderMesh.bind();
+	QMatrix4x4 modelMesh;
+	shaderMesh.setUniformValue("view", view);
+	shaderMesh.setUniformValue("projection", projection);
+	shaderMesh.setUniformValue("model", modelMesh);
+	modelObj.Draw(shaderMesh);
+
 	//强制刷新缓冲区，保证命令被执行  
 	glFlush();
 }
@@ -266,6 +285,11 @@ void SceneWindow::initShader() {
 	shaderCoor.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader/coordinate.vert");
 	shaderCoor.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader/coordinate.frag");
 	shaderCoor.link();
+
+	//初始化mesh程序
+	shaderMesh.addShaderFromSourceFile(QOpenGLShader::Vertex, "shader/model_loading.vert");
+	shaderMesh.addShaderFromSourceFile(QOpenGLShader::Fragment, "shader/model_loading.frag");
+	shaderMesh.link();
 }
 
 void SceneWindow::initVAO() {

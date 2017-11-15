@@ -1,12 +1,14 @@
 #pragma once
 
 #include <QtWidgets/QOpenGLWidget>  
+#include <QtGui/QOpenGLFunctions> 
 #include <QtGui/QOpenGLFunctions_3_3_Core> 
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 
 #include <vector>
 #include "camera.h"
+#include "model.h"
 
 struct HelioDes {
 	int helioNum;
@@ -46,6 +48,10 @@ protected:
 
 
 private:
+	//opengl 的 context
+	QOpenGLContext *glContext;
+	QOpenGLFunctions_3_3_Core *glFuncs;
+	Model modelObj;
 
 	QCursor cursor; // 管理光标形状
 	GLfloat lastX = 0;        //光标上次x值  
@@ -57,6 +63,7 @@ private:
 	QOpenGLShaderProgram shaderLand;
 	QOpenGLShaderProgram shaderCoor;
 	QOpenGLShaderProgram shaderCube;
+	QOpenGLShaderProgram shaderMesh;
 
 	GLuint NumVAOGw = 3;                //VAO的数目  
 	GLuint NumVBOGw = 3;                //VBO的数目  

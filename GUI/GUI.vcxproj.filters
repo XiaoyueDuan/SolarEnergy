@@ -104,6 +104,9 @@
     <ClCompile Include="convert_type.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Scene Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="gui.h">
@@ -147,6 +150,12 @@
     <ClInclude Include="convert_type.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Scene Window</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Scene Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GUI.rc" />
@@ -183,6 +192,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="shader\skybox.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\model_loading.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\model_loading.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
