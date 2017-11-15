@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QOpenGLWidget>  
-#include <QtGui/QOpenGLFunctions> 
+#include <QtGui/QOpenGLFunctions>  
 #include <QtGui/QOpenGLFunctions_3_3_Core> 
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>

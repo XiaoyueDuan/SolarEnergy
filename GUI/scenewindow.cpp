@@ -51,8 +51,8 @@ void SceneWindow::initializeGL()
 		exit(1);
 	}
 	// 加载 mesh数据
-	//modelObj.loadModel("Resources/rock/rock.obj", glFuncs);
-	modelObj.loadModel("./Resources/nanosuit/nanosuit.obj", glFuncs);
+	modelObj.loadModel("Resources/rock/rock.obj", glFuncs);
+	//modelObj.loadModel("./Resources/nanosuit/nanosuit.obj", glFuncs);
 
 	/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
@@ -154,7 +154,6 @@ void SceneWindow::paintGL()
 
 void SceneWindow::resizeGL(int width, int height)
 {
-	//未使用  
 	/*Q_UNUSED(width);
 	Q_UNUSED(height);*/
 	glViewport(0, 0, width, height);
@@ -173,6 +172,8 @@ void SceneWindow::initHelioParam() {
 	helio.pos.push_back(QVector3D(300, 3, 0));
 	helio.geo.push_back(QVector3D(1, 1, 2));
 	helio.norm.push_back(QVector3D(0, 0, 1));
+
+
 
 }
 

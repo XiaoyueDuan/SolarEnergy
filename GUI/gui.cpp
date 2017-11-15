@@ -16,7 +16,7 @@ GUI::GUI(QWidget *parent)
 	ui.parameterTableWidget->setItem(1, 0, new QTableWidgetItem(QString("pos")));
 	ui.parameterTableWidget->setItem(1, 1, new QTableWidgetItem(QString("100 100 2")));
 
-	connect(ui.actionopen,&QAction::triggered, this,&GUI::openFile);
+	connect(ui.actionopen, &QAction::triggered, this, &GUI::openFile);
 	connect(ui.actionsave, &QAction::triggered, this, &GUI::saveFile);
 	connect(ui.actionsave_as, &QAction::triggered, this, &GUI::saveAsFile);
 	connect(ui.actionSunLight, &QAction::triggered, this, &GUI::setSunLight);

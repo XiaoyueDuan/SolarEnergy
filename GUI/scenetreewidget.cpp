@@ -1,20 +1,24 @@
 ﻿#include "scenetreewidget.hpp"
-#include <QtWidgets/QTreeWidget>
-#include "../ClassedSunRay/solar_scene.h"
+
 
 
 sceneTreeWidget::sceneTreeWidget(QWidget * parent) : QTreeWidget(parent) {
 	setHeaderLabels(QStringList() << "Key" << "Value");
 	//refresh data
 	refreshData();
-
 	//connect
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this,SLOT(openRowEditor(QTreeWidgetItem*, int)));
 	connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(closeRowEditor()));
+	setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(popMenu(const QPoint&)));  //check the menu right click
 	setStyleSheet("QTreeWidget::item{height:20px}");
 }
 
 sceneTreeWidget::~sceneTreeWidget() {
+	releaseData();
+}
+
+void sceneTreeWidget::releaseData() {
 	if (groundTree) delete groundTree;
 	if (receiverTree) delete receiverTree;
 	if (!gridTree.empty()) {
@@ -24,6 +28,8 @@ sceneTreeWidget::~sceneTreeWidget() {
 		}
 	}
 }
+
+
 QTreeWidgetItem* sceneTreeWidget::addSelfItem(QTreeWidgetItem* parent, QString key, QString value, DataType dtype, int isCheck,QString iconPath) {
 	QStringList columItemList;
 	QTreeWidgetItem *child;
@@ -46,6 +52,7 @@ QTreeWidgetItem* sceneTreeWidget::addSelfItem(QTreeWidgetItem* parent, QString k
 
 
 void sceneTreeWidget::refreshData() {
+	clear();
 	// set the init data
 	groundTree = new QTreeWidgetItem(QStringList() << "ground" << " " << QString::number(DataType::TYPE_NONE));
 	groundTree->setIcon(0, QIcon(":/GUI/icons/viewer_viewSun.png"));
@@ -129,7 +136,7 @@ void sceneTreeWidget::refreshData() {
 			addSelfItem(helio, key, value, DataType::TYPE_FLOAT3);
 			key = "norm";
 			value = float3_to_string(solar_scene->heliostats[helio_index]->normal_);
-			addSelfItem(helio, key, value, DataType::TYPE_FLOAT3);
+			addSelfItem(helio, key, value, DataType::TYPE_NONE);
 			key = "gap";
 			value = float2_to_string(solar_scene->heliostats[helio_index]->gap_);
 			addSelfItem(helio, key, value, DataType::TYPE_FLOAT2);
@@ -142,7 +149,11 @@ void sceneTreeWidget::refreshData() {
 
 
 void sceneTreeWidget::openRowEditor(QTreeWidgetItem *item, int column) {
-	if (column == 1)
+	// if type is editable，change the status
+	int role = Qt::DisplayRole;
+	QVariant qvar = item->data(2, role);
+	int type = qvar.value<int>();
+	if (column == 1 && type != DataType::TYPE_NONE )
 	{
 		openPersistentEditor(item, column);// 设置某一item可以编辑
 		editItem = item;
@@ -154,5 +165,90 @@ void sceneTreeWidget::closeRowEditor() {
 	if (editItem != nullptr) {
 		closePersistentEditor(editItem, editColumn);// 设置某一item不可编辑
 		editItem = nullptr;
+	}
+}
+
+void sceneTreeWidget::popMenu(const QPoint&) {
+	QTreeWidgetItem* curItem = currentItem();  //获取当前被点击的节点
+	if (curItem == NULL)return;   //这种情况是右键的位置不在treeItem的范围内，即在空白位置右击
+	QString nodeName = curItem->text(0);
+	qDebug() << "nodeName:" << nodeName;
+	if (nodeName == "ground") { return; }
+	if (nodeName == "receiver" || nodeName.startsWith("grid_"))
+	{
+		//QAction deleteNode(QString::fromLocal8Bit("&删除该节点"),this);
+		QAction addNode(QString::fromLocal8Bit("&增加子节点"),this);       
+		//connect(&deleteNode, SIGNAL(triggered()), this, SLOT(deleteSceneNode()));
+		connect(&addNode, SIGNAL(triggered()), this, SLOT(addSceneNode()));
+
+		QPoint pos;
+		QMenu menu(this);
+		//menu.addAction(&deleteNode);
+		menu.addAction(&addNode);
+		menu.exec(QCursor::pos());  //在当前鼠标位置显示
+	}
+	else if(nodeName.startsWith("rece_") || nodeName.startsWith("helio_")){
+		QAction deleteNode(QString::fromLocal8Bit("&删除该节点"), this);
+		//在界面上删除该item
+		connect(&deleteNode, SIGNAL(triggered()), this, SLOT(deleteSceneNode()));
+		QPoint pos;
+		QMenu menu(this);
+		menu.addAction(&deleteNode);
+		menu.exec(QCursor::pos());  //在当前鼠标位置显示
+	}
+}
+
+void sceneTreeWidget::addSceneNode() {
+	QTreeWidgetItem *curItem = currentItem();  //获取当前被点击的节点
+	if (curItem == NULL)return;   
+	QString nodeName = curItem->text(0);
+	SolarScene *solar_scene = SolarScene::GetInstance();
+	QString key, value;
+	if (nodeName.startsWith("receiver")) {
+		
+		int rece_num = solar_scene->receivers.size();
+		key = "rece_" + QString::number(rece_num);
+		value = "";
+		QTreeWidgetItem* rece = addSelfItem(curItem, key, value, DataType::TYPE_NONE, 2, QString(":/GUI/icons/receiver.png"));
+		//params
+		key = "pos";
+		value = float3_to_string(solar_scene->receivers[0]->pos_);
+		addSelfItem(rece, key, value, DataType::TYPE_FLOAT3);
+		key = "size";
+		value = float3_to_string(solar_scene->receivers[0]->size_);
+		addSelfItem(rece, key, value, DataType::TYPE_FLOAT3);
+		key = "norm";
+		value = float3_to_string(solar_scene->receivers[0]->normal_);
+		addSelfItem(rece, key, value, DataType::TYPE_NONE);
+	}
+	else if ( nodeName.startsWith("grid_")) {
+		int helio_num = solar_scene->heliostats.size();
+		key = "helio_" + QString::number(helio_num);
+		value = "";
+		QTreeWidgetItem* helio = addSelfItem(curItem, key, value, DataType::TYPE_NONE, 2, QString(":/GUI/icons/helio.png"));
+		//params
+		key = "pos";
+		value = float3_to_string(solar_scene->heliostats[0]->pos_);
+		addSelfItem(helio, key, value, DataType::TYPE_FLOAT3);
+		key = "size";
+		value = float3_to_string(solar_scene->heliostats[0]->size_);
+		addSelfItem(helio, key, value, DataType::TYPE_FLOAT3);
+		key = "norm";
+		value = float3_to_string(solar_scene->heliostats[0]->normal_);
+		addSelfItem(helio, key, value, DataType::TYPE_NONE);
+		key = "gap";
+		value = float2_to_string(solar_scene->heliostats[0]->gap_);
+		addSelfItem(helio, key, value, DataType::TYPE_FLOAT2);
+		key = "matric";
+		value = int2_to_string(solar_scene->heliostats[0]->row_col_);
+		addSelfItem(helio, key, value, DataType::TYPE_INT2);
+	}
+}
+void sceneTreeWidget::deleteSceneNode() {
+	QTreeWidgetItem* curItem = currentItem();	
+	if (curItem == nullptr) return;
+	QTreeWidgetItem* parentNode = curItem->parent();  
+	if (parentNode != nullptr) {
+		parentNode->removeChild(curItem);
 	}
 }

@@ -20,8 +20,11 @@ enum DataType{
 
 
 
-
-
 QString int2_to_string(int2 vec);
 QString float3_to_string(float3 vec);
 QString float2_to_string(float2 vec);
+
+bool string_to_int(QString str, int &vec);
+bool string_to_int2(QString str,int2 &vec);
+bool string_to_float3(QString str,float3 &vec);
+bool string_to_float2(QString str,float2 &vec);
