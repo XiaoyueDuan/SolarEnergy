@@ -7,6 +7,7 @@
 #include "receiver.cuh"
 #include "sunray.h"
 #include "destroy.h"
+#include "scene_instance_process.h"
 
 //Singleton design model to  control the  access to resources
 class SolarScene {
@@ -22,7 +23,7 @@ public:
 	bool InitSolarScene(string filepath);
 	bool LoadSceneFromFile(string filepath);
 
-	bool InitContent();					// Call the method only if all grids, heliostats and receivers are initialized. 
+	bool InitContent();					// Call the method only if all grids, heliostats and receivers needs initializing. 
 
 private:
 	static SolarScene *m_instance;		//Singleton

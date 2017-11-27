@@ -25,15 +25,23 @@ namespace global_func
 		float3 u, n, v;// could be shared
 
 		n = aligned_normal;
-		u = cross(n, make_float3(0.0f, 1.0f, 0.0f));
-		if (abs(u.x)<Epsilon&&
-			abs(u.y)<Epsilon&&
-			abs(u.z)<Epsilon)		//	parallel to (0,1,0), don't need to transform
-			return d_local;		
+
+		if (abs(n.x)<Epsilon&&abs(n.z)<Epsilon)
+			return d_local; //	parallel to (0,1,0), don't need to transform
+
+		if (abs(n.x) > abs(n.z))
+		{
+			v = cross(n, make_float3(0.0f, 1.0f, 0.0f));
+			v = normalize(v);
+			u = cross(n, v);
+			u = normalize(u);
+		}
 		else
 		{
-			u /= length(u);
-			v = cross(u, n); v /= length(v);
+			u = cross(make_float3(0.0f, 1.0f, 0.0f), n);
+			u = normalize(u);
+			v = cross(u, n);
+			u = normalize(u);
 		}
 
 		float3 d_world = make_float3(d_local.x*u.x + d_local.y*n.x + d_local.z*v.x,
@@ -169,5 +177,18 @@ namespace global_func
 		return make_float3(sinf(d_angles.x)*cosf(d_angles.y),
 			cosf(d_angles.x),
 			sinf(d_angles.x)*sinf(d_angles.y));
+	}
+
+	//	Unroll and roll the index and address
+	__host__ __device__ inline int unroll_index(int3 index, int3 matrix_size)
+	{
+		int address = index.x*matrix_size.y*matrix_size.z + index.y*matrix_size.z + index.z;
+		return address;
+	}
+
+	__host__ __device__ inline int unroll_index(int2 index, int2 matrix_size)
+	{
+		int address = index.x*matrix_size.y + index.y;
+		return address;
 	}
 }

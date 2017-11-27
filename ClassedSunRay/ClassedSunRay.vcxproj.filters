@@ -19,6 +19,15 @@
     <Filter Include="PreProcess">
       <UniqueIdentifier>{0322dca0-7279-4acc-b595-3216c119b3a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RayTracing">
+      <UniqueIdentifier>{86ce5839-0acb-496e-9b35-3ba3a93e5a12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing\RectGrid">
+      <UniqueIdentifier>{94929d54-c931-4efb-a3c4-5a7d3266f569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing\RectHelio">
+      <UniqueIdentifier>{c73b1c80-266f-418f-888f-9d3f2c97f838}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grid.h">
@@ -66,6 +75,21 @@
     <ClInclude Include="scene_instance_process.h">
       <Filter>PreProcess</Filter>
     </ClInclude>
+    <ClInclude Include="ray_tracing.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="rectgrid_raytracing.cuh">
+      <Filter>RayTracing\RectGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="recthelio_tracing.h">
+      <Filter>RayTracing\RectHelio</Filter>
+    </ClInclude>
+    <ClInclude Include="steps_for_raytracing.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="image_save.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solar_scene.cpp">
@@ -95,6 +119,12 @@
     <ClCompile Include="scene_instance_process.cpp">
       <Filter>PreProcess</Filter>
     </ClCompile>
+    <ClCompile Include="recthelio_tracing.cpp">
+      <Filter>RayTracing\RectHelio</Filter>
+    </ClCompile>
+    <ClCompile Include="image_save.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="receiver.cu">
@@ -108,6 +138,15 @@
     </CudaCompile>
     <CudaCompile Include="scene_instance_process.cu">
       <Filter>PreProcess</Filter>
+    </CudaCompile>
+    <CudaCompile Include="ray_tracing.cu">
+      <Filter>RayTracing</Filter>
+    </CudaCompile>
+    <CudaCompile Include="rectgrid_raytracing.cu">
+      <Filter>RayTracing\RectGrid</Filter>
+    </CudaCompile>
+    <CudaCompile Include="steps_for_raytracing.cu">
+      <Filter>RayTracing</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

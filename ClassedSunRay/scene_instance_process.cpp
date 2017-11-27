@@ -18,24 +18,24 @@ void SceneProcessor::set_receiver_content(vector<Receiver *> &receivers)
 }
 
 // helio
-void SceneProcessor::set_helio_content(vector<Heliostat *> &heliostats, const float3 &focus_center)
+void SceneProcessor::set_helio_content(vector<Heliostat *> &heliostats, const float3 &focus_center, const float3 &sunray_dir)
 {
 	for (int i = 0; i < heliostats.size(); ++i)
 	{
-		heliostats[i]->Cset_sub_row_col(solarenergy::helio_pixel_length);
-		heliostats[i]->CRotate(focus_center);
+		heliostats[i]->Cset_pixel_length(solarenergy::helio_pixel_length);
+		heliostats[i]->CRotate(focus_center, sunray_dir);
 	}
 }
 
-bool SceneProcessor::set_helio_content(vector<Heliostat *> &heliostats, const float3 *focus_centers, const size_t &size)
+bool SceneProcessor::set_helio_content(vector<Heliostat *> &heliostats, const float3 *focus_centers, const float3 &sunray_dir, const size_t &size)
 {
 	if (heliostats.size() != size)
 		return false;
 
 	for (int i = 0; i < heliostats.size(); ++i)
 	{
-		heliostats[i]->Cset_sub_row_col(solarenergy::helio_pixel_length);
-		heliostats[i]->CRotate(focus_centers[i]);
+		heliostats[i]->Cset_pixel_length(solarenergy::helio_pixel_length);
+		heliostats[i]->CRotate(focus_centers[i], sunray_dir);
 	}
 	return true;
 }

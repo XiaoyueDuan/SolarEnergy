@@ -26,11 +26,16 @@
     <ClInclude Include="grid.h" />
     <ClInclude Include="Gtest.cuh" />
     <ClInclude Include="heliostat.cuh" />
+    <ClInclude Include="image_save.h" />
     <ClInclude Include="random_generator.h" />
+    <ClInclude Include="ray_tracing.h" />
     <ClInclude Include="receiver.cuh" />
+    <ClInclude Include="rectgrid_raytracing.cuh" />
+    <ClInclude Include="recthelio_tracing.h" />
     <ClInclude Include="scene_file_proc.h" />
     <ClInclude Include="scene_instance_process.h" />
     <ClInclude Include="solar_scene.h" />
+    <ClInclude Include="steps_for_raytracing.h" />
     <ClInclude Include="sunray.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vector_arithmetic.cuh" />
@@ -39,9 +44,11 @@
     <ClCompile Include="common_var.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="heliostat.cpp" />
+    <ClCompile Include="image_save.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="random_generator.cpp" />
     <ClCompile Include="receiver.cpp" />
+    <ClCompile Include="recthelio_tracing.cpp" />
     <ClCompile Include="scene_file_proc.cpp" />
     <ClCompile Include="scene_instance_process.cpp" />
     <ClCompile Include="solar_scene.cpp" />
@@ -49,8 +56,11 @@
   <ItemGroup>
     <CudaCompile Include="Gtest.cu" />
     <CudaCompile Include="random_generator.cu" />
+    <CudaCompile Include="ray_tracing.cu" />
     <CudaCompile Include="receiver.cu" />
+    <CudaCompile Include="rectgrid_raytracing.cu" />
     <CudaCompile Include="scene_instance_process.cu" />
+    <CudaCompile Include="steps_for_raytracing.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9B83FDF2-CFC3-416D-A55C-583E1B12A7BB}</ProjectGuid>

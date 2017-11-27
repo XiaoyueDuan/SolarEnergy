@@ -1,16 +1,21 @@
 #include "heliostat.cuh"
 
-void RectangleHelio::Cset_sub_row_col(const float &pixel_length)
+//void RectangleHelio::Cset_sub_row_col(const float &pixel_length)
+//{
+//	float sub_helio_col_length = (size_.x - gap_.x*(row_col_.y - 1))/ row_col_.y;
+//	float sub_helio_row_length = (size_.z - gap_.y*(row_col_.x - 1)) / row_col_.x;
+//	sub_row_col_.x = sub_helio_row_length / pixel_length;
+//	sub_row_col_.y = sub_helio_col_length / pixel_length;
+//}
+
+void RectangleHelio::Cset_pixel_length(const float &pixel_length)
 {
-	float sub_helio_col_length = (size_.x - gap_.x*(row_col_.y - 1))/ row_col_.y;
-	float sub_helio_row_length = (size_.z - gap_.y*(row_col_.x - 1)) / row_col_.x;
-	sub_row_col_.x = sub_helio_row_length / pixel_length;
-	sub_row_col_.y = sub_helio_col_length / pixel_length;
+	pixel_length_ = pixel_length;
 }
 
-void RectangleHelio::CRotate(const float3 focus_center)
+void RectangleHelio::CRotate(const float3 &focus_center, const float3 &sunray_dir)
 {
-	Cset_normal(focus_center);
+	Cset_normal(focus_center, sunray_dir);
 	Cset_localvertex();
 	Cset_worldvertex();
 }
@@ -36,9 +41,10 @@ void RectangleHelio::Cset_worldvertex()
 	vertex_[3] = global_func::transform(vertex_[3], pos_);
 }
 
-void RectangleHelio::Cset_normal(const float3 focus_center)
+void RectangleHelio::Cset_normal(const float3 &focus_center, const float3 &sunray_dir)
 {
-	float3 local_center = make_float3(pos_.x, pos_.y + size_.y / 2, pos_.z);
-	float3 dir = focus_center - local_center;
+	float3 local_center = make_float3(pos_.x, pos_.y, pos_.z);
+	float3 reflect_dir = focus_center - local_center; reflect_dir = normalize(reflect_dir);
+	float3 dir = reflect_dir - sunray_dir;
 	normal_ = normalize(dir);
 }
