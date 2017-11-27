@@ -21,7 +21,7 @@ SceneWindow::SceneWindow(QWidget *parent)
 	textures_stone = nullptr;
 	texture_skybox = nullptr;
 	//init the helio param
-	initHelioParam();
+	initReceHelioParam();
 
 }
 
@@ -33,6 +33,31 @@ SceneWindow::~SceneWindow()
 		delete texture_skybox;
 	if (texture_grassland)
 		delete texture_grassland;
+}
+
+void SceneWindow::initReceHelioParam() {
+	SolarScene *solar_scene;
+	solar_scene = SolarScene::GetInstance();
+	//receiver
+	receDes.number = solar_scene->receivers.size();
+	vector<Receiver *>::iterator receIter;
+	receIter = solar_scene->receivers.begin();
+	while (receIter != solar_scene->receivers.end()) {
+		receDes.pos.push_back(float3_to_qVec((*receIter)->pos_));
+		receDes.geo.push_back(float3_to_qVec((*receIter)->size_));
+		receDes.norm.push_back(float3_to_qVec((*receIter)->normal_));
+		receIter++;
+	}
+	// heliostat
+	helioDes.number = solar_scene->heliostats.size();
+	vector<Heliostat *>::iterator  helioIter;
+	helioIter = solar_scene->heliostats.begin();
+	while (helioIter != solar_scene->heliostats.end()) {
+		helioDes.pos.push_back(float3_to_qVec((*helioIter)->pos_));
+		helioDes.geo.push_back(float3_to_qVec((*helioIter)->size_));
+		helioDes.norm.push_back(float3_to_qVec((*helioIter)->normal_));
+		helioIter++;
+	}
 }
 
 void SceneWindow::initializeGL()
@@ -53,7 +78,6 @@ void SceneWindow::initializeGL()
 	// 加载 mesh数据
 	modelObj.loadModel("Resources/rock/rock.obj", glFuncs);
 	//modelObj.loadModel("./Resources/nanosuit/nanosuit.obj", glFuncs);
-
 	/* 固定属性区域 */
 	glEnable(GL_DEPTH_TEST);        //开启深度测试 
 
@@ -61,20 +85,20 @@ void SceneWindow::initializeGL()
 
 void SceneWindow::paintGL()
 {
-	//清理屏幕  
+	//clear the screen  
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	//实现参数的刷新  
+	//flush the parameter
 	update();
-	float width = this->width();
-	float height = this->height();
-	glDepthMask(GL_FALSE); // 禁止写入深度缓冲区
+	float width = this->width();  // the width of the screen
+	float height = this->height(); // the height of the  sscreen
 	QMatrix4x4 view;
 	QMatrix4x4 projection;
 	view = camera.GetViewMatrix();
 	projection.perspective(camera.Zoom, width/height, 1.0f, 100000.0f);
 
-	//渲染skybox  
+	//rendering skybox 
+	glDepthMask(GL_FALSE); // colse the depth test to ensure the sky is in the background
 	texture_skybox->bind();
 	shaderSky.bind();
 	QMatrix4x4 model;
@@ -85,22 +109,9 @@ void SceneWindow::paintGL()
 	glBindVertexArray(IDVAO[0]);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
-	glDepthMask(GL_TRUE); // 禁止写入深度缓冲区
+	glDepthMask(GL_TRUE); //open the depth test
 
-	//渲染cube
-	textures_stone->bind();
-	shaderCube.bind();
-	view = camera.GetViewMatrix();
-	QMatrix4x4 modelCube;
-	modelCube.translate(QVector3D(0.0f, 100.0f, 0.0f));
-	shaderCube.setUniformValue("view", view);
-	shaderCube.setUniformValue("projection", projection);
-	shaderCube.setUniformValue("model", modelCube);
-	glBindVertexArray(IDVAO[0]);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
-
-	//渲染地面
+	//rendering the grassland
 	texture_grassland->bind();
 	shaderLand.bind();
 	QMatrix4x4 model3;
@@ -112,7 +123,7 @@ void SceneWindow::paintGL()
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 
-	//画坐标  
+	//rendering the coordinate
 	shaderCoor.bind();
 	QMatrix4x4 modelCoor1;
 	modelCoor1.setToIdentity();
@@ -125,22 +136,38 @@ void SceneWindow::paintGL()
 	glDrawArrays(GL_LINES, 4, 2);
 	glBindVertexArray(0);
 
-	//绘制定日镜
+	//rendering cube
+	textures_stone->bind();
+	shaderCube.bind();
+	shaderCube.setUniformValue("view", view);
+	shaderCube.setUniformValue("projection", projection);
+	glBindVertexArray(IDVAO[0]);
+	for (size_t i = 0; i < receDes.number; i++) {
+		QMatrix4x4 modelCube;
+		modelCube.translate(receDes.pos[i]);
+		modelCube.scale(receDes.geo[i]);
+		shaderCube.setUniformValue("model", modelCube);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
+	glBindVertexArray(0);
+	
+	// rendering the cube
 	textures_metal->bind();
 	shaderCube.bind();
 	shaderCube.setUniformValue("view", view);
 	shaderCube.setUniformValue("projection", projection);
 	glBindVertexArray(IDVAO[0]);
-	for (size_t i = 0; i < helio.helioNum; i++) {
+	for (size_t i = 0; i < helioDes.number; i++) {
 		QMatrix4x4 modelCube;
-		modelCube.translate(helio.pos[i]);
-		modelCube.scale(helio.geo[i]);
+		modelCube.translate(helioDes.pos[i]);
+		modelCube.scale(helioDes.geo[i]);
 		shaderCube.setUniformValue("model", modelCube);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 	glBindVertexArray(0);
 
-	//绘制mehs结构
+	//render the mesh 
+	textures_stone->bind();
 	shaderMesh.bind();
 	QMatrix4x4 modelMesh;
 	shaderMesh.setUniformValue("view", view);
@@ -157,24 +184,6 @@ void SceneWindow::resizeGL(int width, int height)
 	/*Q_UNUSED(width);
 	Q_UNUSED(height);*/
 	glViewport(0, 0, width, height);
-}
-
-void SceneWindow::initHelioParam() {
-	helio.helioNum = 3;
-	helio.pos.push_back(QVector3D(100, 3, 0));
-	helio.geo.push_back(QVector3D(3, 1, 1));
-	helio.norm.push_back(QVector3D(1, 0, 0));
-
-	helio.pos.push_back(QVector3D(200, 3, 0));
-	helio.geo.push_back(QVector3D(1, 2, 1));
-	helio.norm.push_back(QVector3D(0, 1, 0));
-
-	helio.pos.push_back(QVector3D(300, 3, 0));
-	helio.geo.push_back(QVector3D(1, 1, 2));
-	helio.norm.push_back(QVector3D(0, 0, 1));
-
-
-
 }
 
 void SceneWindow::mouseMoveEvent(QMouseEvent *event)
@@ -294,11 +303,11 @@ void SceneWindow::initShader() {
 }
 
 void SceneWindow::initVAO() {
-	//初始化VAO VBO EBO
-	IDVAO.resize(NumVAOGw);
-	IDVBO.resize(NumVBOGw);
-	IDEBO.resize(NumEBOGw);
-	/******************************** 设置顶点数据 ********************************/
+	//init VAO VBO EBO
+	IDVAO.resize(numVAO);
+	IDVBO.resize(numVBO);
+	IDEBO.resize(numEBO);
+
 	//带有纹理的正方体坐标 不同面用不同的纹理，因此不需要EBO
 	GLfloat vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -362,8 +371,8 @@ void SceneWindow::initVAO() {
 	};
 	// VAO　VBO
 	/* 创建相关对象 */
-	glGenVertexArrays(NumVAOGw, &IDVAO[0]);
-	glGenBuffers(NumVBOGw, &IDVBO[0]);
+	glGenVertexArrays(numVAO, &IDVAO[0]);
+	glGenBuffers(numVBO, &IDVBO[0]);
 	/* 立方体 */
 	glBindVertexArray(IDVAO[0]);  //开始记录状态信息  
 	glBindBuffer(GL_ARRAY_BUFFER, IDVBO[0]);
@@ -401,7 +410,7 @@ void SceneWindow::initVAO() {
 }
 
 void SceneWindow::initTexture() {
-	//添加纹理信息 
+	//add the texture
 	textures_stone = new QOpenGLTexture(QImage(QString(":/Resources/images/stone1.jpg")).mirrored());
 	textures_metal = new QOpenGLTexture(QImage(QString(":/Resources/images/metal.png")).mirrored());
 	texture_grassland = new QOpenGLTexture(QImage(QString(":/Resources/images/grassland.jpg")).mirrored());
@@ -409,7 +418,7 @@ void SceneWindow::initTexture() {
 	texture_grassland->setWrapMode(QOpenGLTexture::MirroredRepeat);
 	texture_grassland->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
 	texture_grassland->setMagnificationFilter(QOpenGLTexture::LinearMipMapLinear);
-	//天空盒纹理
+
 	// Load all skybox texture images
 	const QImage posx = QImage(":/Resources/images/skybox/posx.jpg").mirrored().convertToFormat(QImage::Format_RGBA8888);
 	const QImage posy = QImage(":/Resources/images/skybox/posy.jpg").mirrored().convertToFormat(QImage::Format_RGBA8888);

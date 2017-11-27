@@ -10,14 +10,15 @@
 #include "camera.h"
 #include "model.h"
 
-struct HelioDes {
-	int helioNum;
+#include "convert_type.h"
+#include "../ClassedSunRay/solar_scene.h"
+
+struct CubeDes {
+	int number;
 	std::vector<QVector3D> pos;
 	std::vector<QVector3D> geo;
 	std::vector<QVector3D> norm;
 };
-
-
 
 
 class SceneWindow : public QOpenGLWidget,
@@ -32,7 +33,7 @@ public:
 	void initializeGL();
 	void resizeGL(int width, int height);
 	void paintGL();
-	void initHelioParam();
+	void initReceHelioParam();
 
 protected:
 	void mouseMoveEvent(QMouseEvent *event);
@@ -48,35 +49,37 @@ protected:
 
 
 private:
-	//opengl 的 context
+	//the context of the opengl
 	QOpenGLContext *glContext;
 	QOpenGLFunctions_3_3_Core *glFuncs;
+	//store the model
 	Model modelObj;
 
-	QCursor cursor; // 管理光标形状
-	GLfloat lastX = 0;        //光标上次x值  
-	GLfloat lastY = 0;        //光标上次y值  
-	Camera camera; //camera function
+	Camera camera;		 //camera function
+	QCursor cursor;      // cusor shape
+	GLfloat lastX = 0;   // the cursor last x position 
+	GLfloat lastY = 0;   // the cursor last y position 
 
-				   //着色器交互程序
+	//shader program
 	QOpenGLShaderProgram shaderSky;
 	QOpenGLShaderProgram shaderLand;
 	QOpenGLShaderProgram shaderCoor;
 	QOpenGLShaderProgram shaderCube;
 	QOpenGLShaderProgram shaderMesh;
 
-	GLuint NumVAOGw = 3;                //VAO的数目  
-	GLuint NumVBOGw = 3;                //VBO的数目  
-	GLuint NumEBOGw = 0;                //EBO的数目  
+	GLuint numVAO = 3;     //VAO number 
+	GLuint numVBO = 3;     //VBO number 
+	GLuint numEBO = 0;     //EBO number  
 	std::vector<GLuint> IDVAO;
 	std::vector<GLuint> IDVBO;
 	std::vector<GLuint> IDEBO;
-	//纹理
+	//texture
 	QOpenGLTexture *texture_grassland;
 	QOpenGLTexture *texture_skybox;
 	QOpenGLTexture *textures_stone;
 	QOpenGLTexture *textures_metal;
 	//vector
-	HelioDes helio;
+	CubeDes helioDes;
+	CubeDes receDes;
 
 };

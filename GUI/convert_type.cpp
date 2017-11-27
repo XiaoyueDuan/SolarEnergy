@@ -70,3 +70,10 @@ bool string_to_float2(QString str, float2 &vec) {
 	return true;
 }
 
+QVector3D float3_to_qVec(float3 vec) {
+	QVector3D vec3d;
+	vec3d.setX(vec.x);
+	vec3d.setY(vec.y);
+	vec3d.setZ(vec.z);
+	return vec3d;
+}

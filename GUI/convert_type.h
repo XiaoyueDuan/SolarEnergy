@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QTreeWidget>
+#include <QVector3D>
 #include "../ClassedSunRay/solar_scene.h"
 
 enum DataType{
@@ -28,3 +29,5 @@ bool string_to_int(QString str, int &vec);
 bool string_to_int2(QString str,int2 &vec);
 bool string_to_float3(QString str,float3 &vec);
 bool string_to_float2(QString str,float2 &vec);
+
+QVector3D float3_to_qVec(float3 vec);
