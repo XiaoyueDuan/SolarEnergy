@@ -24,6 +24,8 @@ public:
 	bool LoadSceneFromFile(string filepath);
 
 	bool InitContent();					// Call the method only if all grids, heliostats and receivers needs initializing. 
+	bool ResetHelioNorm(float3 foucupoint);			    // reset heliostats focus point
+
 
 private:
 	static SolarScene *m_instance;		//Singleton
@@ -34,6 +36,7 @@ public:
 	int grid_num_;
 	
 	SunRay *sunray_;
+	float3 focus_center_;  // focus point
 	//scene object
 	vector<Grid *> grid0s;
 	vector<Heliostat *> heliostats;
