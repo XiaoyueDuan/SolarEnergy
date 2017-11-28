@@ -42,6 +42,25 @@ bool SolarScene::InitSolarScece() {
 }
 
 bool SolarScene::InitSolarScene(string filepath) {
+	//firstly clean the dataSpace
+	// 1. free memory on GPU
+	free_scene::gpu_free(receivers);
+	free_scene::gpu_free(grid0s);
+	free_scene::gpu_free(sunray_);
+
+	// 2. free memory on CPU
+	free_scene::cpu_free(receivers);
+	free_scene::cpu_free(grid0s);
+	free_scene::cpu_free(heliostats);
+	free_scene::cpu_free(sunray_);
+
+	receivers.clear();
+	grid0s.clear();
+	heliostats.clear();
+
+	sunray_ = new SunRay(solarenergy::sun_dir, solarenergy::num_sunshape_groups, solarenergy::num_sunshape_lights_per_group,
+		solarenergy::dni, solarenergy::csr);
+
 	return LoadSceneFromFile(filepath);
 }
 

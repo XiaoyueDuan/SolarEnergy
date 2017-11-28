@@ -19,16 +19,15 @@ public:
 	static void InitInstance();
 	~SolarScene();
 
-	bool InitSolarScece();
 	bool InitSolarScene(string filepath);
-	bool LoadSceneFromFile(string filepath);
-
 	bool InitContent();					// Call the method only if all grids, heliostats and receivers needs initializing. 
 	bool ResetHelioNorm(float3 foucupoint);			    // reset heliostats focus point
 
 
 private:
 	static SolarScene *m_instance;		//Singleton
+	bool InitSolarScece();              // only used in the InitInstance
+	bool LoadSceneFromFile(string filepath);
 
 public:
 	float ground_length_;
