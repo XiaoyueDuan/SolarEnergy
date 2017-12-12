@@ -25,10 +25,8 @@ void RectangleReceiver::Cinit_vertex()
 
 void RectangleReceiver::Cset_resolution(const int &geometry_info)
 {
-	float height = length(rect_vertex_[1] - rect_vertex_[0]);
-	float width = length(rect_vertex_[1] - rect_vertex_[2]);
-	resolution_.x = width*float(geometry_info);
-	resolution_.y = height*float(geometry_info);
+	resolution_.x = size_.x*float(geometry_info);
+	resolution_.y = size_.y*float(geometry_info);
 }
 
 void RectangleReceiver::Cset_focuscenter()
