@@ -6,6 +6,20 @@ void Receiver::Calloc_image()
 	checkCudaErrors(cudaMalloc((void **)&d_image_, sizeof(float)*resolution_.x*resolution_.y));
 }
 
+void Receiver::Cclean_image_content()
+{
+	int n_resolution = resolution_.x*resolution_.y;
+	float *h_clean_receiver = new float[n_resolution];
+	for (int i = 0; i < n_resolution; ++i)
+		h_clean_receiver[i] = 0.0f;
+
+	// clean screen
+	global_func::cpu2gpu(d_image_, h_clean_receiver, n_resolution);
+
+	delete[] h_clean_receiver;
+	h_clean_receiver = nullptr;
+}
+
 // RectangleReceiver
 void RectangleReceiver::CInit(const int &geometry_info)
 {
@@ -14,6 +28,7 @@ void RectangleReceiver::CInit(const int &geometry_info)
 	Cset_focuscenter();
 	Cset_resolution(geometry_info);
 	Calloc_image();
+	Cclean_image_content();
 }
 
 void RectangleReceiver::Cinit_vertex()
@@ -61,27 +76,27 @@ void RectangleReceiver::Cset_localvertex()
 	{
 	case 0:
 		rect_vertex_[0] = make_float3(-size_.x / 2, -size_.y / 2, size_.z / 2);
-		rect_vertex_[1] = make_float3(size_.x / 2, -size_.y / 2, size_.z / 2);
+		rect_vertex_[1] = make_float3(-size_.x / 2, size_.y / 2, size_.z / 2);
 		rect_vertex_[2] = make_float3(size_.x / 2, size_.y / 2, size_.z / 2);
-		rect_vertex_[3] = make_float3(-size_.x / 2, size_.y / 2, size_.z / 2);
+		rect_vertex_[3] = make_float3(size_.x / 2, -size_.y / 2, size_.z / 2);
 		break;
 	case 1:
 		rect_vertex_[0] = make_float3(size_.x / 2, -size_.y / 2, size_.z / 2);
-		rect_vertex_[1] = make_float3(size_.x / 2, -size_.y / 2, -size_.z / 2);
+		rect_vertex_[1] = make_float3(size_.x / 2, size_.y / 2, size_.z / 2);
 		rect_vertex_[2] = make_float3(size_.x / 2, size_.y / 2, -size_.z / 2);
-		rect_vertex_[3] = make_float3(size_.x / 2, size_.y / 2, size_.z / 2);		
+		rect_vertex_[3] = make_float3(size_.x / 2, -size_.y / 2, -size_.z / 2);
 		break;
 	case 2:
 		rect_vertex_[0] = make_float3(size_.x / 2, -size_.y / 2, -size_.z / 2);
-		rect_vertex_[1] = make_float3(-size_.x / 2, -size_.y / 2, -size_.z / 2);		
+		rect_vertex_[1] = make_float3(size_.x / 2, size_.y / 2, -size_.z / 2);
 		rect_vertex_[2] = make_float3(-size_.x / 2, size_.y / 2, -size_.z / 2);
-		rect_vertex_[3] = make_float3(size_.x / 2, size_.y / 2, -size_.z / 2);
+		rect_vertex_[3] = make_float3(-size_.x / 2, -size_.y / 2, -size_.z / 2);
 		break;
 	case 3:
 		rect_vertex_[0] = make_float3(-size_.x / 2, -size_.y / 2, -size_.z / 2);
-		rect_vertex_[1] = make_float3(-size_.x / 2, -size_.y / 2, size_.z / 2);
+		rect_vertex_[1] = make_float3(-size_.x / 2, size_.y / 2, -size_.z / 2);
 		rect_vertex_[2] = make_float3(-size_.x / 2, size_.y / 2, size_.z / 2);
-		rect_vertex_[3] = make_float3(-size_.x / 2, size_.y / 2, -size_.z / 2);
+		rect_vertex_[3] = make_float3(-size_.x / 2, -size_.y / 2, size_.z / 2);
 		break;
 	default:
 		break;

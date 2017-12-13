@@ -39,3 +39,11 @@ S:
 
 Q:
 1. 使用check_paper场景结果不正确
+2. 区别都发到邮箱里面了：
+global_function.cuh文件
+Gtest文件
+
+2017.12.13
+S:
+1. 解决了12号check paper不对的bug：image_的内容需要全部初始化为0
+2. 把receiver的坐标位置做了修改，u,v还有resolution.x，resolution.y对应了起来

@@ -16,7 +16,7 @@ float3 solarenergy::sun_dir = make_float3(0.0f, -0.08715574f, 0.996194698f);
 float solarenergy::csr = 0.1f;
 float solarenergy::receiver_pixel_length = 0.04f;
 float solarenergy::disturb_std = 0.001;
-string  solarenergy::scene_filepath = "../userData/scene/check_the_paper_small.scn";
+string  solarenergy::scene_filepath = "../userData/scene/check_the_paper.scn";
 
 float solarenergy::dni = 981.0f;
 //float solarenergy::csr = 0.2f;

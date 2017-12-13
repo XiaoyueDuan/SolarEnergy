@@ -15,6 +15,7 @@ public:
 	//__device__ void GAddEnergy(const float &u, const float &v, const float &energy);	// add energy to d_image
 																							
 	void Calloc_image();
+	void Cclean_image_content();
 
 	__device__ __host__ Receiver() :d_image_(nullptr) {}
 

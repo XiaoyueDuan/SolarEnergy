@@ -140,7 +140,7 @@ __device__ void receiver_drawing(RectangleReceiver &receiver, const SunRay &sunr
 	if (!receiver.GIntersect(orig, dir, t, u, v))
 		return;
 
-	int2 row_col = make_int2(v* receiver.resolution_.y, u* receiver.resolution_.x); // Intersect location
+	int2 row_col = make_int2(u* receiver.resolution_.y, v* receiver.resolution_.x); // Intersect location
 
 																					//	Step2: Calculate the energy of the light
 	float eta = eta_aAlpha(t);
