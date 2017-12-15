@@ -48,4 +48,15 @@ void recthelio_ray_tracing(const SunRay &sunray,
 	//	ray_tracing
 	ray_tracing(sunray, grid, receiver,
 		d_helio_vertexs, d_microhelio_normals, d_microhelio_centers, d_microhelio_groups, microhelio_num);
+
+	//	Clean all
+	cudaFree(d_microhelio_centers);
+	cudaFree(d_microhelio_normals);
+	cudaFree(d_helio_vertexs);
+	cudaFree(d_microhelio_groups);
+
+	d_microhelio_centers = nullptr;
+	d_microhelio_normals = nullptr;
+	d_helio_vertexs = nullptr;
+	d_microhelio_groups = nullptr;
 }

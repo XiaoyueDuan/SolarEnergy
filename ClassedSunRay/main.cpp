@@ -19,7 +19,6 @@ int main() {
 	solar_scene->InitContent();
 
 	// Step 3: 
-
 	test(*solar_scene);
 
 	// Finally, destroy solar_scene
