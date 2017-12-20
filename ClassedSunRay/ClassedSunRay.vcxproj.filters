@@ -127,9 +127,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="receiver.cu">
-      <Filter>DataStructure</Filter>
-    </CudaCompile>
     <CudaCompile Include="Gtest.cu">
       <Filter>test</Filter>
     </CudaCompile>

@@ -5,6 +5,7 @@
 // sunray
 void SceneProcessor::set_sunray_content(SunRay &sunray)
 {
+	sunray.sun_dir_ = normalize(sunray.sun_dir_);
 	set_perturbation(sunray);
 	set_samplelights(sunray);
 }

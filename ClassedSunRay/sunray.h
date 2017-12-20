@@ -7,7 +7,7 @@ public:
 	__device__ __host__ SunRay() :d_samplelights_(nullptr), d_perturbation_(nullptr) {}
 
 	__device__ __host__ SunRay(float3 sun_dir,int num_sunshape_groups,int lights_per_group,
-		float dni = 1000.0f,float csr = 0.001) : SunRay(){
+		float dni,float csr) : SunRay(){
 		sun_dir_ = sun_dir;
 		dni_ = dni;
 		csr_ = csr;

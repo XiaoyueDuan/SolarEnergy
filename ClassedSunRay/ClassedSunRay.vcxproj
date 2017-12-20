@@ -57,7 +57,6 @@
     <CudaCompile Include="Gtest.cu" />
     <CudaCompile Include="random_generator.cu" />
     <CudaCompile Include="ray_tracing.cu" />
-    <CudaCompile Include="receiver.cu" />
     <CudaCompile Include="rectgrid_raytracing.cu" />
     <CudaCompile Include="scene_instance_process.cu" />
     <CudaCompile Include="steps_for_raytracing.cu" />

@@ -6,6 +6,20 @@ void Receiver::Calloc_image()
 	checkCudaErrors(cudaMalloc((void **)&d_image_, sizeof(float)*resolution_.x*resolution_.y));
 }
 
+void Receiver::Cclean_image_content()
+{
+	int n_resolution = resolution_.x*resolution_.y;
+	float *h_clean_receiver = new float[n_resolution];
+	for (int i = 0; i < n_resolution; ++i)
+		h_clean_receiver[i] = 0.0f;
+
+	// clean screen
+	global_func::cpu2gpu(d_image_, h_clean_receiver, n_resolution);
+
+	delete[] h_clean_receiver;
+	h_clean_receiver = nullptr;
+}
+
 // RectangleReceiver
 void RectangleReceiver::CInit(const int &geometry_info)
 {
@@ -14,6 +28,7 @@ void RectangleReceiver::CInit(const int &geometry_info)
 	Cset_focuscenter();
 	Cset_resolution(geometry_info);
 	Calloc_image();
+	Cclean_image_content();
 }
 
 void RectangleReceiver::Cinit_vertex()
@@ -25,10 +40,8 @@ void RectangleReceiver::Cinit_vertex()
 
 void RectangleReceiver::Cset_resolution(const int &geometry_info)
 {
-	float height = length(rect_vertex_[1] - rect_vertex_[0]);
-	float width = length(rect_vertex_[1] - rect_vertex_[2]);
-	resolution_.x = width*float(geometry_info);
-	resolution_.y = height*float(geometry_info);
+	resolution_.x = size_.x*float(geometry_info);
+	resolution_.y = size_.y*float(geometry_info);
 }
 
 void RectangleReceiver::Cset_focuscenter()
