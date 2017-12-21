@@ -1,4 +1,6 @@
 #include "image_save.h"
+#include "global_constant.h"
+#include <iomanip>
 
 void ImageSaver::savetxt(const string filename, int w, int h, float *h_data)
 {
@@ -10,7 +12,11 @@ void ImageSaver::savetxt(const string filename, int w, int h, float *h_data)
 		for (int c = 0; c < w; ++c)
 		{
 			address = (h - 1 - r)*w + c;
-			out << h_data[address] << ',';
+
+			if (h_data[address] < Epsilon)
+				out << 0 << ',';
+			else
+				out << fixed << setprecision(2)<< h_data[address] << ',';
 		}
 		out << endl;
 	}

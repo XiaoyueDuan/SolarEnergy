@@ -25,5 +25,5 @@ float solarenergy::reflected_rate = 0.88;
 float solarenergy::disturb_std = 0.002;
 
 //default scene file
-string  solarenergy::scene_filepath = "../userData/scene/helioField_smallheliostat_yAdjust.scn";
+string  solarenergy::scene_filepath = "../userData/scene/rect_helio.scn";
 //string  solarenergy::scene_filepath = "../userData/scene/example.scn";

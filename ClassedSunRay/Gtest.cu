@@ -5,6 +5,24 @@
 
 #include <sstream>
 
+namespace tmp
+{
+	template<typename T>
+	void init_matrix(T *matrix, int size)
+	{
+		for (int i = 0; i < size; ++i)
+			matrix[i] = 0;
+	}
+
+	void save_array(string filename, float *array, int size)
+	{
+		ofstream out(filename.c_str());
+		for (int i = 0; i < size; ++i)
+			out << array[i] << endl;
+		out.close();
+	}
+};
+
 void test(SolarScene &solar_scene)
 {
 	//// helios
@@ -16,23 +34,54 @@ void test(SolarScene &solar_scene)
 	//float disturb_stds[] = { 0.001,0.002,0.003 };
 
 	// helios
-	float helio_granularity[] = { 0.01f};
+	float helio_granularity[] = { 0.01f };
+	//float helio_granularity[] = { 0.02f, 0.05f, 0.1f };
 
 	// rays
 	int sun_shape_per_group[] = { 2048 };
-	float csrs[] = { 0.1f};
-	float disturb_stds[] = { 0.001};
+	//int sun_shape_per_group[] = {512};
+	float csrs[] = { 0.1f };
+	//float csrs[] = { 0.2f, 0.3f };
+	float disturb_stds[] = { 0.001 };
+	//float disturb_stds[] = { 0.003 };
 
-	int start_n = 0, end_n = 1000;
-	string save_path("../result//____.txt");
+	int start_n = 0, end_n = 1000, save_number = 100;
+	string save_path("../result//rect//_____.txt");
+	string save_avg_path("../result//avg//origin_rect_____.txt");
+
+	string save_peak_path("../result//peak//origin_rect____.txt");
+	string save_avgpeak_path("../result//avg_peak//origin_rect____.txt");
+
 	float *h_image = nullptr;
 
 	int index = 0;
 	Receiver *recv = dynamic_cast<RectangleReceiver *>(solar_scene.receivers[0]);
 	/*for (int i = 0; i < solar_scene.heliostats.size(); ++i)*/
-	for (int i = 24; i < 25; ++i)
+
+	// Result to be saved
+	// 1. Peak
+	float *peak_value = new float[end_n - start_n];
+	// 2. Average Peak
+	float *avg_peak_value = new float[end_n - start_n];
+	// 3. Average image
+	int avg_int[] = { 10,50,100,500,1000};
+	//int avg_int[] = { 2000 };
+
+	float *h_avg_img = new float[recv->resolution_.x*recv->resolution_.y];
+	tmp::init_matrix(h_avg_img, recv->resolution_.x*recv->resolution_.y);
+
+	//int helio_num[] = { 4, 14, 24, 34,
+	//					20, 22, 26, 28, 29 };
+	int helio_num[] = { 0 };
+
+	for (int id = 0; id < sizeof(helio_num) / sizeof(helio_num[0]); ++id)
 	{
+		int i = helio_num[id];
+		tmp::init_matrix(h_avg_img, recv->resolution_.x*recv->resolution_.y);
+
 		RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[i]);
+
+		int avg_index = 0;
 		for (int i_gral = 0; i_gral < sizeof(helio_granularity) / sizeof(float); ++i_gral)
 		{
 			recthelio->pixel_length_ = helio_granularity[i_gral];
@@ -47,14 +96,6 @@ void test(SolarScene &solar_scene)
 						solar_scene.sunray_->csr_ = csrs[i_csr];
 						for (int i_dist = 0; i_dist < sizeof(disturb_stds) / sizeof(float); ++i_dist)
 						{
-							string tmp = save_path;
-							tmp.insert(tmp.size() - 9, to_string(i));
-							tmp.insert(tmp.size() - 8, to_string(i_gral));
-							tmp.insert(tmp.size() - 7, to_string(j));
-							tmp.insert(tmp.size() - 6, to_string(i_n_per_group));
-							tmp.insert(tmp.size() - 5, to_string(i_csr));
-							tmp.insert(tmp.size() - 4, to_string(i_dist));
-
 							solarenergy::disturb_std = disturb_stds[i_dist];
 							// reset sunray
 							SceneProcessor::set_sunray_content(*solar_scene.sunray_);
@@ -70,7 +111,6 @@ void test(SolarScene &solar_scene)
 								solar_scene.heliostats);
 
 							// Save result
-
 							global_func::gpu2cpu(h_image, recv->d_image_, recv->resolution_.x*recv->resolution_.y);
 							// Id, Ssub, rou, Nc
 							float Id = solar_scene.sunray_->dni_;
@@ -78,28 +118,82 @@ void test(SolarScene &solar_scene)
 							float rou = solarenergy::reflected_rate;
 							int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
 							float Srec = recv->pixel_length_*recv->pixel_length_;
-							float max = -1.0f;
+							float max = -1.0f, max_avg = -1.0f;
 							for (int p = 0; p < recv->resolution_.x*recv->resolution_.y; ++p)
 							{
 								h_image[p] = h_image[p] * Id * Ssub * rou / Nc / Srec;
+								h_avg_img[p] = (h_avg_img[p] * float(j) + h_image[p]) / float(j + 1);
 
 								if (max < h_image[p])
 									max = h_image[p];
+
+								if (max_avg < h_avg_img[p])
+									max_avg = h_avg_img[p];
 							}
 
-							ImageSaver::savetxt(tmp, recv->resolution_.x, recv->resolution_.y, h_image);
+							peak_value[j] = max;
+							avg_peak_value[j] = max_avg;
+
+							if (j < save_number)
+							{
+								string tmp = save_path;
+								tmp.insert(tmp.size() - 9, to_string(i));
+								tmp.insert(tmp.size() - 8, to_string(j));
+								tmp.insert(tmp.size() - 7, to_string(helio_granularity[i_gral]));
+								tmp.insert(tmp.size() - 6, to_string(sun_shape_per_group[i_n_per_group]));
+								tmp.insert(tmp.size() - 5, to_string(csrs[i_csr]));
+								tmp.insert(tmp.size() - 4, to_string(disturb_stds[i_dist]));
+								ImageSaver::savetxt(tmp, recv->resolution_.x, recv->resolution_.y, h_image);
+							}
+
+							if (j == avg_int[avg_index] - 1)
+							{
+								string tmp = save_avg_path;
+								tmp.insert(tmp.size() - 9, to_string(i));
+								tmp.insert(tmp.size() - 8, to_string(avg_int[avg_index]));
+								tmp.insert(tmp.size() - 7, to_string(helio_granularity[i_gral]));
+								tmp.insert(tmp.size() - 6, to_string(sun_shape_per_group[i_n_per_group]));
+								tmp.insert(tmp.size() - 5, to_string(csrs[i_csr]));
+								tmp.insert(tmp.size() - 4, to_string(disturb_stds[i_dist]));
+								ImageSaver::savetxt(tmp, recv->resolution_.x, recv->resolution_.y, h_avg_img);
+
+								++avg_index;
+							}
+
 							printf("No.%d\n", ++index);
 						}
 					}
 				}
 				printf("(%d,\t%d)\n", i, j);
 			}
+			string tmp = save_peak_path;
+			tmp.insert(tmp.size() - 8, to_string(i));
+			tmp.insert(tmp.size() - 7, to_string(helio_granularity[i_gral]));
+			tmp.insert(tmp.size() - 6, to_string(sun_shape_per_group[0]));
+			tmp.insert(tmp.size() - 5, to_string(csrs[0]));
+			tmp.insert(tmp.size() - 4, to_string(disturb_stds[0]));
+			tmp::save_array(tmp, peak_value, end_n - start_n);
+
+			tmp = save_avgpeak_path;
+			tmp.insert(tmp.size() - 8, to_string(i));
+			tmp.insert(tmp.size() - 7, to_string(helio_granularity[i_gral]));
+			tmp.insert(tmp.size() - 6, to_string(sun_shape_per_group[0]));
+			tmp.insert(tmp.size() - 5, to_string(csrs[0]));
+			tmp.insert(tmp.size() - 4, to_string(disturb_stds[0]));
+			tmp::save_array(tmp, avg_peak_value, end_n - start_n);
 		}
 	}
+
 	delete[] h_image;
 	h_image = nullptr;
 
+	delete[] peak_value;
+	delete[] avg_peak_value;
+	delete[] h_avg_img;
 
+	peak_value = nullptr;
+	avg_peak_value = nullptr;
+	h_avg_img = nullptr;
 
 
 
