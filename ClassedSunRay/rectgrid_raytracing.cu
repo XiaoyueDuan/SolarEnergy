@@ -177,8 +177,10 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 		return;
 
 	//	Step 2: whether the reflect light is shadowed by other heliostats	
-	float3 normal = d_microhelio_normals[myId / nLights];
-	float3 turbulence = sunray.d_perturbation_[myId % nLights];
+	float3 normal = d_microhelio_normals[myId / nLights];	
+	int group_id = myId / nLights-1?0:(myId / nLights>0);
+	address = d_microhelio_groups[group_id] * nLights + myId%nLights;
+	float3 turbulence = sunray.d_perturbation_[address];
 	normal = global_func::local2world(turbulence, normal); normal = normalize(normal);
 
 	dir = -dir;
