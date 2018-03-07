@@ -5,6 +5,7 @@
 
 #include <sstream>
 
+
 namespace tmp
 {
 	template<typename T>
@@ -147,32 +148,30 @@ void test(SolarScene &solar_scene)
 
 
 
-
-
-	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[0]);
+	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[24]);
 	recthelio_ray_tracing(*solar_scene.sunray_,
 							*solar_scene.receivers[0],
 							*recthelio,
 							*solar_scene.grid0s[0],
 							solar_scene.heliostats);
+
+	float *h_image = nullptr;
+	global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y);
+	// Id, Ssub, rou, Nc
+	float Id=solar_scene.sunray_->dni_;
+	float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
+	float rou = solarenergy::reflected_rate;
+	int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
+	float Srec = solar_scene.receivers[0]->pixel_length_*solar_scene.receivers[0]->pixel_length_;
+	float max = -1.0f;
+	for (int i = 0; i < solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y; ++i)
+	{
+		h_image[i] = h_image[i] * Id * Ssub * rou / Nc/ Srec;
 	
-	//float *h_image = nullptr;
-	//global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y);
-	//// Id, Ssub, rou, Nc
-	//float Id=solar_scene.sunray_->dni_;
-	//float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
-	//float rou = solarenergy::reflected_rate;
-	//int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
-	//float Srec = solar_scene.receivers[0]->pixel_length_*solar_scene.receivers[0]->pixel_length_;
-	//float max = -1.0f;
-	//for (int i = 0; i < solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y; ++i)
-	//{
-	//	h_image[i] = h_image[i] * Id * Ssub * rou / Nc/ Srec;
-	//
-	//	if (max < h_image[i])
-	//		max = h_image[i];
-	//}
-	//
-	//// Save image	
-	//ImageSaver::savetxt("../result/validate-with-paper.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
+		if (max < h_image[i])
+			max = h_image[i];
+	}
+	
+	// Save image	
+	ImageSaver::savetxt("../result/24th-128.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
 }

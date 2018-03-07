@@ -11,6 +11,7 @@ class RandomGenerator
 {	
 public:
 	//static unsigned int seed_;
+	static curandGenerator_t *gen;
 	//init the seed
 	static void initSeed() {
 		unsigned int mrand = (unsigned int)time(NULL);

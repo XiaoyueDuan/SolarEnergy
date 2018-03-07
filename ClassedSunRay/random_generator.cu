@@ -15,13 +15,13 @@ bool RandomGenerator::gpu_Uniform(int *d_min_max_array, const int &low_threshold
 	if (d_min_max_array == nullptr)
 		return false;
 
-	curandGenerator_t gen;
-	curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
-	curandSetPseudoRandomGeneratorSeed(gen, time(NULL));
+	//curandGenerator_t gen;
+	//curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
+	//curandSetPseudoRandomGeneratorSeed(gen, time(NULL));
 
 	float *d_uniform = nullptr;
 	checkCudaErrors(cudaMalloc((void**)&d_uniform, array_length * sizeof(float)));
-	curandGenerateUniform(gen, d_uniform, array_length);
+	curandGenerateUniform(*gen, d_uniform, array_length);
 
 	int nThreads;
 	dim3 nBlocks;
@@ -32,7 +32,7 @@ bool RandomGenerator::gpu_Uniform(int *d_min_max_array, const int &low_threshold
 	cudaDeviceSynchronize();
 	checkCudaErrors(cudaGetLastError());
 	/* Cleanup */
-	curandDestroyGenerator(gen);
+	/*curandDestroyGenerator(gen);*/
 	checkCudaErrors(cudaFree(d_uniform));
 	return true;
 }

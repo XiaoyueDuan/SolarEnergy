@@ -17,15 +17,15 @@ bool RandomGenerator::gpu_Uniform(float *d_0_1_array, const size_t &array_length
 		return false;
 
 	/* Generate */
-	curandGenerator_t gen;
-	curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
-	curandSetPseudoRandomGeneratorSeed(gen, time(NULL));
+	//curandGenerator_t gen;
+	//curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
+	//curandSetPseudoRandomGeneratorSeed(gen, time(NULL));
 		
 	/* Generate 0-1 array */
-	curandGenerateUniform(gen, d_0_1_array, array_length);
+	curandGenerateUniform(*gen, d_0_1_array, array_length);
 
 	/* Cleanup */
-	curandDestroyGenerator(gen);
+	//curandDestroyGenerator(gen);
 	return true;
 }
 
@@ -48,15 +48,15 @@ bool RandomGenerator::gpu_Gaussian(float *d_0_1_array, const float &mean, const 
 	if (d_0_1_array == nullptr)
 		return false;
 	/* Generate */
-	curandGenerator_t gen;
-	curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
-	curandSetPseudoRandomGeneratorSeed(gen, time(NULL));
+	//curandGenerator_t gen;
+	//curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_DEFAULT);
+	//curandSetPseudoRandomGeneratorSeed(gen, time(NULL));
 
 	/* Generate 0-1 array */
-	curandGenerateNormal(gen, d_0_1_array, array_length, mean, stddev);
+	curandGenerateNormal(*gen, d_0_1_array, array_length, mean, stddev);
 
 	/* Cleanup */
-	curandDestroyGenerator(gen);
+	//curandDestroyGenerator(gen);
 	return true;
 }
 
