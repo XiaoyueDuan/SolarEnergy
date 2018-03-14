@@ -3,7 +3,7 @@
 #include "steps_for_raytracing.h"
 #include "ray_tracing.h"
 
-void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heliostat will be traced
+float recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heliostat will be traced
 								const Grid &grid,							//	the grid heliostat belongs to
 								const vector<Heliostat *> heliostats,		//	all heliostats
 								const int &num_group,						//	number of sun-ray
@@ -13,7 +13,7 @@ void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heli
 								float3 *&d_helio_vertexs,
 								int *&d_microhelio_groups);
 
-void recthelio_ray_tracing(const SunRay &sunray,
+float recthelio_ray_tracing(const SunRay &sunray,
 							Receiver &receiver,
 							const RectangleHelio &recthelio,		//	which heliostat will be traced
 							Grid &grid,								//	the grid heliostat belongs to

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_var.h" />
+    <ClInclude Include="compact_sample.cuh" />
     <ClInclude Include="destroy.h" />
     <ClInclude Include="global_constant.h" />
     <ClInclude Include="global_function.cuh" />
@@ -27,6 +28,7 @@
     <ClInclude Include="Gtest.cuh" />
     <ClInclude Include="heliostat.cuh" />
     <ClInclude Include="image_save.h" />
+    <ClInclude Include="poisson_disk.cuh" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="ray_tracing.h" />
     <ClInclude Include="receiver.cuh" />
@@ -54,7 +56,9 @@
     <ClCompile Include="solar_scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CudaCompile Include="compact_sample.cu" />
     <CudaCompile Include="Gtest.cu" />
+    <CudaCompile Include="poisson_disk.cu" />
     <CudaCompile Include="random_generator.cu" />
     <CudaCompile Include="ray_tracing.cu" />
     <CudaCompile Include="rectgrid_raytracing.cu" />

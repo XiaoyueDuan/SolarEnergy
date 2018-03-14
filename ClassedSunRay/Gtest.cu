@@ -149,7 +149,7 @@ void test(SolarScene &solar_scene)
 
 
 	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[24]);
-	recthelio_ray_tracing(*solar_scene.sunray_,
+	float Ssub =recthelio_ray_tracing(*solar_scene.sunray_,
 							*solar_scene.receivers[0],
 							*recthelio,
 							*solar_scene.grid0s[0],
@@ -159,7 +159,7 @@ void test(SolarScene &solar_scene)
 	global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y);
 	// Id, Ssub, rou, Nc
 	float Id=solar_scene.sunray_->dni_;
-	float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
+	//float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
 	float rou = solarenergy::reflected_rate;
 	int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
 	float Srec = solar_scene.receivers[0]->pixel_length_*solar_scene.receivers[0]->pixel_length_;
@@ -173,5 +173,5 @@ void test(SolarScene &solar_scene)
 	}
 	
 	// Save image	
-	ImageSaver::savetxt("../result/24th-128.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
+	ImageSaver::savetxt("../result/24th-2048-1group_lights.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
 }

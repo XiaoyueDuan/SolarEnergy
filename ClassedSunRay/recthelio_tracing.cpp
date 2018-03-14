@@ -1,6 +1,6 @@
 #include "recthelio_tracing.h"
 
-void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heliostat will be traced
+float recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heliostat will be traced
 	const Grid &grid,						//	the grid heliostat belongs to
 	const vector<Heliostat *> heliostats,	//	all heliostats
 	const int &num_group,					//	number of sun-ray
@@ -14,7 +14,8 @@ void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heli
 	//float3 *d_microhelio_centers = nullptr;
 	//float3 *d_microhelio_normals = nullptr;
 
-	set_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
+	//set_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
+	float subhelio_area=set_possion_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
 	cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
 
 	int start_pos = grid.start_helio_pos_;
@@ -26,9 +27,11 @@ void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heli
 	//int *d_microhelio_groups = nullptr;
 	set_microhelio_groups(d_microhelio_groups, num_group, microhelio_num);
 	cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
+
+	return subhelio_area;
 }
 
-void recthelio_ray_tracing(const SunRay &sunray,
+float recthelio_ray_tracing(const SunRay &sunray,
 	Receiver &receiver,
 	const RectangleHelio &recthelio,			//	which heliostat will be traced
 	Grid &grid,									//	the grid heliostat belongs to
@@ -41,7 +44,7 @@ void recthelio_ray_tracing(const SunRay &sunray,
 	int *d_microhelio_groups = nullptr;
 
 	//	Init
-	recthelio_ray_tracing_init(recthelio, grid, heliostats, sunray.num_sunshape_groups_,
+	float subhelio_area=recthelio_ray_tracing_init(recthelio, grid, heliostats, sunray.num_sunshape_groups_,
 		microhelio_num, d_microhelio_centers, d_microhelio_normals, 
 		d_helio_vertexs, d_microhelio_groups);
 
@@ -59,4 +62,6 @@ void recthelio_ray_tracing(const SunRay &sunray,
 	d_microhelio_normals = nullptr;
 	d_helio_vertexs = nullptr;
 	d_microhelio_groups = nullptr;
+
+	return subhelio_area;
 }

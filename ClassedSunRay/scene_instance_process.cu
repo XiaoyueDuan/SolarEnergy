@@ -148,17 +148,17 @@ namespace samplelights
 	}
 }
 
-// delete it when doesn't need
-namespace tmp2
-{
-	void save_array(string filename, float *array, int size)
-	{
-		ofstream out(filename.c_str());
-		for (int i = 0; i < size; ++i)
-			out << array[i] << endl;
-		out.close();
-	}
-};
+//// delete it when doesn't need
+//namespace tmp2
+//{
+//	void save_array(string filename, float *array, int size)
+//	{
+//		ofstream out(filename.c_str());
+//		for (int i = 0; i < size; ++i)
+//			out << array[i] << endl;
+//		out.close();
+//	}
+//};
 
 void SceneProcessor::set_samplelights(SunRay &sunray)
 {

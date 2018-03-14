@@ -28,6 +28,9 @@
     <Filter Include="RayTracing\RectHelio">
       <UniqueIdentifier>{c73b1c80-266f-418f-888f-9d3f2c97f838}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RayTracing\StepsForTracing">
+      <UniqueIdentifier>{3a76c518-6153-4fc5-ac34-b1554f00cd19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grid.h">
@@ -84,11 +87,17 @@
     <ClInclude Include="recthelio_tracing.h">
       <Filter>RayTracing\RectHelio</Filter>
     </ClInclude>
-    <ClInclude Include="steps_for_raytracing.h">
-      <Filter>RayTracing</Filter>
-    </ClInclude>
     <ClInclude Include="image_save.h">
       <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="steps_for_raytracing.h">
+      <Filter>RayTracing\StepsForTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="poisson_disk.cuh">
+      <Filter>RayTracing\StepsForTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="compact_sample.cuh">
+      <Filter>RayTracing\StepsForTracing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,7 +152,13 @@
       <Filter>RayTracing\RectGrid</Filter>
     </CudaCompile>
     <CudaCompile Include="steps_for_raytracing.cu">
-      <Filter>RayTracing</Filter>
+      <Filter>RayTracing\StepsForTracing</Filter>
+    </CudaCompile>
+    <CudaCompile Include="poisson_disk.cu">
+      <Filter>RayTracing\StepsForTracing</Filter>
+    </CudaCompile>
+    <CudaCompile Include="compact_sample.cu">
+      <Filter>RayTracing\StepsForTracing</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>
