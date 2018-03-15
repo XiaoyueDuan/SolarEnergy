@@ -163,7 +163,7 @@ namespace samplelights
 void SceneProcessor::set_samplelights(SunRay &sunray)
 {
 	// input parameters
-	int num_group = 128;
+	int num_group = 1024;
 	float csr = sunray.csr_;
 	float upper_lm = 4.65f;
 

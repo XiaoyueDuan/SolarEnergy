@@ -149,7 +149,7 @@ void test(SolarScene &solar_scene)
 
 
 	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[24]);
-	float Ssub =recthelio_ray_tracing(*solar_scene.sunray_,
+	int num_subcenters =recthelio_ray_tracing(*solar_scene.sunray_,
 							*solar_scene.receivers[0],
 							*recthelio,
 							*solar_scene.grid0s[0],
@@ -162,16 +162,24 @@ void test(SolarScene &solar_scene)
 	//float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
 	float rou = solarenergy::reflected_rate;
 	int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
-	float Srec = solar_scene.receivers[0]->pixel_length_*solar_scene.receivers[0]->pixel_length_;
+	//float Srec = solar_scene.receivers[0]->pixel_length_*solar_scene.receivers[0]->pixel_length_;
 	float max = -1.0f;
+
+	int num_recv_m2 = (1 / solar_scene.receivers[0]->pixel_length_)*(1 / solar_scene.receivers[0]->pixel_length_);
+	float w = recthelio->size_.x - recthelio->gap_.x*(recthelio->row_col_.y - 1);
+	float h = recthelio->size_.z - recthelio->gap_.y*(recthelio->row_col_.x - 1);
+	float multiplier = (w*h*float(num_recv_m2)*Id * rou) / float(Nc*num_subcenters);
+
 	for (int i = 0; i < solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y; ++i)
 	{
-		h_image[i] = h_image[i] * Id * Ssub * rou / Nc/ Srec;
-	
+		//h_image[i] = h_image[i] * Id * Ssub * rou / Nc/ Srec;
+
+		// Ssub / Srec = Shelio_area* (1/Srec) / num_subcenters
+		h_image[i] *= multiplier;	
 		if (max < h_image[i])
 			max = h_image[i];
 	}
 	
 	// Save image	
-	ImageSaver::savetxt("../result/24th-2048-1group_lights.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
+	ImageSaver::savetxt("../result/24th-1024-64group_lights-poisson(5).txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
 }

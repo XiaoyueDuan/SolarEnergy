@@ -7,7 +7,7 @@
 // float3 *d_microhelio_normals
 // microhelio_num
 bool set_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhelio_centers, float3 *&d_microhelio_normals, size_t &size);
-float set_possion_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhelio_centers,
+int set_possion_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhelio_centers,
 									float3 *&d_microhelio_normals, size_t &size,
 									int k=8);
 

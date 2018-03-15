@@ -107,7 +107,7 @@ bool set_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhel
 	return true;
 }
 
-float set_possion_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhelio_centers, 
+int set_possion_microhelio_centers(const RectangleHelio &recthelio, float3 *&d_microhelio_centers, 
 	float3 *&d_microhelio_normals, size_t &size,
 	int k)
 {
@@ -159,7 +159,7 @@ float set_possion_microhelio_centers(const RectangleHelio &recthelio, float3 *&d
 	// 3. world center position
 	map_microhelio_center2world << <nBlocks, nThreads >> >(d_microhelio_centers, d_microhelio_centers, recthelio.normal_, recthelio.pos_, size);
 
-	return width*height/float(size);
+	return size;
 }
 
 // const float3 *d_helio_vertexs
