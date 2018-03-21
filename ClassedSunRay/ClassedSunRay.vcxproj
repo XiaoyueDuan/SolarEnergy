@@ -26,8 +26,10 @@
     <ClInclude Include="global_function.cuh" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="Gtest.cuh" />
+    <ClInclude Include="heap.cuh" />
     <ClInclude Include="heliostat.cuh" />
     <ClInclude Include="image_save.h" />
+    <ClInclude Include="image_smooth.cuh" />
     <ClInclude Include="poisson_disk.cuh" />
     <ClInclude Include="random_generator.h" />
     <ClInclude Include="ray_tracing.h" />
@@ -58,6 +60,7 @@
   <ItemGroup>
     <CudaCompile Include="compact_sample.cu" />
     <CudaCompile Include="Gtest.cu" />
+    <CudaCompile Include="image_smooth.cu" />
     <CudaCompile Include="poisson_disk.cu" />
     <CudaCompile Include="random_generator.cu" />
     <CudaCompile Include="ray_tracing.cu" />

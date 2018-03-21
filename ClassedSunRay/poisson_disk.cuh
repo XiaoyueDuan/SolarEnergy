@@ -1,3 +1,5 @@
+#pragma once
+
 // Includes CUDA
 #include <cuda.h>
 #include <cuda_runtime.h>

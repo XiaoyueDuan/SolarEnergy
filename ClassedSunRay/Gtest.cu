@@ -2,6 +2,7 @@
 #include "scene_instance_process.h"
 #include "recthelio_tracing.h"
 #include "image_save.h"
+#include "image_smooth.cuh"
 
 #include <sstream>
 
@@ -154,6 +155,12 @@ void test(SolarScene &solar_scene)
 							*recthelio,
 							*solar_scene.grid0s[0],
 							solar_scene.heliostats);
+	// Smooth result
+	int kernel_radius = 5;
+	float trimmed_ratio = 0.03;
+	ImageSmoother::image_smooth(solar_scene.receivers[0]->d_image_,
+		kernel_radius, trimmed_ratio,
+		solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y);
 
 	float *h_image = nullptr;
 	global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y);
@@ -181,5 +188,5 @@ void test(SolarScene &solar_scene)
 	}
 	
 	// Save image	
-	ImageSaver::savetxt("../result/24th-1024-64group_lights-poisson(5).txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
+	ImageSaver::savetxt("../result/24th-64group-1024pergroup-poisson-smoothed.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
 }

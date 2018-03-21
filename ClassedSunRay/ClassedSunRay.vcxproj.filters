@@ -99,6 +99,12 @@
     <ClInclude Include="compact_sample.cuh">
       <Filter>RayTracing\StepsForTracing</Filter>
     </ClInclude>
+    <ClInclude Include="heap.cuh">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="image_smooth.cuh">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="solar_scene.cpp">
@@ -159,6 +165,9 @@
     </CudaCompile>
     <CudaCompile Include="compact_sample.cu">
       <Filter>RayTracing\StepsForTracing</Filter>
+    </CudaCompile>
+    <CudaCompile Include="image_smooth.cu">
+      <Filter>PostProcess</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>
