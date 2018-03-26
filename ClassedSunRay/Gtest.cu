@@ -4,6 +4,7 @@
 #include "image_save.h"
 
 #include <sstream>
+#include <chrono>
 
 
 namespace tmp
@@ -145,33 +146,72 @@ void test(SolarScene &solar_scene)
 	//
 	//delete[] h_avg_img;
 	//h_avg_img = nullptr;
-
-
+	
+	string save_path("../result/24//24-.txt"); // e.g. - ../result/24/256/24-0.txt
+	int helio_id[] = { 24 };
+	int num_lights[4] = { 256, 512,1024,2048 };
+	int run_times_start = 900, run_times_end = 1000;
 
 	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[24]);
-	recthelio_ray_tracing(*solar_scene.sunray_,
-							*solar_scene.receivers[0],
-							*recthelio,
-							*solar_scene.grid0s[0],
-							solar_scene.heliostats);
+	Receiver *recv = dynamic_cast<RectangleReceiver *>(solar_scene.receivers[0]);
 
-	float *h_image = nullptr;
-	global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y);
-	// Id, Ssub, rou, Nc
-	float Id=solar_scene.sunray_->dni_;
-	float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
-	float rou = solarenergy::reflected_rate;
-	int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
-	float Srec = solar_scene.receivers[0]->pixel_length_*solar_scene.receivers[0]->pixel_length_;
-	float max = -1.0f;
-	for (int i = 0; i < solar_scene.receivers[0]->resolution_.x*solar_scene.receivers[0]->resolution_.y; ++i)
+	// time
+	auto start = std::chrono::high_resolution_clock::now();			 // nano-seconds
+	auto elapsed = std::chrono::high_resolution_clock::now() - start;// nano-seconds
+	long long total_time = 0, ray_gen_time=0;
+	long long time_tracing = 0, time_subcenter = 0;
+	for (int i = 0; i < sizeof(num_lights)/sizeof(num_lights[0]); ++i)
 	{
-		h_image[i] = h_image[i] * Id * Ssub * rou / Nc/ Srec;
-	
-		if (max < h_image[i])
-			max = h_image[i];
+		solar_scene.sunray_->num_sunshape_lights_per_group_ = num_lights[i];
+		solar_scene.sunray_->CClear();
+		total_time = ray_gen_time = 0;
+		time_tracing = time_subcenter = 0;
+		for (int j = run_times_start; j < run_times_end; ++j)
+		{
+			// Clear result of 
+			recv->Cclean_image_content();
+
+			start = std::chrono::high_resolution_clock::now();
+			// Reset content of sunrays
+			SceneProcessor::set_sunray_content(*solar_scene.sunray_);
+			elapsed = std::chrono::high_resolution_clock::now() - start;
+			ray_gen_time += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count(); // microseconds
+
+			// Ray-tracing
+			recthelio_ray_tracing(*solar_scene.sunray_,
+				*recv,
+				*recthelio,
+				*solar_scene.grid0s[0],
+				solar_scene.heliostats, 
+				time_tracing, time_subcenter);
+			elapsed = std::chrono::high_resolution_clock::now() - start;
+			total_time += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count(); // microseconds
+
+			float *h_image = nullptr;
+			global_func::gpu2cpu(h_image, recv->d_image_, recv->resolution_.x*recv->resolution_.y);
+			// Id, Ssub, rou, Nc
+			float Id = solar_scene.sunray_->dni_;
+			float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
+			float rou = solarenergy::reflected_rate;
+			int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
+			float Srec = recv->pixel_length_*recv->pixel_length_;
+
+			for (int i = 0; i < recv->resolution_.x*recv->resolution_.y; ++i)
+				h_image[i] = h_image[i] * Id * Ssub * rou / Nc / Srec;
+			
+			// Save image		
+			string tmp_name = save_path;
+			tmp_name.insert(tmp_name.size() - 8, to_string(num_lights[i]));
+			tmp_name.insert(tmp_name.size() - 4, to_string(j));
+			ImageSaver::savetxt(tmp_name, recv->resolution_.x, recv->resolution_.y, h_image);
+
+			//cout << to_string(num_lights[i])+ "\t" +to_string(j) << endl;
+		}
+		std::cout << to_string(num_lights[i]) << endl;
+		std::cout << "Total Average Time:\t" + to_string(double(total_time / (run_times_end - run_times_start))) << endl;
+		std::cout << "Rays Generation Time:\t" + to_string(double(ray_gen_time / (run_times_end - run_times_start))) << endl;
+		std::cout << "Subcenter Generation Time:\t" + to_string(double(time_subcenter / (run_times_end - run_times_start))) << endl;
+		std::cout << "Tracing Time:\t" + to_string(double(time_tracing / (run_times_end - run_times_start))) << endl;
+		std::cout << endl;
 	}
-	
-	// Save image	
-	ImageSaver::savetxt("../result/24th-128.txt", solar_scene.receivers[0]->resolution_.x, solar_scene.receivers[0]->resolution_.y, h_image);
 }

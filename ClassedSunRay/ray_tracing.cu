@@ -6,7 +6,6 @@ void ray_tracing(const SunRay &sunray,		// sun
 	const float3 *d_helio_vertexs,			// 3 vertexs of heliostats
 	const float3 *d_microhelio_normals,		// micro-heliostat's normal
 	const float3 *d_microhelio_origs,		// micro-heliostat's origins
-	const int *d_microhelio_groups,			// micro-heliostat's belonging group number
 	const int &microhelio_num)
 {
 	int nThreads = 256;
@@ -20,10 +19,8 @@ void ray_tracing(const SunRay &sunray,		// sun
 	{
 		RectGrid *rectgrid = dynamic_cast<RectGrid *> (&grid);
 		RectangleReceiver *rect_receiver = dynamic_cast<RectangleReceiver *> (&receiver);
-		map_tracing << <nBlocks, nThreads >> >(sunray, *rectgrid, *rect_receiver,
-			d_helio_vertexs, d_microhelio_normals, d_microhelio_origs, d_microhelio_groups,
-			microhelio_num);
-		auto a = cudaGetLastError();
+		map_tracing << <nBlocks, nThreads >> > (sunray, *rectgrid, *rect_receiver,
+			d_helio_vertexs, d_microhelio_normals, d_microhelio_origs, microhelio_num);
 		cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
 		break;
 	}

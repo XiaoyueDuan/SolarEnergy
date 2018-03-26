@@ -10,12 +10,13 @@ void recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which heli
 								size_t &microhelio_num,
 								float3 *&d_microhelio_centers,
 								float3 *&d_microhelio_normals,
-								float3 *&d_helio_vertexs,
-								int *&d_microhelio_groups);
+								float3 *&d_helio_vertexs);
 
 void recthelio_ray_tracing(const SunRay &sunray,
 							Receiver &receiver,
 							const RectangleHelio &recthelio,		//	which heliostat will be traced
 							Grid &grid,								//	the grid heliostat belongs to
-							const vector<Heliostat *> heliostats);	//	all heliostats
+							const vector<Heliostat *> heliostats,	//	all heliostats
+							long long &tracing_time,
+							long long &subcenter_time);	
 							

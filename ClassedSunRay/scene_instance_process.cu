@@ -24,7 +24,7 @@ __global__ void map_turbulance(float3 *d_turbulance, const float *d_guassian, co
 
 void SceneProcessor::set_perturbation(SunRay &sunray)
 {
-	int size = sunray.num_sunshape_lights_per_group_* sunray.num_sunshape_lights_per_group_;
+	int size = sunray.num_sunshape_groups_* sunray.num_sunshape_lights_per_group_;
 	//	Step 1:	Allocate memory for sunray.d_perturbation_ on GPU
 	if (sunray.d_perturbation_ == nullptr)
 		checkCudaErrors(cudaMalloc((void **)&sunray.d_perturbation_, sizeof(float3)*size));
@@ -160,132 +160,132 @@ namespace tmp2
 	}
 };
 
-void SceneProcessor::set_samplelights(SunRay &sunray)
-{
-	// input parameters
-	int num_group = 128;
-	float csr = sunray.csr_;
-	float upper_lm = 4.65f;
-
-	// 
-	float k = 0.9f*logf(13.5f*csr)*powf(csr, -0.3f);
-	float gamma = 2.2f*logf(0.52f*csr)*powf(csr, 0.43f) - 0.1f;
-	float value_465_930 = samplelights::inter_larger_465_intensity(9.3f, k, gamma) - samplelights::inter_larger_465_intensity(upper_lm, k, gamma);
-
-	float *h_k = new float[num_group];
-	float2 *h_cdf = samplelights::parameters_generate(h_k, num_group, k, gamma, upper_lm);
-	float value_less_465 = h_cdf[num_group].y;
-
-	float2 *d_cdf = nullptr;
-	cudaMalloc((void **)&d_cdf, sizeof(float2)*(num_group + 1));
-	cudaMemcpy(d_cdf, h_cdf, sizeof(float2)*(num_group + 1), cudaMemcpyHostToDevice);
-	float *d_k = nullptr;
-	cudaMalloc((void **)&d_k, sizeof(float)*num_group);
-	cudaMemcpy(d_k, h_k, sizeof(float)*num_group, cudaMemcpyHostToDevice);
-
-	// Generate uniform random theta and phi in range [0,1]
-	float *d_theta = nullptr;
-	int num_random = sunray.num_sunshape_groups_ * sunray.num_sunshape_lights_per_group_;
-	cudaMalloc((void **)&d_theta, sizeof(float)*num_random);
-	RandomGenerator::gpu_Uniform(d_theta, num_random);
-
-	float *d_phi = nullptr;
-	cudaMalloc((void **)&d_phi, sizeof(float)*num_random);
-	RandomGenerator::gpu_Uniform(d_phi, num_random);
-
-	//float *d_phi = nullptr;
-	//float *h_phi2 = new float[num_random];
-	//RandomGenerator::cpu_Uniform(h_phi2, num_random);
-	//global_func::cpu2gpu(d_phi, h_phi2, num_random);
-	
-	int nThreads = 1024;
-	int nBlock = (num_random + nThreads - 1) / nThreads;
-	float A = value_less_465 + value_465_930;
-	float B = (gamma + 1) / expf(k);
-	float C = powf(4.65, gamma + 1);
-
-	// Change to correct theta
-	samplelights::linear_interpolate << <nBlock, nThreads >> >(d_theta, d_cdf, d_k, value_less_465, gamma, k,
-		A, B, C,
-		num_group, num_random);
-
-	// 
-	if (sunray.d_samplelights_ == nullptr)
-		cudaMalloc((void **)&sunray.d_samplelights_, sizeof(float3)*num_random);
-	samplelights::map_samplelights <<<nBlock, nThreads >>>(sunray.d_samplelights_,d_theta,d_phi,num_random);
-
-	// //save result
-	//float *h_theta = new float[num_random];
-	//cudaMemcpy(h_theta, d_theta, sizeof(float)*num_random, cudaMemcpyDeviceToHost);
-	//float *h_phi = new float[num_random];
-	//cudaMemcpy(h_phi, d_phi, sizeof(float)*num_random, cudaMemcpyDeviceToHost);
-	//tmp2::save_array("../result/theta_distribution.txt", h_theta, num_random);
-	//tmp2::save_array("../result/phi_distribution.txt", h_phi, num_random);
-
-	// clear
-	delete[] h_k;
-	delete[] h_cdf;
-	h_k = nullptr;
-	h_cdf = nullptr;
-
-	cudaFree(d_theta);
-	cudaFree(d_phi);
-	cudaFree(d_cdf);
-	cudaFree(d_k);
-	d_theta = nullptr;
-	d_phi = nullptr;
-	d_cdf = nullptr;
-	d_k = nullptr;
-}
-
-//float sunshape_normalizedintensity(const float &theta, const float &k, const float &gamma)
-//{
-//	if (theta > 0 && theta <= 4.65)
-//		return cosf(0.326*theta) / cosf(0.308*theta);
-//	else if (theta > 4.65)
-//		return exp(k)*pow(theta, gamma);
-//
-//	return 0.0;
-//}
-//
 //void SceneProcessor::set_samplelights(SunRay &sunray)
 //{
-//	int num_all_lights = sunray.num_sunshape_groups_ * sunray.num_sunshape_lights_per_group_;
-//	float CSR = sunray.csr_;
-//	float k = 0.9*logf(13.5*CSR)*powf(CSR, -0.3);
-//	float gamma = 2.2*logf(0.52*CSR)*powf(CSR, 0.43) - 0.1;
+//	// input parameters
+//	int num_group = 128;
+//	float csr = sunray.csr_;
+//	float upper_lm = 4.65f;
 //
-//	//	Step 1:	Allocate memory temporarily used as h_samplelights, h_tmp_theta and h_tmp_phi on CPU
-//	float3 *h_samplelights = new float3[num_all_lights];
+//	// 
+//	float k = 0.9f*logf(13.5f*csr)*powf(csr, -0.3f);
+//	float gamma = 2.2f*logf(0.52f*csr)*powf(csr, 0.43f) - 0.1f;
+//	float value_465_930 = samplelights::inter_larger_465_intensity(9.3f, k, gamma) - samplelights::inter_larger_465_intensity(upper_lm, k, gamma);
 //
-//	//	Step 2:
-//	float x, y;
-//	float theta, phi;
-//	float xmin = 0.0f, xmax = 9.3f;
-//	int accept = 0, count = 0;
-//	while (accept<num_all_lights)
-//	{
-//		x = (float)((float)rand() / (RAND_MAX))*(xmax - xmin) + xmin;
-//		y = (float)((float)rand() / (RAND_MAX));
+//	float *h_k = new float[num_group];
+//	float2 *h_cdf = samplelights::parameters_generate(h_k, num_group, k, gamma, upper_lm);
+//	float value_less_465 = h_cdf[num_group].y;
 //
-//		if (y <= sunshape_normalizedintensity(x, k, gamma))
-//		{
-//			theta = x / 1000;
-//			phi = (float)((float)rand() / (RAND_MAX)) * 2 * MATH_PI;
-//			h_samplelights[accept] = global_func::angle2xyz(make_float2(theta, phi));
-//			++accept;
-//		}
-//		++count;
-//	}
+//	float2 *d_cdf = nullptr;
+//	cudaMalloc((void **)&d_cdf, sizeof(float2)*(num_group + 1));
+//	cudaMemcpy(d_cdf, h_cdf, sizeof(float2)*(num_group + 1), cudaMemcpyHostToDevice);
+//	float *d_k = nullptr;
+//	cudaMalloc((void **)&d_k, sizeof(float)*num_group);
+//	cudaMemcpy(d_k, h_k, sizeof(float)*num_group, cudaMemcpyHostToDevice);
 //
-//	// Step 3 : Transfer h_samplelights to sunray.d_samplelights_
-//	global_func::cpu2gpu(sunray.d_samplelights_, h_samplelights, num_all_lights);
+//	// Generate uniform random theta and phi in range [0,1]
+//	float *d_theta = nullptr;
+//	int num_random = sunray.num_sunshape_groups_ * sunray.num_sunshape_lights_per_group_;
+//	cudaMalloc((void **)&d_theta, sizeof(float)*num_random);
+//	RandomGenerator::gpu_Uniform(d_theta, num_random);
 //
-//	//	Step 4 : Cleanup
-//	delete[] h_samplelights;
-//	h_samplelights = nullptr;
+//	float *d_phi = nullptr;
+//	cudaMalloc((void **)&d_phi, sizeof(float)*num_random);
+//	RandomGenerator::gpu_Uniform(d_phi, num_random);
+//
+//	//float *d_phi = nullptr;
+//	//float *h_phi2 = new float[num_random];
+//	//RandomGenerator::cpu_Uniform(h_phi2, num_random);
+//	//global_func::cpu2gpu(d_phi, h_phi2, num_random);
+//	
+//	int nThreads = 1024;
+//	int nBlock = (num_random + nThreads - 1) / nThreads;
+//	float A = value_less_465 + value_465_930;
+//	float B = (gamma + 1) / expf(k);
+//	float C = powf(4.65, gamma + 1);
+//
+//	// Change to correct theta
+//	samplelights::linear_interpolate << <nBlock, nThreads >> >(d_theta, d_cdf, d_k, value_less_465, gamma, k,
+//		A, B, C,
+//		num_group, num_random);
+//
+//	// 
+//	if (sunray.d_samplelights_ == nullptr)
+//		cudaMalloc((void **)&sunray.d_samplelights_, sizeof(float3)*num_random);
+//	samplelights::map_samplelights <<<nBlock, nThreads >>>(sunray.d_samplelights_,d_theta,d_phi,num_random);
+//
+//	// //save result
+//	//float *h_theta = new float[num_random];
+//	//cudaMemcpy(h_theta, d_theta, sizeof(float)*num_random, cudaMemcpyDeviceToHost);
+//	//float *h_phi = new float[num_random];
+//	//cudaMemcpy(h_phi, d_phi, sizeof(float)*num_random, cudaMemcpyDeviceToHost);
+//	//tmp2::save_array("../result/theta_distribution.txt", h_theta, num_random);
+//	//tmp2::save_array("../result/phi_distribution.txt", h_phi, num_random);
+//
+//	// clear
+//	delete[] h_k;
+//	delete[] h_cdf;
+//	h_k = nullptr;
+//	h_cdf = nullptr;
+//
+//	cudaFree(d_theta);
+//	cudaFree(d_phi);
+//	cudaFree(d_cdf);
+//	cudaFree(d_k);
+//	d_theta = nullptr;
+//	d_phi = nullptr;
+//	d_cdf = nullptr;
+//	d_k = nullptr;
 //}
-//
+
+float sunshape_normalizedintensity(const float &theta, const float &k, const float &gamma)
+{
+	if (theta > 0 && theta <= 4.65)
+		return cosf(0.326*theta) / cosf(0.308*theta);
+	else if (theta > 4.65)
+		return exp(k)*pow(theta, gamma);
+
+	return 0.0;
+}
+
+void SceneProcessor::set_samplelights(SunRay &sunray)
+{
+	int num_all_lights = sunray.num_sunshape_groups_ * sunray.num_sunshape_lights_per_group_;
+	float CSR = sunray.csr_;
+	float k = 0.9*logf(13.5*CSR)*powf(CSR, -0.3);
+	float gamma = 2.2*logf(0.52*CSR)*powf(CSR, 0.43) - 0.1;
+
+	//	Step 1:	Allocate memory temporarily used as h_samplelights, h_tmp_theta and h_tmp_phi on CPU
+	float3 *h_samplelights = new float3[num_all_lights];
+
+	//	Step 2:
+	float x, y;
+	float theta, phi;
+	float xmin = 0.0f, xmax = 9.3f;
+	int accept = 0, count = 0;
+	while (accept<num_all_lights)
+	{
+		x = (float)((float)rand() / (RAND_MAX))*(xmax - xmin) + xmin;
+		y = (float)((float)rand() / (RAND_MAX));
+
+		if (y <= sunshape_normalizedintensity(x, k, gamma))
+		{
+			theta = x / 1000;
+			phi = (float)((float)rand() / (RAND_MAX)) * 2 * MATH_PI;
+			h_samplelights[accept] = global_func::angle2xyz(make_float2(theta, phi));
+			++accept;
+		}
+		++count;
+	}
+
+	// Step 3 : Transfer h_samplelights to sunray.d_samplelights_
+	global_func::cpu2gpu(sunray.d_samplelights_, h_samplelights, num_all_lights);
+
+	//	Step 4 : Cleanup
+	delete[] h_samplelights;
+	h_samplelights = nullptr;
+}
+
 
 //void SceneProcessor::set_samplelights(SunRay &sunray)
 //{

@@ -57,5 +57,5 @@ public:
 										//		memory size = num_sunshape_groups_ * num_sunshape_lights_per_group_
 	float3* d_perturbation_;			// e.g. point to the memory on GPU
 										//		which obeys Gaussian distribution 
-										//		memory size = num_sunshape_lights_per_group_
+										//		memory size = num_sunshape_groups_ * num_sunshape_lights_per_group_
 };

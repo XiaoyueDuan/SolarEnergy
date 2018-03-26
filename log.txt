@@ -63,3 +63,26 @@ S:
 2. 及时清除了不必要的gpu开销
 Q:
 1. 存储是个大问题
+
+2018.3.26
+1. 生成grid ray tracing 分支
+2. 修复一些小问题：
+	// rectgrid_raytracing.cu
+	181:
+	int group_id = (myId / nLights-1>0)? (myId / nLights - 1):0;
+	163:
+	~~unsigned~~ long long int myId = global_func::getThreadId();
+
+	// scene_instance_process.cu
+	27:
+	int size = sunray.num_sunshape_groups_* sunray.num_sunshape_lights_per_group_;
+
+	// common_var.cpp
+	注意保持参数相同
+
+	// sunray.h
+	58:
+	float3* d_perturbation_;			// e.g. point to the memory on GPU
+										//		which obeys Gaussian distribution 
+										//		memory size = num_sunshape_groups_ * num_sunshape_lights_per_group_
+3. 去除了选择组别和生成组别
