@@ -24,7 +24,7 @@ __global__ void map_turbulance(float3 *d_turbulance, const float *d_guassian, co
 
 void SceneProcessor::set_perturbation(SunRay &sunray)
 {
-	int size = sunray.num_sunshape_lights_per_group_* sunray.num_sunshape_lights_per_group_;
+	int size = sunray.num_sunshape_groups_* sunray.num_sunshape_lights_per_group_;
 	//	Step 1:	Allocate memory for sunray.d_perturbation_ on GPU
 	if (sunray.d_perturbation_ == nullptr)
 		checkCudaErrors(cudaMalloc((void **)&sunray.d_perturbation_, sizeof(float3)*size));

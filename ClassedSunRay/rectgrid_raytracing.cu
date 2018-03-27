@@ -160,7 +160,7 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 	const int *d_microhelio_groups,		// micro-heliostat's belonging group number
 	const int microhelio_num)
 {
-	unsigned long long int myId = global_func::getThreadId();
+	long long int myId = global_func::getThreadId();
 	if (myId >= microhelio_num*sunray.num_sunshape_lights_per_group_)
 		return;
 
@@ -178,7 +178,7 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 
 	//	Step 2: whether the reflect light is shadowed by other heliostats	
 	float3 normal = d_microhelio_normals[myId / nLights];	
-	int group_id = myId / nLights-1?0:(myId / nLights>0);
+	int group_id = (myId / nLights - 1>0) ? (myId / nLights - 1) : 0;
 	address = d_microhelio_groups[group_id] * nLights + myId%nLights;
 	float3 turbulence = sunray.d_perturbation_[address];
 	normal = global_func::local2world(turbulence, normal); normal = normalize(normal);
