@@ -17,7 +17,7 @@ float3 solarenergy::sun_dir = make_float3(0.0f, -0.5f, 0.866025404f);
 float solarenergy::dni = 1000.0f;
 float solarenergy::csr = 0.1f;
 float solarenergy::num_sunshape_groups = 1;
-float solarenergy::num_sunshape_lights_per_group = 256;
+float solarenergy::num_sunshape_lights_per_group = 1024;
 
 float solarenergy::helio_pixel_length = 0.01f;
 float solarenergy::receiver_pixel_length = 0.01f;

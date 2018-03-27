@@ -16,7 +16,7 @@ void ImageSaver::savetxt(const string filename, int w, int h, float *h_data)
 			if (h_data[address] < Epsilon)
 				out << 0 << ',';
 			else
-				out << fixed << setprecision(2)<< h_data[address] << ',';
+				out << fixed << setprecision(5)<< h_data[address] << ',';
 		}
 		out << endl;
 	}
