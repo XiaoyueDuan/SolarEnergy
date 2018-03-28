@@ -63,3 +63,8 @@ S:
 2. 及时清除了不必要的gpu开销
 Q:
 1. 存储是个大问题
+
+2018.3.28
+S:
+1. 在Heliostat类里面添加了变量type，指明sub-helio center是poisson disk还是grid
+2. 可以生产多种结果的组合：当sun中的lights一定时，num_groups↑（num_lights_per_group↓)，效果如何？

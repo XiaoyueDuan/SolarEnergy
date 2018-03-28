@@ -3,6 +3,12 @@
 #include "utils.h"
 #include "global_function.cuh"
 
+enum class SubCenterType 
+{ 
+	Grid, 
+	Poisson 
+};
+
 // Heliostats
 class Heliostat
 {
@@ -12,8 +18,9 @@ public:
 	float3 normal_;
 	int2 row_col_;		// How many mirrors compose a heliostat
 	float2 gap_;		// The gap between mirrors
+	SubCenterType type;
 
-	__device__ __host__ Heliostat() {}
+	__device__ __host__ Heliostat():type(SubCenterType::Grid){}
 
 	virtual void Cset_pixel_length(const float &pixel_length) = 0;
 	virtual void CRotate(const float3 &focus_center, const float3 &sunray_dir) = 0;

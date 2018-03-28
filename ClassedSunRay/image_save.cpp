@@ -2,7 +2,7 @@
 #include "global_constant.h"
 #include <iomanip>
 
-void ImageSaver::savetxt(const string filename, int w, int h, float *h_data)
+void ImageSaver::savetxt(const string filename, int w, int h, float *h_data, int precision)
 {
 	ofstream out(filename.c_str());
 
@@ -16,7 +16,7 @@ void ImageSaver::savetxt(const string filename, int w, int h, float *h_data)
 			if (h_data[address] < Epsilon)
 				out << 0 << ',';
 			else
-				out << fixed << setprecision(5)<< h_data[address] << ',';
+				out << fixed << setprecision(precision)<< h_data[address] << ',';
 		}
 		out << endl;
 	}

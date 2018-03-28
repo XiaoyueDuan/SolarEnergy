@@ -10,12 +10,23 @@ int recthelio_ray_tracing_init(const RectangleHelio &recthelio,			//	which helio
 	float3 *&d_helio_vertexs,
 	int *&d_microhelio_groups)
 {
-	//size_t microhelio_num;
-	//float3 *d_microhelio_centers = nullptr;
-	//float3 *d_microhelio_normals = nullptr;
-
-	//set_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
-	int num_subcenters=set_possion_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
+	int num_subcenters = 0;
+	switch (recthelio.type)
+	{
+		case(SubCenterType::Grid):
+		{	
+			set_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
+			num_subcenters = microhelio_num;
+			break;
+		}			
+		case(SubCenterType::Poisson):
+		{
+			num_subcenters = set_possion_microhelio_centers(recthelio, d_microhelio_centers, d_microhelio_normals, microhelio_num);
+			break;
+		}
+		default:
+			break;
+	}
 	cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
 
 	int start_pos = grid.start_helio_pos_;

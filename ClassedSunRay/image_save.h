@@ -8,5 +8,5 @@ using namespace std;
 class ImageSaver 
 {
 public:	
-	static void savetxt(const string filename, int w, int h, float *h_data);
+	static void savetxt(const string filename, int w, int h, float *h_data, int precision=2);
 };
