@@ -5,6 +5,7 @@
 #include "image_smooth.cuh"
 
 #include <sstream>
+#include <chrono>
 
 
 namespace tmp
@@ -147,12 +148,10 @@ void test(SolarScene &solar_scene)
 	//delete[] h_avg_img;
 	//h_avg_img = nullptr;
 
-	string save_path("../result/24////24-.txt"); // e.g. - ../result/24/256/24-0.txt
+	string save_path("../result/24///24_.txt"); // e.g. - ../result/24/256/24-0.txt
 	int helio_id[] = { 24 };
-	int num_lights[] = { 256, 512,1024,2048 };
-	SubCenterType heliocenters[] = { SubCenterType::Grid, SubCenterType::Poisson };
-	string heliocenters_name[] = { "grid_center", "poisson_center" };
-	int run_times_start = 0, run_times_end = 100;
+	int num_groups[] = { 32 };
+	int run_times_start = 900, run_times_end = 901;
 
 	// Smooth result
 	int kernel_radius = 5;
@@ -161,72 +160,92 @@ void test(SolarScene &solar_scene)
 
 	RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[24]);
 	Receiver *recv = dynamic_cast<RectangleReceiver *>(solar_scene.receivers[0]);
-	
-	int N = 256 * 256;
-	// 256-256 128-512 64-1024 32-2048
-	for (int j = run_times_start; j < run_times_end; ++j)
+
+	// time
+	auto start = std::chrono::high_resolution_clock::now();			 // nano-seconds
+	auto elapsed = std::chrono::high_resolution_clock::now() - start;// nano-seconds
+	long long total_time = 0, ray_gen_time = 0;
+	long long time_tracing = 0, time_subcenter = 0, time_group_gen = 0;
+	long long time_smooth = 0;
+
+	recthelio->type = SubCenterType::Poisson;
+	for (int i = 0; i < sizeof(num_groups) / sizeof(num_groups[0]); ++i)
 	{
-		solar_scene.sunray_->CClear();
-		solar_scene.sunray_->num_sunshape_groups_ = 1;
-		solar_scene.sunray_->num_sunshape_lights_per_group_ = N;
-		SceneProcessor::set_sunray_content(*solar_scene.sunray_);
-		for (int i = 0; i < sizeof(num_lights) / sizeof(num_lights[0]); ++i)
+		solar_scene.sunray_->num_sunshape_groups_ = num_groups[i];
+		for (int j = run_times_start; j < run_times_end; ++j)
 		{
-			solar_scene.sunray_->num_sunshape_lights_per_group_ = num_lights[i];
-			solar_scene.sunray_->num_sunshape_groups_ = N / num_lights[i];
+			// Reset the content of sun
+			solar_scene.sunray_->CClear();
+			start = std::chrono::high_resolution_clock::now();
+			SceneProcessor::set_sunray_content(*solar_scene.sunray_);
+			elapsed = std::chrono::high_resolution_clock::now() - start;
+			ray_gen_time+= std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
-			// Grid or Poisson
-			for (int t = 0; t < sizeof(heliocenters) / sizeof(heliocenters[0]); ++t)
-			{
-				// Clear result of receiver
-				recv->Cclean_image_content();
-				recthelio->type = heliocenters[t];
+			// Clear result of receiver
+			recv->Cclean_image_content();
 
-				// Ray-tracing
-				int num_subcenters = recthelio_ray_tracing(*solar_scene.sunray_,
-					*recv, *recthelio,
-					*solar_scene.grid0s[0],
-					solar_scene.heliostats);
-				global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
+			// Ray-tracing
+			int num_subcenters = recthelio_ray_tracing(*solar_scene.sunray_,
+				*recv, *recthelio,
+				*solar_scene.grid0s[0],
+				solar_scene.heliostats,
+				time_tracing,
+				time_subcenter,
+				time_group_gen);
+			elapsed = std::chrono::high_resolution_clock::now() - start;
+			total_time += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
-				// Non Smooth
-				float Id = solar_scene.sunray_->dni_;
-				float rou = solarenergy::reflected_rate;
-				int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
+			//global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
+			
+			//// Non Smooth
+			//float Id = solar_scene.sunray_->dni_;
+			//float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
+			//float rou = solarenergy::reflected_rate;
+			//int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
+			//float Srec = recv->pixel_length_*recv->pixel_length_;
+			//for (int k = 0; k < recv->resolution_.x * recv->resolution_.y; ++k)
+			//	h_image[k] *= Id * Ssub * rou / Nc / Srec;
+			//// Save image	
+			//string tmp_path = save_path;
+			//tmp_path.insert(tmp_path.size() - 9, to_string(num_groups[i]));
+			//tmp_path.insert(tmp_path.size() - 8, "non_smooth");
+			//tmp_path.insert(tmp_path.size() - 4, to_string(j));
+			//ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image);
 
-				int num_recv_m2 = (1 / solar_scene.receivers[0]->pixel_length_)*(1 / solar_scene.receivers[0]->pixel_length_);
-				float w = recthelio->size_.x - recthelio->gap_.x*(recthelio->row_col_.y - 1);
-				float h = recthelio->size_.z - recthelio->gap_.y*(recthelio->row_col_.x - 1);
-				float multiplier = (w*h*float(num_recv_m2)*Id * rou) / float(Nc*num_subcenters);
+			// Smooth
+			start = std::chrono::high_resolution_clock::now();
+			ImageSmoother::image_smooth(recv->d_image_,
+				kernel_radius, trimmed_ratio,
+				recv->resolution_.x, recv->resolution_.y);
+			elapsed = std::chrono::high_resolution_clock::now() - start;
+			time_smooth += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+			total_time += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
-				for (int k = 0; k < recv->resolution_.x*recv->resolution_.y; ++k)
-					h_image[k] *= multiplier;
-
-				// Save image	
-				string tmp_path = save_path;//"../result/24////24-.txt"
-				tmp_path.insert(tmp_path.size() - 10, heliocenters_name[t]);
-				tmp_path.insert(tmp_path.size() - 9, to_string(N / num_lights[i])+"_"+ to_string(num_lights[i]));
-				tmp_path.insert(tmp_path.size() - 8, "non_smooth");
-				tmp_path.insert(tmp_path.size() - 4, to_string(j));
-				ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image, 5);
-
-				// Smooth
-				ImageSmoother::image_smooth(recv->d_image_,
-					kernel_radius, trimmed_ratio,
-					recv->resolution_.x, recv->resolution_.y);
-				global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
-				for (int k = 0; k < recv->resolution_.x*recv->resolution_.y; ++k)
-					h_image[k] *= multiplier;
-				tmp_path = save_path;//"../result/24////24-.txt"
-				tmp_path.insert(tmp_path.size() - 10, heliocenters_name[t]);
-				tmp_path.insert(tmp_path.size() - 9, to_string(N / num_lights[i]) + "_" + to_string(num_lights[i]));
-				tmp_path.insert(tmp_path.size() - 8, "smooth");
-				tmp_path.insert(tmp_path.size() - 4, to_string(j));
-				ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image, 5);
-				cout << tmp_path << endl;
-			}
+			//global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
+			//for (int k = 0; k < recv->resolution_.x*recv->resolution_.y; ++k)
+			//	h_image[k] *= Id * Ssub * rou / Nc / Srec;
+			//tmp_path = save_path;//"../result/24////24-.txt"
+			//tmp_path.insert(tmp_path.size() - 9, to_string(num_groups[i]));
+			//tmp_path.insert(tmp_path.size() - 8, "smooth");
+			//tmp_path.insert(tmp_path.size() - 4, to_string(j));
+			//ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image);
+			//cout << tmp_path << endl;
 		}
+		std::cout << to_string(num_groups[i]) << endl;
+		std::cout << "Total Average Time:\t" + to_string(double(total_time / (run_times_end - run_times_start))) << endl;
+		std::cout << "Rays Generation Time:\t" + to_string(double(ray_gen_time / (run_times_end - run_times_start))) << endl;
+		std::cout << "Subcenter Generation Time:\t" + to_string(double(time_subcenter / (run_times_end - run_times_start))) << endl;
+		std::cout << "Groups Generation Time:\t" + to_string(double(time_group_gen / (run_times_end - run_times_start))) << endl;
+		std::cout << "Tracing Time:\t" + to_string(double(time_tracing / (run_times_end - run_times_start))) << endl;
+		std::cout << "Smooth Time:\t" + to_string(double(time_smooth / (run_times_end - run_times_start))) << endl;
+		std::cout << endl;
 	}
+
+
+	delete[] h_image;
+	h_image = nullptr;
+	solar_scene.sunray_->CClear();
+	recv->Cclean_image_content();
 	
 	//RectangleHelio *recthelio = dynamic_cast<RectangleHelio *>(solar_scene.heliostats[24]);
 	//int num_subcenters =recthelio_ray_tracing(*solar_scene.sunray_,
