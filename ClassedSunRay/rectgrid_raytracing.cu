@@ -147,7 +147,7 @@ __device__ void receiver_drawing(RectangleReceiver &receiver, const SunRay &sunr
 	float energy = calEnergy(sunray.sun_dir_, normal, eta);
 
 	//	Step3: Add the energy to the intersect position
-	unsigned int address = row_col.x*receiver.resolution_.x + row_col.y;  //col_row.y + col_row.x*resolution.y;
+	int address = row_col.x*receiver.resolution_.x + row_col.y;  //col_row.y + col_row.x*resolution.y;
 	atomicAdd(&(receiver.d_image_[address]), energy);
 }
 
@@ -157,7 +157,7 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 	const float3 *d_helio_vertexs,	// 3 vertexs of heliostats
 	const float3 *d_microhelio_normals,	// micro-heliostat's normal
 	const float3 *d_microhelio_center,	// micro-heliostat's origins
-	const int *d_microhelio_groups,		// micro-heliostat's belonging group number
+	const int *d_microhelio_start,		// micro-heliostat's belonging group number
 	const int microhelio_num)
 {
 	long long int myId = global_func::getThreadId();
@@ -166,7 +166,8 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 
 	//	Step 1: whether the incident light is shadowed by other heliostats
 	int nLights = sunray.num_sunshape_lights_per_group_;
-	int address = d_microhelio_groups[myId / nLights] * nLights + myId%nLights;
+	int nGroup = sunray.num_sunshape_groups_;
+	int address = (d_microhelio_start[myId / nLights] + myId%nLights)%(nLights*nGroup);
 	float3 dir = sunray.d_samplelights_[address];				// get the y-aligned direction
 	dir = global_func::local2world(dir, sunray.sun_dir_);		// get the sun_direction-aligned direction	
 	dir = -dir;													// Since the sun direction is incident direction, reverse it
@@ -178,8 +179,8 @@ __global__ void map_tracing(const SunRay sunray,		// sun
 
 	//	Step 2: whether the reflect light is shadowed by other heliostats	
 	float3 normal = d_microhelio_normals[myId / nLights];	
-	int group_id = (myId / nLights - 1>0) ? (myId / nLights - 1) : 0;
-	address = d_microhelio_groups[group_id] * nLights + myId%nLights;
+	int start_id = (myId / nLights - 1>0) ? (myId / nLights - 1) : 0;
+	address = (d_microhelio_start[start_id] + myId%nLights) % (nLights*nGroup);
 	float3 turbulence = sunray.d_perturbation_[address];
 	normal = global_func::local2world(turbulence, normal); normal = normalize(normal);
 

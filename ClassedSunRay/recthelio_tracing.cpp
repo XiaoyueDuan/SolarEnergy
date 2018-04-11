@@ -67,7 +67,8 @@ int recthelio_ray_tracing(const SunRay &sunray,
 	int *d_microhelio_groups = nullptr;
 	
 	//	Init
-	int num_subcenters=recthelio_ray_tracing_init(recthelio, grid, heliostats, sunray.num_sunshape_groups_,
+	int num_subcenters=recthelio_ray_tracing_init(recthelio, grid, heliostats, 
+		sunray.num_sunshape_groups_*sunray.num_sunshape_lights_per_group_,
 		microhelio_num, d_microhelio_centers, d_microhelio_normals, 
 		d_helio_vertexs, d_microhelio_groups,
 		time_subcenter, time_group_gen);

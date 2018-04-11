@@ -150,8 +150,8 @@ void test(SolarScene &solar_scene)
 
 	string save_path("../result/24///24_.txt"); // e.g. - ../result/24/256/24-0.txt
 	int helio_id[] = { 24 };
-	int num_groups[] = { 32 };
-	int run_times_start = 900, run_times_end = 901;
+	int num_groups[] = { 1 };
+	int run_times_start = 0, run_times_end = 1;
 
 	// Smooth result
 	int kernel_radius = 5;
@@ -168,7 +168,7 @@ void test(SolarScene &solar_scene)
 	long long time_tracing = 0, time_subcenter = 0, time_group_gen = 0;
 	long long time_smooth = 0;
 
-	recthelio->type = SubCenterType::Poisson;
+	//recthelio->type = SubCenterType::Poisson;
 	for (int i = 0; i < sizeof(num_groups) / sizeof(num_groups[0]); ++i)
 	{
 		solar_scene.sunray_->num_sunshape_groups_ = num_groups[i];
@@ -195,22 +195,22 @@ void test(SolarScene &solar_scene)
 			elapsed = std::chrono::high_resolution_clock::now() - start;
 			total_time += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
-			//global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
+			global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
 			
-			//// Non Smooth
-			//float Id = solar_scene.sunray_->dni_;
-			//float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
-			//float rou = solarenergy::reflected_rate;
-			//int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
-			//float Srec = recv->pixel_length_*recv->pixel_length_;
-			//for (int k = 0; k < recv->resolution_.x * recv->resolution_.y; ++k)
-			//	h_image[k] *= Id * Ssub * rou / Nc / Srec;
-			//// Save image	
-			//string tmp_path = save_path;
-			//tmp_path.insert(tmp_path.size() - 9, to_string(num_groups[i]));
-			//tmp_path.insert(tmp_path.size() - 8, "non_smooth");
-			//tmp_path.insert(tmp_path.size() - 4, to_string(j));
-			//ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image);
+			// Non Smooth
+			float Id = solar_scene.sunray_->dni_;
+			float Ssub = recthelio->pixel_length_*recthelio->pixel_length_;
+			float rou = solarenergy::reflected_rate;
+			int Nc = solar_scene.sunray_->num_sunshape_lights_per_group_;
+			float Srec = recv->pixel_length_*recv->pixel_length_;
+			for (int k = 0; k < recv->resolution_.x * recv->resolution_.y; ++k)
+				h_image[k] *= Id * Ssub * rou / Nc / Srec;
+			// Save image	
+			string tmp_path = save_path;
+			tmp_path.insert(tmp_path.size() - 9, to_string(num_groups[i]));
+			tmp_path.insert(tmp_path.size() - 8, "non_smooth");
+			tmp_path.insert(tmp_path.size() - 4, to_string(j));
+			ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image);
 
 			// Smooth
 			start = std::chrono::high_resolution_clock::now();
@@ -221,15 +221,15 @@ void test(SolarScene &solar_scene)
 			time_smooth += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 			total_time += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 
-			//global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
-			//for (int k = 0; k < recv->resolution_.x*recv->resolution_.y; ++k)
-			//	h_image[k] *= Id * Ssub * rou / Nc / Srec;
-			//tmp_path = save_path;//"../result/24////24-.txt"
-			//tmp_path.insert(tmp_path.size() - 9, to_string(num_groups[i]));
-			//tmp_path.insert(tmp_path.size() - 8, "smooth");
-			//tmp_path.insert(tmp_path.size() - 4, to_string(j));
-			//ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image);
-			//cout << tmp_path << endl;
+			global_func::gpu2cpu(h_image, solar_scene.receivers[0]->d_image_, recv->resolution_.x*recv->resolution_.y);
+			for (int k = 0; k < recv->resolution_.x*recv->resolution_.y; ++k)
+				h_image[k] *= Id * Ssub * rou / Nc / Srec;
+			tmp_path = save_path;//"../result/24////24-.txt"
+			tmp_path.insert(tmp_path.size() - 9, to_string(num_groups[i]));
+			tmp_path.insert(tmp_path.size() - 8, "smooth");
+			tmp_path.insert(tmp_path.size() - 4, to_string(j));
+			ImageSaver::savetxt(tmp_path, recv->resolution_.x, recv->resolution_.y, h_image);
+			cout << tmp_path << endl;
 		}
 		std::cout << to_string(num_groups[i]) << endl;
 		std::cout << "Total Average Time:\t" + to_string(double(total_time / (run_times_end - run_times_start))) << endl;
